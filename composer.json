@@ -187,7 +187,8 @@
             "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
-            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
+            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
+            "Icap\\TagwordsBundle": "plugin/tagwords"
         }
     },
     "extra": {

@@ -9,11 +9,8 @@ use Doctrine\ORM\EntityRepository;
 
 class TagwordsManager extends EntityRepository
 {
-
-
-
     /**
-     * @return pertinence_fr[]
+     * @return TagwordsConfiguration\[]
      */
     public function bddTest($b) // requete pour la pour le lexique
     {
