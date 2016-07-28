@@ -136,7 +136,9 @@
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
-        "formalibre/office-connect-bundle": "*"
+        "formalibre/office-connect-bundle": "*",
+        "icap/tagwords-bundle": "*"
+
     },
     "autoload": {
         "psr-4": {
@@ -191,6 +193,7 @@
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
+            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
             "Icap\\TagwordsBundle": "plugin/tagwords"
         }
     },
@@ -245,7 +248,8 @@
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
             "Claroline\\ChatBundle\\ClarolineChatBundle",
-            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
+            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
+            "Icap\\TagwordsBundle\\IcapTagwordsBundle"
         ]
     }
 }
