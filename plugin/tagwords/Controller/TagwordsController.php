@@ -32,7 +32,7 @@ class TagwordsController extends BaseController
 
 
     /**
-     * @Route("/tagwords", name="icap_tagwords_index")
+     * @Route("/tagwords/aah", name="tagwords")
      *
      * @return Response
      */
