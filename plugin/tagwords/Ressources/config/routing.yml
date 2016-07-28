@@ -1,4 +1,4 @@
 tagwords:
-    resource: "@tagwords/IcapTagwordsBundle.php"
+    resource: "@IcapTagwordsBundle/Controller/"
     prefix: /
     type: annotation
