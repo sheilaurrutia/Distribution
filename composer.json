@@ -134,7 +134,9 @@
         "innova/audio-recorder-bundle": "*",
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
-        "formalibre/office-connect-bundle": "*"
+        "formalibre/office-connect-bundle": "*",
+        "icap/tagwords-bundle": "*"
+
     },
     "autoload": {
         "psr-4": {
@@ -187,7 +189,8 @@
             "Innova\\AudioRecorderBundle\\": "plugin/audio-recorder",
             "Icap\\LessonBundle\\": "plugin/lesson",
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
-            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365"
+            "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
+            "Icap\\TagwordsBundle": "plugin/tagwords"
         }
     },
     "extra": {
@@ -240,7 +243,8 @@
             "Claroline\\FlashCardBundle\\ClarolineFlashCardBundle",
             "UJM\\ExoBundle\\UJMExoBundle",
             "Icap\\LessonBundle\\IcapLessonBundle",
-            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle"
+            "FormaLibre\\OfficeConnectBundle\\FormaLibreOfficeConnectBundle",
+            "Icap\\TagwordsBundle\\IcapTagwordsBundle"
         ]
     }
 }
