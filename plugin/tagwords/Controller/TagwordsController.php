@@ -13,6 +13,7 @@ namespace Icap\TagwordsBundle\TagwordsController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use UJM\ExoBundle\Entity\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
