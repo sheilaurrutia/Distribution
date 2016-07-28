@@ -8,7 +8,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 /**
  * Bundle class.
  */
-class IcapTagwordsBundle extends PluginBundle implements AutoConfigurableInterface
+class IcapTagwordsBundle extends PluginBundle 
 {
     public function getConfiguration($environment)
     {
