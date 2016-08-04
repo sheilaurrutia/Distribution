@@ -194,7 +194,7 @@
             "Claroline\\FlashCardBundle\\": "plugin/flashcard",
             "Innova\\MediaResourceBundle\\": "plugin/media-resource",
             "FormaLibre\\OfficeConnectBundle\\": "plugin/o365",
-            "Icap\\TagwordsBundle": "plugin/tagwords"
+            "Icap\\TagwordsBundle\\": "plugin/tagwords"
         }
     },
     "extra": {
