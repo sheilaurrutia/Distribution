@@ -1,0 +1,11 @@
+plugin:
+  has_options: false
+  icon: res_sub.png
+
+  resources:
+    - class: Claroline\SubscriptionBundle\Entity\Subscription
+      name: claroline_subscription
+      is_exportable: false
+      icon: res_sub.png
+      activity_rules:
+        - action: ????
