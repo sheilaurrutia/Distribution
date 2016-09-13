@@ -240,7 +240,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 ->leftJoin('r.workspace', 'w')
                 ->andWhere('r.workspace = :workspace')
                 ->setParameter('workspace', $workspace);
-        };
+        }
 
         return $executeQuery ? $userQueryBuilder->getQuery()->getResult() : $userQueryBuilder->getQuery();
     }
@@ -1547,6 +1547,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $query->getResult();
     }
+
     /**
      * @param Workspace $workspace
      *

@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Command\Import;
 
+use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
+use Claroline\CoreBundle\Listener\DoctrineDebug;
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,6 +39,14 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $consoleLogger = ConsoleLogger::get($output);
+        $om = $this->getContainer()->get('claroline.persistence.object_manager');
+        $om->setLogger($consoleLogger)->activateLog();
+        $this->getContainer()->get('claroline.doctrine.debug')->setLogger($consoleLogger)
+            ->activateLog()
+            ->setDebugLevel(DoctrineDebug::DEBUG_ALL)
+            ->setVendor('Claroline');
+
         //validate the csv file...
         $validator = $this->getContainer()->get('validator');
         $file = $input->getArgument('csv_workspace_path');
