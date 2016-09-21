@@ -31,28 +31,4 @@ class TagwordsListener
         $this->container = $container;
     }
 
-    /**
-     * @DI\Observe("play_file_text")
-     *
-     * @param PlayFileEvent $event
-     */
-    public function onOpenText(PlayFileEvent $event)
-    {
-        $path = $this->container->getParameter('claroline.param.files_directory')
-            .DIRECTORY_SEPARATOR
-            .$event->getResource()->getHashName();
-        $text = file_get_contents($path);
-        $content = $this->container->get('templating')->render(
-            'ClarolineTextPlayerBundle::text.html.twig',
-            array(
-                'path' => $path,
-                'text' => $text,
-                '_resource' => $event->getResource(),
-            )
-        );
-
-        $response = new Response($content);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
 }

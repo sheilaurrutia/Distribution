@@ -1,90 +1,124 @@
-    {% extends 'base.html.twig' %}
+{% extends 'IcapTagwordsBundle::base.html.twig' %}
 
 {% block body %}
 
-   <div id="tagcloud1">
+    <div id="mydiv" style="width: 1250px">
 
-        <div id="aze">
-            <div id="texte">
-            <div id="fontPolice">
+        <div id="tagwords">
 
-           {% for key, nuage1 in nuageFinal %}           {#fontion qui permet d'arrangez dans un ordre de grandeur les mots pour le rendu#}
+            <div id="choosFont">
 
-                   {% if nuage1.ratio != 0 %}
+                <div id="fontPolice">
 
-                      {%  if ((nuage1.ratio / ratio) *100) < 25 %}
+                    {% for key, tagword in renderText %}
+                        {# Displaying of the words by their "relevance" #}
 
-                                     <span style="font-size:0.5em; opacity: 0.5; font-weight: 100;"> {{ nuage1.mot }}  </span>
+                        {% if tagword.ratio != 0 %}
 
-                            {% elseif  ((nuage1.ratio / ratio) *100) >=25 and ((nuage1.ratio / ratio) *100) < 45 %}
+                            {% if ((tagword.ratio / ratio) *100) < 25 %}
 
-                                     <span style="font-size:0.9em; opacity: 0.7; font-weight: 200;"> {{ nuage1.mot }} </span>
+                                <span style="font-size:0.5em; opacity: 0.5; font-weight: 100;"> {{ tagword.word }}  </span>
 
+                            {% elseif ((tagword.ratio / ratio) *100) >=25 and ((tagword.ratio / ratio) *100) < 45 %}
 
-                            {% elseif   ((nuage1.ratio / ratio) *100) >=45 and  ((nuage1.ratio / ratio) *100) < 65 %}
+                                <span style="font-size:0.9em; opacity: 0.7; font-weight: 200;"> {{ tagword.word }} </span>
 
-                                     <span style="font-size:1.2em; opacity: 0.8; font-weight: 400;"> {{ nuage1.mot }} </span>
+                            {% elseif  ((tagword.ratio / ratio) *100) >=45 and  ((tagword.ratio / ratio) *100) < 65 %}
 
+                                <span style="font-size:1.2em; opacity: 0.8; font-weight: 400;"> {{ tagword.word }} </span>
 
-                            {% elseif  ((nuage1.ratio / ratio) *100) >=65 and  ((nuage1.ratio / ratio) *100) < 95 %}
+                            {% elseif ((tagword.ratio / ratio) *100) >=65 and  ((tagword.ratio / ratio) *100) < 95 %}
 
-                                     <span style="font-size:1.7em; opacity: 0.9; font-weight: 700;"> {{ nuage1.mot }} </span>
-
+                                <span style="font-size:1.7em; opacity: 0.9; font-weight: 700;"> {{ tagword.word }} </span>
 
                             {% else %}
 
-                                     <span style="font-size:2.1em; opacity: 1; font-weight: 900;"> {{ nuage1.mot }} </span>
+                                <span style="font-size:2.1em; opacity: 1; font-weight: 900;"> {{ tagword.word }} </span>
 
                             {% endif %}
 
-                     {% else %}
+                        {% else %}
 
-                         <span style="font-size: 3em; opacity: 1; font-weight: 900;"> {{ nuage1.mot }} </span>
+                            <span style="font-size: 3em; opacity: 1; font-weight: 900;"> {{ tagword.word }} </span>
 
-                {% endif %}
-            {% endfor %}
+                        {% endif %}
+
+                    {% endfor %}
+
+                 </div>
 
             </div>
-          </div>
+
         </div>
+
     </div>
 
 
+    <div id="colorPicker" style="display: none">          <!-- Color picker -->
 
-    <div id="colorPicker" style="display: none">          <!--selection couleur du fond et de la police-->
         <div id="background">
 
         </div>
+
         <div>
+
             R <input type="range" name="red" min="0" max="255"><br/>
+
             G <input type="range" name="green" min="0" max="255"><br/>
+
             B <input type="range" name="blue" min="0" max="255"><br/>
+
             <input type="text" name="colorHex">
+
             <br/>
-            <button class="font_color">Choix couleur police</button>
-            <button class="background">Choix couleur background</button>
-            </br>
+
+            <button class="font_color">Color font</button>
+
+            <button class="background">Color background</button>
+
+            <br />
+
             <form>
-                <select name="font" id="police">             <!-- selection des polices d'écriture-->
+
+                <select name="font" id="police">             <!-- Font -->
+
 
                     <option value="'Times New Roman', Times, serif" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+
                     <option value="Georgia, serif" style="font-family: Georgia, serif;">Georgia</option>
+
                     <option value="'Palatino Linotype', Palatino, serif" style="font-family: 'Palatino Linotype', Palatino, serif">Palatino Linotype</option>
+
                     <option value="Arial, Helvetica, sans-serif" style="font-family: Arial, Helvetica, sans-serif">Arial</option>
+
                     <option value="'Arial Black', Gadget, sans-serif" style="font-family:'Arial Black', Gadget, sans-serif">Arial Black</option>
+
                     <option value="'Comic Sans MS', cursive, sans-serif" style="font-family:'Comic Sans MS', cursive, sans-serif">Comic Sans MS</option>
+
                     <option value="Impact, Charcoal, sans-serif" style="font-family: Impact, Charcoal, sans-serif">Impact</option>
+
                     <option value="'Lucida Sans Unicode', 'Lucida Grande', sans-serif" style="font-family:'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans Unicode</option>
+
                     <option value="Tahoma, Geneva, sans-serif" style="font-family:Tahoma, Geneva, sans-serif">Tahoma</option>
+
                     <option value="'Trebuchet MS', Helvetica, sans-serif" style="font-family:'Trebuchet MS', Helvetica, sans-serif">Tebuchet MS</option>
+
                     <option value="Verdana, Geneva, sans-serif" style="font-family:Verdana, Geneva, sans-serif">Verdana</option>
+
                     <option value="'Courier New', Courrier, monospace" style="font-family:'Courier New', Courrier, monospace">Courrier New</option>
+
                     <option value="'Lucida Console', Monaco, monospace" style="font-family: 'Lucida Console', Monaco, monospace">Lucida Console</option>
 
                 </select>
+
             </form>
+
             <br />
+
         </div>
+
     </div>
+
+    <a href="#" id="save_image_locally" >save</a>
 
 {% endblock %}

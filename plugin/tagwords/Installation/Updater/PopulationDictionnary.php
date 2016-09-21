@@ -5,14 +5,12 @@ namespace Icap\TagwordsBundle\Installation\Updater;
 use AppKernel;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
 
-
-class populationDictionnary extends Updater
+class PopulationDictionnary extends Updater
 {
-    public function postUpdate(Connection $connection, AppKernel $kernel)
+    public function postInstall(Connection $connection, AppKernel $kernel)
     {
-        // Delete portfolio badges tables if the BadgeBundle is not installed
+
         /** @var \Symfony\Component\HttpKernel\Bundle\Bundle[] $bundles */
         $bundles = $kernel->getBundles();
         $isTagwordsBundleInstalled = false;
@@ -22,14 +20,22 @@ class populationDictionnary extends Updater
             }
         }
 
-        if (!$isTagwordsBundleInstalled && $connection->getSchemaManager()->tablesExist(['icap__motFr'])) {
-            $sql = 'LOAD DATA INFILE \''.__DIR__.'../../lexique.csv\'
-               INTO TABLE motFr
+        if ($isTagwordsBundleInstalled && $connection->getSchemaManager()->tablesExist(['icap_tagwords_french'])) {
+            $sql = 'LOAD DATA INFILE \''.__DIR__.'../../../tagwordsFrench.csv\'
+               INTO TABLE icap_tagwords_french
                FIELDS TERMINATED BY \',\'
                LINES TERMINATED BY \'\n\'
                IGNORE 1 ROWS;';
-            $stmt = $this->connection->prepare($sql);
-            $stmt = execute();
+            $connection->exec($sql);
+        }
+
+        if ($isTagwordsBundleInstalled && $connection->getSchemaManager()->tablesExist(['icap_tagwords_english'])) {
+            $sql = 'LOAD DATA INFILE \''.__DIR__.'../../../tagwordsEnglish.csv\'
+               INTO TABLE icap_tagwords_english
+               FIELDS TERMINATED BY \';\'
+               LINES TERMINATED BY \'\n\'
+               ';
+            $connection->exec($sql);
         }
     }
 }

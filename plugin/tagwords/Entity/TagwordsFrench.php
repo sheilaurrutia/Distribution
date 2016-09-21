@@ -1,18 +1,15 @@
 <?php
 
-
 namespace Icap\TagwordsBundle\Entity;
 
-use Icap\TagwordsBundle\Repository\TagwordsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\TagwordsBundle\Repository\TagwordsRepository")
- * @ORM\Table(name="french_tagwords")
+ * @ORM\Table(name="icap_tagwords_french")
  */
-class french_tagwords
+class TagwordsFrench
 {
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,7 +20,7 @@ class french_tagwords
     /**
      * @ORM\Column(type="string")
      */
-    private $french_tagwords;
+    private $tagwordsFrench;
 
     /**
      * @ORM\Column(type="float")
@@ -49,20 +46,18 @@ class french_tagwords
     /**
      * @return mixed
      */
-    public function getFrenchTagwords()
+    public function getTagwordsFrench()
     {
-        return $this->french_tagwords;
+        return $this->tagwordsFrench;
     }
 
     /**
      * @param mixed $french_tagwords
      */
-    public function setFrenchTagwords($french_tagwords)
+    public function setTagwordsFrench($tagwordsFrench)
     {
-        $this->french_tagwords = $french_tagwords;
+        $this->tagwordsFrench = $tagwordsFrench;
     }
-    
-
 
     /**
      * @return mixed
@@ -71,14 +66,13 @@ class french_tagwords
     {
         return $this->id;
     }
-    
-    public function serialize() //permet de changer le nom des collones de la requete pour le Lexique
+
+    public function serialize()
     {
-        return array(
+        return [
             'id' => $this->id,
-            '$french_tagwords' => $this->french_tagwords,
-            //'valeur' => $this->valeur,
-            'ratio' => $this->ratio
-        );
+            'tagwords' => $this->tagwordsFrench,
+            'ratio' => $this->ratio,
+        ];
     }
 }

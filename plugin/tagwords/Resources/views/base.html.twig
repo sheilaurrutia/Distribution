@@ -2,86 +2,164 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Nuage!{% endblock %}</title>
+
+        <title>{% block title %}Tagwords!{% endblock %}</title>
 
         {% block javascripts %}
+
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+
             <script>
-            $(document).ready(function() {
+
+                $(document).ready(function() {
 
 ///fonction colorpicker////
-                $colorPicker = $('#colorPicker'),
+
+                    $colorPicker = $('#colorPicker'),
+
                         $colorPDiv = $colorPicker.children('div:first-of-type'),
+
                         $colorPRed = $colorPicker.children().children('input').first(),
+
                         $colorPGreen = $colorPicker.children().children('input').eq(1),
+
                         $colorPBlue = $colorPicker.children().children('input').eq(2),
+
                         $colorPRGB = $colorPicker.children().children('input').eq(3);
 
 
-                $colorPRed.add($colorPGreen).add($colorPBlue).change(function () {
-                    var rgb = 'rgb(' + $colorPRed.val() + ', ' + $colorPGreen.val() + ', ' + $colorPBlue.val() + ')';
-                    $colorPRGB.val(rgb);
-                    $colorPDiv.css('background-color', rgb);
-                });
+                    $colorPRed.add($colorPGreen).add($colorPBlue).change(function () {
 
-                $colorPRGB.change(function () {
-                    var rgb = $colorPRGB.val().slice(4, -1).split(', ');
-                    $colorPRed.val(rgb[0]);
-                    $colorPGreen.val(rgb[1]);
-                    $colorPBlue.val(rgb[2]);
-                    $colorPDiv.css('background-color', $colorPRGB.val());
-                });
+                        var rgb = 'rgb(' + $colorPRed.val() + ', ' + $colorPGreen.val() + ', ' + $colorPBlue.val() + ')';
+
+                        $colorPRGB.val(rgb);
+
+                        $colorPDiv.css('background-color', rgb);
+
+                    });
+
+                    $colorPRGB.change(function () {
+
+                        var rgb = $colorPRGB.val().slice(4, -1).split(', ');
+
+                        $colorPRed.val(rgb[0]);
+
+                        $colorPGreen.val(rgb[1]);
+
+                        $colorPBlue.val(rgb[2]);
+
+                        $colorPDiv.css('background-color', $colorPRGB.val());
+
+                    });
 
 /////function//////
-                validColorPicker = function () {
-                    $colorPicker.hide();
-                    $ecolor.css('background-color', $colorPRGB.val());
-                    $ecolor = false;
-                    saved = false;
-                }
-                validColorPicker2 = function () {
-                    $colorPicker.hide();
-                    $ecolor2.css('color', $colorPRGB.val());
-                    $ecolor = false;
-                    saved = false;
-                }
 
-                $('#tagcloud1').click(function () {
-                    $ecolor = $(this);
-                    var color = $ecolor.css('background-color');
-                    $colorPDiv.css('background', color);
-                    $colorPRed.val(color);
-                    $colorPRGB.val(color);
-                    $colorPicker.show();
-                });
+                    validColorPicker = function () {
 
-                $('#aze').click(function () {
-                    $ecolor2 = $(this);
-                    var color = $ecolor2.css('color');
-                    $colorPDiv.css('color', color);
-                    $colorPRed.val(color);
-                    $colorPRGB.val(color);
-                    $colorPicker.show();
-                });
+                        $colorPicker.hide();
+
+                        $ecolor.css('background-color', $colorPRGB.val());
+
+                        $ecolor = false;
+
+                        saved = false;
+
+                    }
+
+                    validColorPicker2 = function () {
+
+                        $colorPicker.hide();
+
+                        $ecolor2.css('color', $colorPRGB.val());
+
+                        $ecolor = false;
+
+                        saved = false;
+
+                    }
+
+                    $('#tagwords').click(function () {
+
+                        $ecolor = $(this);
+
+                        var color = $ecolor.css('background-color');
+
+                        $colorPDiv.css('background', color);
+
+                        $colorPRed.val(color);
+
+                        $colorPRGB.val(color);
+
+                        $colorPicker.show();
+
+                    });
+
+                    $('#choosFont').click(function () {
+
+                        $ecolor2 = $(this);
+
+                        var color = $ecolor2.css('color');
+
+                        $colorPDiv.css('color', color);
+
+                        $colorPRed.val(color);
+
+                        $colorPRGB.val(color);
+
+                        $colorPicker.show();
+
+                    });
+
 ///button/////
 
-                $colorPicker.children().children('.font_color').click(function () {
-                    $('#tagcloud1').on("click", validColorPicker2());
-                });
-                $colorPicker.children().children('.background').click(function () {
-                    $('#tagcloud1').on("click", validColorPicker());
+                    $colorPicker.children().children('.font_color').click(function () {
+
+                        $('#tagwords').on("click", validColorPicker2());
+
+                    });
+
+                    $colorPicker.children().children('.background').click(function () {
+
+                        $('#tagwords').on("click", validColorPicker());
+
+                    });
+
+///Choose of the font///
+
+                    $("#police").change(function(){
+
+                        $("#fontPolice").css("font-family", $(this).val());
+
+                        $colorPicker.hide();
+
+                    });
+
+
+                    $('#save_image_locally').click(function(){
+
+                        html2canvas($("#mydiv"), {
+
+                            onrendered: function (canvas) {
+
+                                var a = $("<a>").attr("href", canvas.toDataURL('image/png'))
+
+                                    .attr("download", "output.png")
+
+                                    .appendTo("body");
+
+                                a[0].click();
+
+                                a.remove();
+
+                            }
+
+                        });
+
+                    });
 
                 });
-
-///choix de la police///
-                $("#police").change(function(){
-                    $("#fontPolice").css("font-family", $(this).val());
-
-                    $colorPicker.hide();
-                });
-
-            });
-
 
             </script>
 
@@ -89,36 +167,53 @@
 
 
         {% block stylesheets %}
+
             <style>
 
-            #tagcloud1 {
-                width :  1250px;
-                padding :  10px;
-                border :  1px solid black;
-                -moz-border-radius :  1px;
-                -webkit-border-radius :  1px;
-                border-radius :  1px;
-                text-align :  center;
-                line-height :  0.8;
-            }
+                #tagwords {
 
-            #aze{
-                color: black;
-            }
+                    padding :  10px;
 
-            #background{
-                width: 300px;
-                height: 300px;
-                display : inline-block;
-            }
+                    border :  1px solid black;
 
+                    -moz-border-radius :  1px;
+
+                    -webkit-border-radius :  1px;
+
+                    border-radius :  1px;
+
+                    text-align :  center;
+
+                    line-height :  0.8;
+
+                }
+
+                #choosFont{
+
+                    color: black;
+
+                }
+
+                #background{
+
+                    width: 300px;
+
+                    height: 300px;
+
+                    display : inline-block;
+
+                }
 
             </style>
+
         {% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+            <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
     </head>
 
     <body>
+
         {% block body %}{% endblock %}
 
     </body>

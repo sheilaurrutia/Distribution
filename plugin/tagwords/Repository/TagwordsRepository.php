@@ -1,48 +1,36 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: root
- * Date: 01/09/16
- * Time: 10:12
- */
-namespace Claroline\TextPlayerBundle\Repository;
-use Claroline\TextPlayerBundle\Entity\nuage;
-use Claroline\TextPlayerBundle\Entity\texte;
-use Claroline\TextPlayerBundle\Controller\Tagwords;
+
+namespace Icap\TagwordsBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
+use Icap\TagwordsBundle\Entity\TagwordsEnglish;
+use Icap\TagwordsBundle\Entity\TagwordsFrench;
 
-class NuageRepository extends EntityRepository
+class TagwordsRepository extends EntityRepository
 {
-
     /**
-     * @return nuage[]
+     * @return icap_tagwords_french[]
      */
-    public function bddNuage($test) //requete pour selection le texte
+    public function Tagwords_french($b) // Query for the database with the word
     {
-        return $this->createQueryBuilder('nuage')
-            ->select('nuage.post')
-            ->where('nuage.id = (:test)')
-            ->setParameter('test', $test)
-            ->getQuery()
-            ->getResult();
-
-
-    }
-
-
-    /**
-     * @return texte[]
-     */
-    public function bddTest($b) // requete pour la pour le lexique
-    {
-
-        return $this->createQueryBuilder('texte')
-            ->select('texte')
-            ->where('texte.texte IN (:mots)')
+        return $this->createQueryBuilder('icap_tagwords_french')
+            ->select('icap_tagwords_french')
+            ->where('icap_tagwords_french.tagwordsFrench IN (:mots)')
             ->setParameter('mots', $b, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
             ->getQuery()
             ->getResult();
     }
 
-
+    /**
+     * @return icap_tagwords_english[]
+     */
+    public function Tagwords_english($b) // Query for the database with the word
+    {
+        return $this->createQueryBuilder('icap_tagwords_english')
+            ->select('icap_tagwords_english')
+            ->where('icap_tagwords_english.tagwordsEnglish IN (:mots)')
+            ->setParameter('mots', $b, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -10,14 +10,11 @@ namespace Icap\TagwordsBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
-class AdditionallInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller
 {
     public function postInstall()
     {
-        $updater = new Updater\MigrationUpdater();
-        $updater->setLogger($this->logger);
-        $updater->postInstall($this->container->get('doctrine.orm'), $this->container->get(''));
+        $updater = new Updater\PopulationDictionnary();
+        $updater->postInstall($this->container->get('doctrine.dbal.default_connection'), $this->container->get('kernel'));
     }
-
-
 }
