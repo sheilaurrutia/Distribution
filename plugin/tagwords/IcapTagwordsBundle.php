@@ -14,7 +14,7 @@ class IcapTagwordsBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config;
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'tagwords');
     }
 
     public function hasMigrations()
