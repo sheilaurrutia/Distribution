@@ -98,6 +98,13 @@
                     data-answer="questionShowCtrl.questionPaper.answer"
                     data-include-correction="questionShowCtrl.includeCorrection">
             </graphic-question>
+
+            <!-- Boundary Type -->
+            <boundary-question
+                    data-ng-switch-when="application/x.boundary+json"
+                    data-question="questionShowCtrl.question"
+                    data-answer="questionShowCtrl.questionPaper.answer">
+            </boundary-question>
         </div>
 
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">

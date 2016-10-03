@@ -20,6 +20,7 @@ import ClozeQuestionCtrl from './Controllers/Type/ClozeQuestionCtrl'
 import GraphicQuestionCtrl from './Controllers/Type/GraphicQuestionCtrl'
 import MatchQuestionCtrl from './Controllers/Type/MatchQuestionCtrl'
 import OpenQuestionCtrl from './Controllers/Type/OpenQuestionCtrl'
+import BoundaryQuestionCtrl from './Controllers/Type/BoundaryQuestionCtrl'
 
 import QuestionShowDirective from './Directives/QuestionShowDirective'
 import ChoiceQuestionDirective from './Directives/Type/ChoiceQuestionDirective'
@@ -27,6 +28,7 @@ import ClozeQuestionDirective from './Directives/Type/ClozeQuestionDirective'
 import GraphicQuestionDirective from './Directives/Type/GraphicQuestionDirective'
 import MatchQuestionDirective from './Directives/Type/MatchQuestionDirective'
 import OpenQuestionDirective from './Directives/Type/OpenQuestionDirective'
+import BoundaryQuestionDirective from './Directives/Type/BoundaryQuestionDirective'
 
 import QuestionService from './Services/QuestionService'
 import ChoiceQuestionService from './Services/Type/ChoiceQuestionService'
@@ -34,6 +36,7 @@ import ClozeQuestionService from './Services/Type/ClozeQuestionService'
 import GraphicQuestionService from './Services/Type/GraphicQuestionService'
 import MatchQuestionService from './Services/Type/MatchQuestionService'
 import OpenQuestionService from './Services/Type/OpenQuestionService'
+import BoundaryQuestionService from './Services/Type/BoundaryQuestionService'
 
 angular
   .module('Question', [
@@ -82,6 +85,11 @@ angular
     'OpenQuestionService',
     OpenQuestionCtrl
   ])
+  .controller('BoundaryQuestionCtrl',[
+    'FeedbackService',
+    'BoundaryQuestionService',
+    BoundaryQuestionCtrl
+  ])
   .directive('questionShow', [
     QuestionShowDirective
   ])
@@ -109,6 +117,10 @@ angular
   .directive('openQuestion', [
     'FeedbackService',
     OpenQuestionDirective
+  ])
+  .directive('boundaryQuestion', [
+    'FeedbackService',
+    BoundaryQuestionDirective
   ])
   .service('QuestionService', [
     '$log',
@@ -144,4 +156,9 @@ angular
     '$log',
     'FeedbackService',
     OpenQuestionService
+  ])
+  .service('BoundaryQuestionService', [
+    '$log',
+    'FeedbackService',
+    BoundaryQuestionService
   ])
