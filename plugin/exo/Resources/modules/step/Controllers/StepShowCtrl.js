@@ -12,6 +12,27 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepSe
   this.QuestionService = QuestionService
   this.StepService = StepService
 
+  let fake = {
+
+    'id': 1,
+    'type': 'application/x.boundary+json',
+    'title': 'Simple Boundary',
+    'description': null,
+    'invite': '<p>Where is the cat ?</p>',
+    'supplementary': null,
+    'specification': null,
+    'objects': [],
+    'file': {
+      'id': 1,
+      'url': 'http://localhost/claro-audio-mark/files/test.mp3'
+    },
+    'stats': null
+    // add solutions if needed
+
+  }
+  //this.step.items.push(fake)
+  this.items.push(fake)
+
   // Get feedback info
   this.feedback = this.FeedbackService.get()
 

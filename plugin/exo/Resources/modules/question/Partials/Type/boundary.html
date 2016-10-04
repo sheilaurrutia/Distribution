@@ -1,3 +1,52 @@
 <div class="type-question-container boundary-question-container panel panel-default">
-    <h1>Boundary question</h1>
+
+    <div id="wave-timeline"></div>
+    <div id="waveform">
+      <div class="progress progress-striped active" id="progress-bar">
+          <div class="progress-bar progress-bar-info"></div>
+      </div>
+    </div>
+    <hr>
+    <!-- main controls buttons -->
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" data-ng-click="boundaryQuestionCtrl.play()" title="{{'play_pause' | trans:{}:'media_resource'}}">
+                    <i class="fa fa-play"></i>
+                    /
+                    <i class="fa fa-pause"></i>
+                </button>
+                <button type="button" class="btn btn-warning" title="{{'add_marker' | trans:{}:'media_resource'}}" data-ng-click="boundaryQuestionCtrl.mark()">
+                    <i class="fa fa-flag"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <hr>
+    <!-- regions info -->
+    <table class="table table-stripped">
+      <thead>
+        <th>Actions</th>
+        <th>Region</th>
+      </thead>
+      <tbody>
+        <tr data-ng-repeat="region in boundaryQuestionCtrl.regions">
+          <td>{{region.start.time}} / {{region.end.time}}</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" data-ng-click="boundaryQuestionCtrl.play(region)" title="{{'play_pause' | trans:{}:'media_resource'}}">
+                  <i class="fa fa-play"></i>
+                  /
+                  <i class="fa fa-pause"></i>
+              </button>
+              <button type="button" class="btn btn-danger" title="{{'delete_marker' | trans:{}:'media_resource'}}" data-ng-click="boundaryQuestionCtrl.removeRegion(region)">
+                  <i class="fa fa-trash"></i>
+              </button>
+            </div>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
 </div>
