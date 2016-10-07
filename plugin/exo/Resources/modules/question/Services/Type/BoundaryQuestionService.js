@@ -1,18 +1,14 @@
 import AbstractQuestionService from './AbstractQuestionService'
 
-import WaveSurfer from 'wavesurfer.js/dist/wavesurfer'
-import 'wavesurfer.js/dist/plugin/wavesurfer.minimap.min'
-import 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min'
-import 'wavesurfer.js/dist/plugin/wavesurfer.regions.min'
 
 /**
  * Choice Question Service
  * @param {FeedbackService} FeedbackService
  * @constructor
  */
-function BoundaryQuestionService($log, FeedbackService) {
+function BoundaryQuestionService($log, $timeout, FeedbackService) {
   AbstractQuestionService.call(this, $log, FeedbackService)
-  //this.wavesurfer = null
+  this.$timeout = $timeout
 }
 
 // Extends AbstractQuestionCtrl
@@ -21,7 +17,7 @@ BoundaryQuestionService.prototype = Object.create(AbstractQuestionService.protot
 BoundaryQuestionService.prototype.wavesurferOptions = {
   container: '#waveform',
   waveColor: '#172B32',
-  progressColor: '#00A1E5',
+  progressColor: '#bbb',
   height: 256,
   interact: true,
   scrollParent: false,
@@ -29,97 +25,63 @@ BoundaryQuestionService.prototype.wavesurferOptions = {
   minimap: true
 }
 
-BoundaryQuestionService.prototype.wavesurfer = null
-BoundaryQuestionService.prototype.question = null
-
-BoundaryQuestionService.prototype.getWavesurferInstance = function getWavesurferInstance(){
-  return this.wavesurfer
+BoundaryQuestionService.prototype.wavesurferRegionOptions = {
+  color: 'rgba(92,92,92,0.5)',
+  drag: true,
+  resize: true
 }
 
-BoundaryQuestionService.prototype.setQuestion = function setWavesurferInstance(question){
-  this.question = question
+BoundaryQuestionService.prototype.wavesurferMinimapOptions =  {
+  height: 30,
+  waveColor: '#ddd',
+  progressColor: '#999',
+  cursorColor: '#999'
 }
 
-BoundaryQuestionService.prototype.getQuestion = function getQuestion(){
-  return this.question
+BoundaryQuestionService.prototype.getLeftPostionFromTime = function getLeftPostionFromTime(time, wavesurfer) {
+  const duration = wavesurfer.getDuration()
+  const canvas = wavesurfer.container.children[0].children[0]
+  const cWidth = canvas.clientWidth
+  return time * cWidth / duration
 }
 
-
-BoundaryQuestionService.prototype.getWavesurferInstance = function getWavesurferInstance(){
-  return this.wavesurfer
+BoundaryQuestionService.prototype.getTimeFromPosition = function getTimeFromPosition(position, wavesurfer) {
+  const duration = wavesurfer.getDuration()
+  const canvas = wavesurfer.container.children[0].children[0]
+  const cWidth = canvas.clientWidth
+  return position * duration / cWidth
 }
 
-/**
-*/
-BoundaryQuestionService.prototype.init = function init(question){
-  this.setQuestion(question)
-  this.wavesurfer = Object.create(WaveSurfer)
-  const progressDiv = document.querySelector('#progress-bar')
-  const progressBar = progressDiv.querySelector('.progress-bar')
-  const showProgress = function (percent) {
-    progressDiv.style.display = 'block'
-    progressBar.style.width = percent + '%'
-  }
-  const hideProgress = function () {
-    progressDiv.style.display = 'none'
-  }
-  this.wavesurfer.on('loading', showProgress)
-  this.wavesurfer.on('ready', hideProgress)
-  this.wavesurfer.on('destroy', hideProgress)
-  this.wavesurfer.on('error', hideProgress)
-
-  this.wavesurfer.init(this.wavesurferOptions)
-  this.wavesurfer.initMinimap({
-    height: 30,
-    waveColor: '#ddd',
-    progressColor: '#999',
-    cursorColor: '#999'
-  })
-  this.wavesurfer.load(this.question.file.url)
-
-  this.wavesurfer.on('ready', function () {
-    const timeline = Object.create(WaveSurfer.Timeline)
-    timeline.init({
-      wavesurfer: this.wavesurfer,
-      container: '#wave-timeline'
-    })
-
-  }.bind(this))
-}
-
-BoundaryQuestionService.prototype.play = function play(region){
-  const playing = this.wavesurfer.isPlaying()
-  if(playing){
-    this.wavesurfer.pause()
+BoundaryQuestionService.prototype.createRegion = function createRegion(start, end, wavesurfer){
+  let startTime
+  let endTime
+  if(null !== start && null !== end){
+    startTime = start
+    endTime = end
   } else {
-    if(undefined !== region && null !== region){
-      this.wavesurfer.play(region.start.time, region.end.time)
-    } else {
-      this.wavesurfer.play()
-    }
+    const currentTime = wavesurfer.getCurrentTime()
+    const duration = wavesurfer.getDuration()
+    startTime = currentTime > 1 ? currentTime - 1 : 0
+    endTime = currentTime < (duration - 1) ? currentTime + 1 : duration
   }
-}
 
-BoundaryQuestionService.prototype.addRegion = function addRegion(){
-  // start /end marker
-  const currentTime = this.wavesurfer.getCurrentTime()
-  const duration = this.wavesurfer.getDuration()
-  const start = {
-    time: currentTime > 1 ? currentTime - 1 : 0,
+  const startMarker = {
+    time: startTime,
     before: 0,
     after: 0
   }
 
-  const end = {
-    time: currentTime < (duration - 1) ? currentTime + 1 : duration,
+  const endMarker = {
+    time: endTime,
     before: 0,
     after: 0
   }
 
   return {
+    uuid: '1',
     valid: true,
-    start:start,
-    end:end
+    start:startMarker,
+    end:endMarker
   }
 }
 

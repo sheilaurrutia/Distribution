@@ -6,11 +6,12 @@ export default class QuestionService {
    * Constructor.
    *
    * @param {object} $log
-   * @param {ChoiceQuestionService}  ChoiceQuestionService
-   * @param {ClozeQuestionService}   ClozeQuestionService
-   * @param {GraphicQuestionService} GraphicQuestionService
-   * @param {MatchQuestionService}   MatchQuestionService
-   * @param {OpenQuestionService}    OpenQuestionService
+   * @param {ChoiceQuestionService}      ChoiceQuestionService
+   * @param {ClozeQuestionService}       ClozeQuestionService
+   * @param {GraphicQuestionService}     GraphicQuestionService
+   * @param {MatchQuestionService}       MatchQuestionService
+   * @param {OpenQuestionService}        OpenQuestionService
+   * @param {BoundaryQuestionService}    BoundaryQuestionService
    */
   constructor(
     $log,
@@ -18,17 +19,19 @@ export default class QuestionService {
     ClozeQuestionService,
     GraphicQuestionService,
     MatchQuestionService,
-    OpenQuestionService
+    OpenQuestionService,
+    BoundaryQuestionService
   ) {
     this.$log = $log
     this.services = {}
 
     // Inject custom services
-    this.services['application/x.choice+json']  = ChoiceQuestionService
-    this.services['application/x.match+json']   = MatchQuestionService
-    this.services['application/x.cloze+json']   = ClozeQuestionService
-    this.services['application/x.short+json']   = OpenQuestionService
-    this.services['application/x.graphic+json'] = GraphicQuestionService
+    this.services['application/x.choice+json']   = ChoiceQuestionService
+    this.services['application/x.match+json']    = MatchQuestionService
+    this.services['application/x.cloze+json']    = ClozeQuestionService
+    this.services['application/x.short+json']    = OpenQuestionService
+    this.services['application/x.graphic+json']  = GraphicQuestionService
+    this.services['application/x.boundary+json'] = BoundaryQuestionService
   }
 
   /**

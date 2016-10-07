@@ -6,6 +6,7 @@ add_label: Add a label
 add_new_picture: Add a new picture
 add_proposal: Add a proposal
 add_question: Add a question
+add_region: Add a region
 add_step: Add a step
 add_zone_answer: Add an answer zone
 advanced_edition: Advanced edition
@@ -48,6 +49,8 @@ back_to_overview: Go back the the Exercise overview
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
 brief_search: Brief Search
+boundary_no_regions: No region yet. Use the <i class="fa fa-flag"></i> button or draw directly on waveform to create one.
+boundary_only_one_region: Only one region can be on the waveform. Delete the existing one to add a new one.
 
 # C
 calculation_measure_difficulty: It's calculated on the basis of the number of applicants who have correctly answered, divided by total number of applicants.
@@ -89,6 +92,7 @@ delete_of_my_bank: Deleting my bank
 delete_of_my_exercise: Deleting my exercise
 delete_papers: Deleting the papers
 delete_question: Deleting the step
+delete_region: Delete region
 description: Description
 display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
@@ -216,6 +220,7 @@ mark: Score
 mark_question: Give a score to this question
 mark_bigest: The score must be smaller than or equal to the maximum score
 mark_bigest_other: The score is larger than the maximum score
+marker_drag_title: Drag and drop marker to change region size
 matching: Association
 matching_creation: Create association
 matching_edition: Edit association
@@ -295,6 +300,7 @@ penalty: Penalty
 percentage: Percentage
 pic_manage: Manage my documents
 picture_name: Picture name
+play_pause: Play / Pause
 points: Points
 point_answer: You must assign a point to the correct answer.
 # Preceding line to be checked in context !!! #
@@ -339,6 +345,8 @@ random_questions: Random order of questions
 random_steps_order: Random order of steps
 raz: => To reset all pointers' position, press "c".
 square: square
+region_end: End
+region_start: Start
 remove_advanced_edition: Simple edition
 remove_question_confirm_message:  Are you sure you want to delete this question ?
 reset: Reset

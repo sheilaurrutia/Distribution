@@ -7,6 +7,8 @@ import 'angular-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
 import '#/main/core/asset/module'
+import '#/main/core/time/module'
+import '#/main/core/translation/module'
 
 import './../common/module'
 import './../feedback/module'
@@ -41,6 +43,7 @@ import BoundaryQuestionService from './Services/Type/BoundaryQuestionService'
 angular
   .module('Question', [
     'ui.translation',
+    'translation',
     'ui.bootstrap',
     'ui.asset',
     'ui.modal',
@@ -48,7 +51,8 @@ angular
     'Feedback',
     'Image',
     'Hint',
-    'Correction'
+    'Correction',
+    'time'
   ])
   .controller('QuestionShowCtrl', [
     '$uibModal',
@@ -87,6 +91,10 @@ angular
   ])
   .controller('BoundaryQuestionCtrl',[
     'FeedbackService',
+    '$scope',
+    '$timeout',
+    '$window',
+    'Translator',
     'BoundaryQuestionService',
     BoundaryQuestionCtrl
   ])
@@ -129,6 +137,7 @@ angular
     'GraphicQuestionService',
     'MatchQuestionService',
     'OpenQuestionService',
+    'BoundaryQuestionService',
     QuestionService
   ])
   .service('ChoiceQuestionService', [

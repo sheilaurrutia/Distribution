@@ -6,6 +6,7 @@ add_label: Ajouter un label
 add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
 add_question: Ajouter une question
+add_region: Ajouter une région
 add_step: Ajouter une étape
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
@@ -48,6 +49,8 @@ back_to_overview: Retourner à la vue d'ensemble de l'exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
+boundary_no_regions: Aucune région actuellement. Utilisez le bouton <i class="fa fa-flag"></i> ou dessinez directement sur la forme d'onde pour en créer une.
+boundary_only_one_region: Il ne peut y avoir qu'une seule région. Supprimez la région existante pour en créer une nouvelle
 
 # C
 calculation_measure_difficulty: Il se calcule avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants.
@@ -87,6 +90,7 @@ delete_of_my_bank: Supprimer de ma banque
 delete_of_my_exercise: Supprimer de mon exercice
 delete_papers: Supprimer les copies
 delete_question: Supprimer l'étape
+delete_region: Supprimer la région
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
@@ -215,6 +219,7 @@ mark: Note
 mark_question: Noter cette question
 mark_bigest: Le score doit être inférieur ou égal au score maximum
 mark_bigest_other: Le score est supérieur au score maximun
+marker_drag_title: Utilisez le drag and drop marker pour modifier la taille de la région
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
@@ -292,6 +297,7 @@ partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
 picture_name: Nom de l'image
+play_pause: Play / Pause
 points: Points
 point_answer: Vous devez assigner un point à la réponse attendue
 point_answers: Vous devez assigner un point à chaque réponse
@@ -332,6 +338,8 @@ random_steps: Ordre des étapes aléatoire
 random_steps_order: Ordre aléatoire des étapes
 raz: => Pour remettre tous les pointeurs à leurs position initiale, appuyez sur "c".
 square: Carré
+region_end: Fin
+region_start: Début
 remove_advanced_edition: Édition simple
 remove_question_confirm_message:  Êtes-vous sûr de vouloir supprimer cette question ?
 reset: Réinitialiser
