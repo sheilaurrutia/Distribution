@@ -6,19 +6,19 @@ import 'wavesurfer.js/dist/plugin/wavesurfer.timeline.min'
 import 'wavesurfer.js/dist/plugin/wavesurfer.regions.min'
 
 /**
- * Boundary Question Controller
+ * Period Question Controller
  * @param {FeedbackService}           FeedbackService
  * @param {$scope}                    $scope
  * @param {$timeout}                  $timeout
  * @param {$window}                   $window
  * @param {Translator}                Translator
- * @param {BoundaryQuestionService}   BoundaryQuestionService
+ * @param {PeriodQuestionService}     PeriodQuestionService
  * @constructor
  */
-function BoundaryQuestionCtrl(FeedbackService, $scope, $timeout, $window, Translator, BoundaryQuestionService) {
+function PeriodQuestionCtrl(FeedbackService, $scope, $timeout, $window, Translator, PeriodQuestionService) {
   AbstractQuestionCtrl.apply(this, arguments)
 
-  this.BoundaryQuestionService = BoundaryQuestionService
+  this.PeriodQuestionService = PeriodQuestionService
   this.FeedbackService = FeedbackService
   this.$scope = $scope
   this.$timeout = $timeout
@@ -28,17 +28,17 @@ function BoundaryQuestionCtrl(FeedbackService, $scope, $timeout, $window, Transl
 }
 
 // Extends AbstractQuestionCtrl
-BoundaryQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype)
+PeriodQuestionCtrl.prototype = Object.create(AbstractQuestionCtrl.prototype)
 
 // properties
-BoundaryQuestionCtrl.prototype.wavesurfer = null
-BoundaryQuestionCtrl.prototype.question = null
-BoundaryQuestionCtrl.prototype.regions = [] //this.Translator.trans('marker_drag_title', {}, 'ujm_exo')
+PeriodQuestionCtrl.prototype.wavesurfer = null
+PeriodQuestionCtrl.prototype.question = null
+PeriodQuestionCtrl.prototype.regions = [] //this.Translator.trans('marker_drag_title', {}, 'ujm_exo')
 
 /**
  * Init Wavesurfer and data
  */
-BoundaryQuestionCtrl.prototype.init = function init(){
+PeriodQuestionCtrl.prototype.init = function init(){
   this.wavesurfer = Object.create(WaveSurfer)
   this.wavesurfer.on('loading', this.showProgress)
   this.wavesurfer.on('ready', this.hideProgress)
@@ -46,8 +46,8 @@ BoundaryQuestionCtrl.prototype.init = function init(){
   this.wavesurfer.on('error', this.hideProgress)
 
   this.wavesurfer.on('region-update-end', this.regionDragEndHandler.bind(this))
-  this.wavesurfer.init(this.BoundaryQuestionService.wavesurferOptions)
-  this.wavesurfer.initMinimap(this.BoundaryQuestionService.wavesurferMinimapOptions)
+  this.wavesurfer.init(this.PeriodQuestionService.wavesurferOptions)
+  this.wavesurfer.initMinimap(this.PeriodQuestionService.wavesurferMinimapOptions)
   this.wavesurfer.load(this.question.file.url)
 
   this.wavesurfer.on('ready', function () {
@@ -65,7 +65,7 @@ BoundaryQuestionCtrl.prototype.init = function init(){
 /**
  * Get the regions
  */
-BoundaryQuestionCtrl.prototype.getRegions = function getRegions() {
+PeriodQuestionCtrl.prototype.getRegions = function getRegions() {
   return this.regions
 }
 
@@ -73,7 +73,7 @@ BoundaryQuestionCtrl.prototype.getRegions = function getRegions() {
  * Show and update Wavesurfer progress-bar while loading
  * @param {number} percent
  */
-BoundaryQuestionCtrl.prototype.showProgress = function showProgress(percent) {
+PeriodQuestionCtrl.prototype.showProgress = function showProgress(percent) {
   const progressDiv = document.querySelector('#progress-bar')
   const progressBar = progressDiv.querySelector('.progress-bar')
   progressDiv.style.display = 'block'
@@ -83,7 +83,7 @@ BoundaryQuestionCtrl.prototype.showProgress = function showProgress(percent) {
 /**
  * Hide Wavesurfer progress-bar once loading has ended
  */
-BoundaryQuestionCtrl.prototype.hideProgress = function hideProgress() {
+PeriodQuestionCtrl.prototype.hideProgress = function hideProgress() {
   const progressDiv = document.querySelector('#progress-bar')
   progressDiv.style.display = 'none'
 }
@@ -92,7 +92,7 @@ BoundaryQuestionCtrl.prototype.hideProgress = function hideProgress() {
  * Play / Pause audio
  * @param {Object} region
  */
-BoundaryQuestionCtrl.prototype.play = function play(region){
+PeriodQuestionCtrl.prototype.play = function play(region){
   const playing = this.wavesurfer.isPlaying()
   if(playing){
     this.wavesurfer.pause()
@@ -106,7 +106,7 @@ BoundaryQuestionCtrl.prototype.play = function play(region){
 /**
  * Remove a given region from array and DOM
  */
-BoundaryQuestionCtrl.prototype.removeRegion = function removeRegion(region){
+PeriodQuestionCtrl.prototype.removeRegion = function removeRegion(region){
   const index = this.regions.indexOf(region)
   this.regions.splice(index, 1)
   // remove region from dom
@@ -118,7 +118,7 @@ BoundaryQuestionCtrl.prototype.removeRegion = function removeRegion(region){
 /**
  * Remove all regions from array and DOM
  */
-BoundaryQuestionCtrl.prototype.clearRegions = function clearRegions(){
+PeriodQuestionCtrl.prototype.clearRegions = function clearRegions(){
   this.regions = []
   let elements = document.getElementsByClassName('region')
   for(let elem of elements){
@@ -130,7 +130,7 @@ BoundaryQuestionCtrl.prototype.clearRegions = function clearRegions(){
  * Create a region using Drag&Drop on the waveform
  * @param {Object} region WaveSurfer region
  */
-BoundaryQuestionCtrl.prototype.regionDragEndHandler = function regionDragEndHandler(region){
+PeriodQuestionCtrl.prototype.regionDragEndHandler = function regionDragEndHandler(region){
   // remove existing regions
   this.clearRegions()
   // create region from wavesurfer region data
@@ -144,7 +144,7 @@ BoundaryQuestionCtrl.prototype.regionDragEndHandler = function regionDragEndHand
 /**
  * Add a region (using the button)
  */
-BoundaryQuestionCtrl.prototype.mark = function mark() {
+PeriodQuestionCtrl.prototype.mark = function mark() {
   if(this.regions.length === 0){
     this.addRegion(null, null)
   } else {
@@ -158,10 +158,10 @@ BoundaryQuestionCtrl.prototype.mark = function mark() {
  * @param {number} start
  * @param {number} end
  */
-BoundaryQuestionCtrl.prototype.addRegion = function addRegion(start, end){
+PeriodQuestionCtrl.prototype.addRegion = function addRegion(start, end){
   // disable the ability to draw region directly on waveform (this is interracting badly with the current method)
   this.wavesurfer.disableDragSelection()
-  const region = this.BoundaryQuestionService.createRegion(start, end, this.wavesurfer)
+  const region = this.PeriodQuestionService.createRegion(start, end, this.wavesurfer)
   // need to apply scope if the creation come from a waveform drag&drop event
   this.$timeout(function () {
     this.$scope.$apply(function(){
@@ -175,7 +175,7 @@ BoundaryQuestionCtrl.prototype.addRegion = function addRegion(start, end){
  * Add region element on DOM and attach appropriate drag&drop events
  * @param {Object} region
  */
-BoundaryQuestionCtrl.prototype.drawRegion = function drawRegion(region) {
+PeriodQuestionCtrl.prototype.drawRegion = function drawRegion(region) {
 
   const canvas = this.wavesurfer.container.children[0].children[0]
   const cHeight = canvas.clientHeight
@@ -291,7 +291,7 @@ BoundaryQuestionCtrl.prototype.drawRegion = function drawRegion(region) {
  * @param  {Object} region the region related to the current dragged marker
  * @return {Object} data a set of usefull data while dragging
  */
-BoundaryQuestionCtrl.prototype.setDragData = function setDragData(marker, region) {
+PeriodQuestionCtrl.prototype.setDragData = function setDragData(marker, region) {
   let data = {}
 
   // set marker drag limits (left / right limits depending on the marker type)
@@ -309,17 +309,17 @@ BoundaryQuestionCtrl.prototype.setDragData = function setDragData(marker, region
 /**
  * @return a (left) position (relative to waveform canvas) from a given time (seconds)
  */
-BoundaryQuestionCtrl.prototype.getLeftPostionFromTime = function getLeftPostionFromTime(time) {
-  return this.BoundaryQuestionService.getLeftPostionFromTime(time, this.wavesurfer)
+PeriodQuestionCtrl.prototype.getLeftPostionFromTime = function getLeftPostionFromTime(time) {
+  return this.PeriodQuestionService.getLeftPostionFromTime(time, this.wavesurfer)
 }
 
 /**
  * @return a time from a given position
  */
-BoundaryQuestionCtrl.prototype.getTimeFromPosition = function getTimeFromPosition(position) {
-  return this.BoundaryQuestionService.getTimeFromPosition(position, this.wavesurfer)
+PeriodQuestionCtrl.prototype.getTimeFromPosition = function getTimeFromPosition(position) {
+  return this.PeriodQuestionService.getTimeFromPosition(position, this.wavesurfer)
 }
 
 
 
-export default BoundaryQuestionCtrl
+export default PeriodQuestionCtrl

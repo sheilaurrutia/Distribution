@@ -49,8 +49,8 @@ back_to_overview: Retourner à la vue d'ensemble de l'exercice
 back_to_the_list: Retour à la liste
 bank_of_questions: Banque de questions
 brief_search: Recherche rapide
-boundary_no_regions: Aucune région actuellement. Utilisez le bouton <i class="fa fa-flag"></i> ou dessinez directement sur la forme d'onde pour en créer une.
-boundary_only_one_region: Il ne peut y avoir qu'une seule région. Supprimez la région existante pour en créer une nouvelle
+period_no_regions: Aucune région actuellement. Utilisez le bouton <i class="fa fa-flag"></i> ou dessinez directement sur la forme d'onde pour en créer une.
+period_only_one_region: Il ne peut y avoir qu'une seule région. Supprimez la région existante pour en créer une nouvelle
 
 # C
 calculation_measure_difficulty: Il se calcule avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants.

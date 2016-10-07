@@ -15,8 +15,8 @@ function StepShowCtrl(UserPaperService, FeedbackService, QuestionService, StepSe
   let fake = {
 
     'id': 1,
-    'type': 'application/x.boundary+json',
-    'title': 'Simple Boundary',
+    'type': 'application/x.period+json',
+    'title': 'Simple period',
     'description': null,
     'invite': '<p>Where is the cat ?</p>',
     'supplementary': null,

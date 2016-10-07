@@ -49,8 +49,8 @@ back_to_overview: Go back the the Exercise overview
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
 brief_search: Brief Search
-boundary_no_regions: No region yet. Use the <i class="fa fa-flag"></i> button or draw directly on waveform to create one.
-boundary_only_one_region: Only one region can be on the waveform. Delete the existing one to add a new one.
+period_no_regions: No region yet. Use the <i class="fa fa-flag"></i> button or draw directly on waveform to create one.
+period_only_one_region: Only one region can be on the waveform. Delete the existing one to add a new one.
 
 # C
 calculation_measure_difficulty: It's calculated on the basis of the number of applicants who have correctly answered, divided by total number of applicants.

@@ -5,14 +5,14 @@
 export default class AbstractQuestionService {
   /**
    * Constructor.
-   * 
+   *
    * @param {Object} $log
    */
   constructor($log, FeedbackService) {
     this.$log = $log
     this.FeedbackService = FeedbackService
   }
-  
+
   /**
    * Initialize the answer object for the Question
    */
@@ -34,5 +34,9 @@ export default class AbstractQuestionService {
 
   getAnswerScore() {
     this.$log.error('Each instance of AbstractQuestionType must implement the `getAnswerScore(question, answer)`.')
+  }
+
+  answersAllFound(){
+    this.$log.error('Each instance of AbstractQuestionType must implement the `answersAllFound(question, answer)`.')
   }
 }

@@ -11,7 +11,7 @@ export default class QuestionService {
    * @param {GraphicQuestionService}     GraphicQuestionService
    * @param {MatchQuestionService}       MatchQuestionService
    * @param {OpenQuestionService}        OpenQuestionService
-   * @param {BoundaryQuestionService}    BoundaryQuestionService
+   * @param {PeriodQuestionService}    PeriodQuestionService
    */
   constructor(
     $log,
@@ -20,7 +20,7 @@ export default class QuestionService {
     GraphicQuestionService,
     MatchQuestionService,
     OpenQuestionService,
-    BoundaryQuestionService
+    PeriodQuestionService
   ) {
     this.$log = $log
     this.services = {}
@@ -31,7 +31,7 @@ export default class QuestionService {
     this.services['application/x.cloze+json']    = ClozeQuestionService
     this.services['application/x.short+json']    = OpenQuestionService
     this.services['application/x.graphic+json']  = GraphicQuestionService
-    this.services['application/x.boundary+json'] = BoundaryQuestionService
+    this.services['application/x.period+json']   = PeriodQuestionService
   }
 
   /**

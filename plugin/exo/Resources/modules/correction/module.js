@@ -15,12 +15,15 @@ import ClozeCorrectionCtrl from './Controllers/ClozeCorrectionCtrl'
 import GraphicCorrectionCtrl from './Controllers/GraphicCorrectionCtrl'
 import MatchCorrectionCtrl from './Controllers/MatchCorrectionCtrl'
 import OpenCorrectionCtrl from './Controllers/OpenCorrectionCtrl'
+import PeriodCorrectionCtrl from './Controllers/PeriodCorrectionCtrl'
 
 import ChoiceCorrectionDirective from './Directives/ChoiceCorrectionDirective'
 import ClozeCorrectionDirective from './Directives/ClozeCorrectionDirective'
 import GraphicCorrectionDirective from './Directives/GraphicCorrectionDirective'
 import MatchCorrectionDirective from './Directives/MatchCorrectionDirective'
 import OpenCorrectionDirective from './Directives/OpenCorrectionDirective'
+import PeriodCorrectionDirective from './Directives/PeriodCorrectionDirective'
+
 
 angular
   .module('Correction', [
@@ -63,6 +66,11 @@ angular
     'OpenQuestionService',
     OpenCorrectionCtrl
   ])
+  .controller('PeriodCorrectionCtrl', [
+    'QuestionService',
+    'PeriodQuestionService',
+    PeriodCorrectionCtrl
+  ])
   .directive('choiceCorrection', [
     ChoiceCorrectionDirective
   ])
@@ -78,4 +86,7 @@ angular
   ])
   .directive('openCorrection', [
     OpenCorrectionDirective
+  ])
+  .directive('periodCorrection', [
+    PeriodCorrectionDirective
   ])

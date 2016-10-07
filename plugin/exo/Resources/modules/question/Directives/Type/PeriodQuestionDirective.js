@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 import AbstractQuestionDirective from './AbstractQuestionDirective'
-import boundary from './../../Partials/Type/boundary.html'
+import period from './../../Partials/Type/period.html'
 
 /**
  * Choice Question Directive
@@ -9,15 +9,15 @@ import boundary from './../../Partials/Type/boundary.html'
  * @returns {object}
  * @constructor
  */
-function BoundaryQuestionDirective() {
+function PeriodQuestionDirective() {
   return angular.merge({}, AbstractQuestionDirective.apply(this, arguments), {
-    controller: 'BoundaryQuestionCtrl',
-    controllerAs: 'boundaryQuestionCtrl',
-    template: boundary
+    controller: 'PeriodQuestionCtrl',
+    controllerAs: 'periodQuestionCtrl',
+    template: period
   })
 }
 
 // Set up dependency injection (get DI from parent too)
-BoundaryQuestionDirective.$inject = AbstractQuestionDirective.$inject
+PeriodQuestionDirective.$inject = AbstractQuestionDirective.$inject
 
-export default BoundaryQuestionDirective
+export default PeriodQuestionDirective

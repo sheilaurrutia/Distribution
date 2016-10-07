@@ -99,12 +99,12 @@
                     data-include-correction="questionShowCtrl.includeCorrection">
             </graphic-question>
 
-            <!-- Boundary Type -->
-            <boundary-question
-                    data-ng-switch-when="application/x.boundary+json"
+            <!-- Period Type -->
+            <period-question
+                    data-ng-switch-when="application/x.period+json"
                     data-question="questionShowCtrl.question"
                     data-answer="questionShowCtrl.questionPaper.answer">
-            </boundary-question>
+            </period-question>
         </div>
 
         <div class="question-info" data-ng-if="questionShowCtrl.question.specification">
@@ -159,6 +159,13 @@
                         data-question="questionShowCtrl.question"
                         data-show-score="questionShowCtrl.showScore">
                 </graphic-correction>
+
+                <!-- Period Type -->
+                <period-correction
+                        data-ng-switch-when="application/x.period+json"
+                        data-question="questionShowCtrl.question"
+                        data-show-score="questionShowCtrl.showScore">
+                </period-correction>
             </div>
         </div>
 

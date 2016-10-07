@@ -22,7 +22,7 @@ import ClozeQuestionCtrl from './Controllers/Type/ClozeQuestionCtrl'
 import GraphicQuestionCtrl from './Controllers/Type/GraphicQuestionCtrl'
 import MatchQuestionCtrl from './Controllers/Type/MatchQuestionCtrl'
 import OpenQuestionCtrl from './Controllers/Type/OpenQuestionCtrl'
-import BoundaryQuestionCtrl from './Controllers/Type/BoundaryQuestionCtrl'
+import PeriodQuestionCtrl from './Controllers/Type/PeriodQuestionCtrl'
 
 import QuestionShowDirective from './Directives/QuestionShowDirective'
 import ChoiceQuestionDirective from './Directives/Type/ChoiceQuestionDirective'
@@ -30,7 +30,7 @@ import ClozeQuestionDirective from './Directives/Type/ClozeQuestionDirective'
 import GraphicQuestionDirective from './Directives/Type/GraphicQuestionDirective'
 import MatchQuestionDirective from './Directives/Type/MatchQuestionDirective'
 import OpenQuestionDirective from './Directives/Type/OpenQuestionDirective'
-import BoundaryQuestionDirective from './Directives/Type/BoundaryQuestionDirective'
+import PeriodQuestionDirective from './Directives/Type/PeriodQuestionDirective'
 
 import QuestionService from './Services/QuestionService'
 import ChoiceQuestionService from './Services/Type/ChoiceQuestionService'
@@ -38,12 +38,13 @@ import ClozeQuestionService from './Services/Type/ClozeQuestionService'
 import GraphicQuestionService from './Services/Type/GraphicQuestionService'
 import MatchQuestionService from './Services/Type/MatchQuestionService'
 import OpenQuestionService from './Services/Type/OpenQuestionService'
-import BoundaryQuestionService from './Services/Type/BoundaryQuestionService'
+import PeriodQuestionService from './Services/Type/PeriodQuestionService'
 
 angular
   .module('Question', [
     'ui.translation',
     'translation',
+    'time',
     'ui.bootstrap',
     'ui.asset',
     'ui.modal',
@@ -51,8 +52,7 @@ angular
     'Feedback',
     'Image',
     'Hint',
-    'Correction',
-    'time'
+    'Correction'
   ])
   .controller('QuestionShowCtrl', [
     '$uibModal',
@@ -89,14 +89,14 @@ angular
     'OpenQuestionService',
     OpenQuestionCtrl
   ])
-  .controller('BoundaryQuestionCtrl',[
+  .controller('PeriodQuestionCtrl',[
     'FeedbackService',
     '$scope',
     '$timeout',
     '$window',
     'Translator',
-    'BoundaryQuestionService',
-    BoundaryQuestionCtrl
+    'PeriodQuestionService',
+    PeriodQuestionCtrl
   ])
   .directive('questionShow', [
     QuestionShowDirective
@@ -126,9 +126,9 @@ angular
     'FeedbackService',
     OpenQuestionDirective
   ])
-  .directive('boundaryQuestion', [
+  .directive('periodQuestion', [
     'FeedbackService',
-    BoundaryQuestionDirective
+    PeriodQuestionDirective
   ])
   .service('QuestionService', [
     '$log',
@@ -137,7 +137,7 @@ angular
     'GraphicQuestionService',
     'MatchQuestionService',
     'OpenQuestionService',
-    'BoundaryQuestionService',
+    'PeriodQuestionService',
     QuestionService
   ])
   .service('ChoiceQuestionService', [
@@ -166,8 +166,8 @@ angular
     'FeedbackService',
     OpenQuestionService
   ])
-  .service('BoundaryQuestionService', [
+  .service('PeriodQuestionService', [
     '$log',
     'FeedbackService',
-    BoundaryQuestionService
+    PeriodQuestionService
   ])
