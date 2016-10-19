@@ -28,6 +28,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('icap_socialmedia');
+        $event->addTypes('icap_socialmedia','icap_socialmedia');
     }
 }

@@ -27,7 +27,12 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {
-        $event->addTypes('icap_dropzone');
+    {   
+        $children = array(
+            'correction_received_by_trainer',
+            'correction_available_for_learners'
+        );
+        $event->addTypes('icap_dropzone','icap_dropzone',false,$children);
+        
     }
 }

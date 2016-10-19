@@ -9,7 +9,7 @@
  * Date: 4/13/15
  */
 
-namespace Icap\WikiBundle\Listener;
+namespace Innova\CollecticielBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,15 +29,12 @@ class NotificationUserParametersListener
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {   
         $children = array(
-            'create_wiki',
-            'edit_wiki',
-            'deletion_wiki',
-            'Create_section',
-            'edit_section',
-            'deletion_section'
+            'create_collecticiel',
+            'deletion_collecticiel',
+            'Request comment',
+            'Answer comment'
         );
-        $event->addTypes('icap_wiki','icap_wiki',false,$children);
-
+        $event->addTypes('innova_collecticiel','innova_collecticiel',false,$children);
         
     }
 }

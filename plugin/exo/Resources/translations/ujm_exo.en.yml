@@ -71,7 +71,9 @@ contain_search: Whose question contains
 
 correct: Correct
 correction: Correction
+correction_available: - Corrections available
 correction_date: Correction date
+correction_requested: - Corrections requested
 correspondence: correspondence
 correspondence_empty: You have no correspondence !
 correspondence_error: You can't associate the same proposal with several labels !
@@ -79,12 +81,20 @@ create: Create
 create_a_new_category: Create a new category
 create_a_new_entry: Create a new question
 creation_date: Creation date
-create_hole : Create cloze
+create_exercises: - Exercises created
+create_hole : Create hole
+
 
 # D
 date: Date
 default : Default
 delete: Delete
+
+delete_of_my_bank: Delete of my bank
+delete_of_my_exercise: Delete of my exercise
+delete_papers: Delete the papers
+delete_question: Delete the step
+deletion_exercises: - Exercises deleted
 delete_of_my_bank: Deleting my bank
 delete_of_my_exercise: Deleting my exercise
 delete_papers: Deleting the papers

@@ -12,14 +12,20 @@ delete_section: 'Delete section'
 remove_section: 'Remove section'
 create_new_section: 'Create new section'
 create_section: "Create section"
+create_wiki: - Wiki created
 add_new_subsection: 'Add section here'
 move_section: 'Move section'
 back: 'Back'
 back_to_wiki: 'Back to wiki'
 back_to_history: 'Back to history'
 edit: 'Edit'
+edit_wiki: - Wiki edited
+edit_section: - Section edited
 delete: 'Delete'
+deletion_section: - Section deleted
+deletion_wiki: - Wiki deleted
 Create: 'Create'
+Create_section: - Section created
 Confirm: 'Confirm'
 Cancel: 'Cancel'
 history: 'History'

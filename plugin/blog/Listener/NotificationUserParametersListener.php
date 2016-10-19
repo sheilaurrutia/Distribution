@@ -27,7 +27,16 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {
-        $event->addTypes('icap_blog');
+    {   
+        $children = array(
+            'new_blog',
+            'add_new_comment',
+            'add_new_post',
+            'deletion_blog',
+            'delete_comment',
+            'delete_post'
+        );
+        $event->addTypes('icap_blog','icap_blog',false,$children);
+        
     }
 }

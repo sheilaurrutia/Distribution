@@ -5,7 +5,14 @@ icap_blog_post_form_tags: 'Tags <span class="info">(seperated by ,)</span>'
 icap_blog_infos_form_infos: 'Information'
 icap_blog_post_form_publicationDate: 'Publishing date'
 new_post: 'New post'
+new_blog: "- New blog"
+deletion_blog: "- Blog deleted"
 no_post: 'No post.'
+add_new_post: '- Add new post'
+add_new_comment: "- Add new comment"
+delete_comment: "- Comment deleted"
+edit_post: "Edition of the post '%postTitle%'"
+delete_post: "- Post deleted"
 add_new_post: 'Add new post'
 edit_post: 'Editing the post "%postTitle%"'
 back_to_blog: 'Back to blog'

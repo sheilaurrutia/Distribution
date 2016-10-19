@@ -266,6 +266,7 @@ date_range.week: s
 date_range.yesterday: Hier
 db_table: 'Table de la base de données'
 decline: Refuser
+default_following: 'Suivi par défaut'
 default_language: 'Langue par défaut'
 default_role: 'Rôle par défaut'
 deletable: Supprimable
@@ -373,6 +374,7 @@ filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
+followed_resources: 'Ressources que je suis'
 footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
@@ -835,6 +837,7 @@ resource_to_open: 'Ressource à ouvrir'
 resource_type: 'Type de ressource'
 resource_unpublish: 'Êtes-vous sûr de vouloir dépublier cette ressource ?'
 resources: Ressources
+
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
 resources_publish: 'Êtes-vous sûr de vouloir publier ces ressources ?'
 resources_import: 'Importation de ressources'
@@ -864,6 +867,7 @@ roles_fields_form_explanation: 'Ce formulaire vous permet de spécifier quels r�
 roles_for_desktop_widget: Rôles (Bureau)
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
+Save: Enregistrer
 save_as_template: 'Exporter'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 saved_changes: 'Vos changements ont été sauvegardés'

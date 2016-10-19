@@ -3,20 +3,14 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
- * Author: Panagiotis TSAVDARIS
- * 
- * Date: 4/13/15
  */
 
-namespace Icap\WikiBundle\Listener;
+namespace Claroline\AnnouncementBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener.
- *
  * @DI\Service()
  */
 class NotificationUserParametersListener
@@ -27,17 +21,7 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
-            'create_wiki',
-            'edit_wiki',
-            'deletion_wiki',
-            'Create_section',
-            'edit_section',
-            'deletion_section'
-        );
-        $event->addTypes('icap_wiki','icap_wiki',false,$children);
-
-        
+    {
+        $event->addTypes('claroline_announcement_aggregate','claroline_announcement_aggregate');
     }
 }

@@ -4,12 +4,9 @@
  *
  * (c) Claroline Consortium <consortium@claroline.net>
  *
- * Author: Panagiotis TSAVDARIS
- * 
- * Date: 4/13/15
  */
 
-namespace Icap\WikiBundle\Listener;
+namespace Claroline\SurveyBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -28,16 +25,15 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {   
-        $children = array(
-            'create_wiki',
-            'edit_wiki',
-            'deletion_wiki',
-            'Create_section',
-            'edit_section',
-            'deletion_section'
+         $children = array(
+            'create_survey',
+            'delete_survey',
+            'closed_survey',
+            'answers_to_survey'
         );
-        $event->addTypes('icap_wiki','icap_wiki',false,$children);
-
+        $event->addTypes('claroline_survey','claroline_survey',false, $children);
+     
         
+
     }
 }

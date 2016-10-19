@@ -12,15 +12,21 @@ delete_section: 'Supprimer la section'
 remove_section: 'Supprimer définitivement'
 create_new_section: 'Créer une section'
 create_section: "Création de section"
+create_wiki: - Création d'un wiki
 add_new_subsection: 'Ajouter une section ici'
 move_section: 'Déplacer la section'
 back: 'Retour'
 back_to_wiki: 'Retour au wiki'
 back_to_history: "Retour à l'historique"
 edit: 'Modifier'
+edit_wiki: - Modification d'un wiki
+edit_section: - Modification d'une section
 delete: 'Supprimer'
 Delete: 'Supprimer'
+deletion_section: - Suppression d'une section
+deletion_wiki: - Suppression d'un wiki
 Create: 'Créer'
+Create_section: - Création d'une section
 Confirm: 'Confirmer'
 Cancel: 'Annuler'
 Save: 'Sauvegarder'

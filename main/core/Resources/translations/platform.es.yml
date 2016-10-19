@@ -262,6 +262,7 @@ date_range.week: S
 date_range.yesterday: Ayer
 db_table: 'Tabla de la base de datos'
 decline: Rechazar
+default_following: default_following
 default_language: 'Idioma por defecto'
 default_role: default_role
 deletable: 'Suprimir tabla'
@@ -366,6 +367,7 @@ filters: Filtros
 find_workspaces: 'Espacios de trabajo publicos'
 firstName: Nombre
 first_name: Apellido
+followed_resources: followed_resources
 footer: 'Pie de página'
 for_period: 'para el período'
 forgot_password: '¿Ha olvidado su contraseña?'
@@ -844,6 +846,7 @@ roles_facet_form_explanation: 'Este formulario permite especificar que roles pue
 roles_fields_form_explanation: 'Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.'
 roles_management: 'Gestión de roles'
 save: Guardar
+Save: Guardar
 save_as_template: 'Guardar como una plantilla'
 save_workspace_as_template: 'Guardar el espacio de trabajo como una plantilla'
 saved_changes: 'Sus cambios han sido guardados'
