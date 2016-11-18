@@ -22,4 +22,5 @@
     "space-before-function-paren": ["error", "never"]
   },
   "plugins": ["react"]
+  }
 }
