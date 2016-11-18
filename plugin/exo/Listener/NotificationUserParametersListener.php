@@ -33,7 +33,8 @@ class NotificationUserParametersListener
             'correction_available',
             'deletion_exercises'
         );
-        $event->addTypes('ujm_exercise','ujm_exercise',false,$children);
+        $event->addTypes('ujm_exercise',false,'ujm_exercise',$children);
+        $event->addTypes($children, true, 'ujm_exercise');
        
     }
 }

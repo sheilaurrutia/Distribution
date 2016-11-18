@@ -34,7 +34,9 @@ class NotificationUserParametersListener
             'Request comment',
             'Answer comment'
         );
-        $event->addTypes('innova_collecticiel','innova_collecticiel',false,$children);
+        $event->addTypes('innova_collecticiel',false,'innova_collecticiel',$children);
+        $event->addTypes($children, true, 'innova_collecticiel');
+
         
     }
 }

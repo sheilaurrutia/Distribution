@@ -31,7 +31,8 @@ class NotificationUserParametersListener
             'closed_survey',
             'answers_to_survey'
         );
-        $event->addTypes('claroline_survey','claroline_survey',false, $children);
+        $event->addTypes('claroline_survey',false, 'claroline_survey',$children);
+        $event->addTypes($children, true, 'claroline_survey');
      
         
 

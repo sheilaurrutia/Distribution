@@ -36,7 +36,8 @@ class NotificationUserParametersListener
             'delete_comment',
             'delete_post'
         );
-        $event->addTypes('icap_blog','icap_blog',false,$children);
+        $event->addTypes('icap_blog', false, 'icap_blog',$children);
+        $event->addTypes($children, true, 'icap_blog');
         
     }
 }

@@ -85,7 +85,6 @@ class NotificationUserParametersManager
 
     public function allTypesList(NotificationUserParameters $parameters)
     {
-        //$typesParams = array();
 
         $allTypes = array();
 
@@ -94,39 +93,123 @@ class NotificationUserParametersManager
             new NotificationUserParametersEvent($allTypes)
         );
 
-        $visibleTypes = $parameters->getDisplayEnabledTypes();
-        $rssVisibleTypes = $parameters->getRssEnabledTypes();
+        $displayEnabledTypes = $parameters->getDisplayEnabledTypes();
+        $rssEnabledTypes = $parameters->getRssEnabledTypes();
+
+        $phoneEnabledTypes = $parameters->getPhoneEnabledTypes();
+        $mailEnabledTypes = $parameters->getMailEnabledTypes();
+
         foreach ($allTypes as $key => $type) {
-            $allTypes[$key]['visible'] = (isset($visibleTypes[$type['name']])) ? $visibleTypes[$type['name']] : true;
-            $allTypes[$key]['rssVisible'] = (isset($rssVisibleTypes[$type['name']])) ? $rssVisibleTypes[$type['name']] : false;
+
+            $allTypes[$key]['display'] = (isset($displayEnabledTypes[$type['name']])) ? $displayEnabledTypes[$type['name']] : true;
+            $allTypes[$key]['rss'] = (isset($rssEnabledTypes[$type['name']])) ? $rssEnabledTypes[$type['name']] : false;
+
+
+            $allTypes[$key]['phone'] = (isset($phoneEnabledTypes[$type['name']])) ? $phoneEnabledTypes[$type['name']] : false;
+            $allTypes[$key]['mail'] = (isset($mailEnabledTypes[$type['name']])) ? $mailEnabledTypes[$type['name']] : false;
+
         }
 
         return $allTypes;
     }
+
+
 
     public function processUpdate($newParameters, $userId)
     {
         $userParameters = $this->getParametersByUserId($userId);
         $allParameterTypes = $this->allTypesList($userParameters);
 
-        $visibleTypes = array();
-        $rssVisibleTypes = array();
+        $displayEnabledTypes = array();
+        $rssEnabledTypes = array();
+
+        $phoneEnabledTypes = array();
+        $mailEnabledTypes = array();
+
         foreach ($allParameterTypes as $type) {
             if (isset($newParameters[$type['name']])) {
+
                 $options = $newParameters[$type['name']];
-                $visibleTypes[$type['name']] = in_array('visible', $options);
-                $rssVisibleTypes[$type['name']] = in_array('rss', $options);
+                
+
+                $displayEnabledTypes[$type['name']] = in_array('visible', $options);
+                $rssEnabledTypes[$type['name']] = in_array('rss', $options);
+
+                $phoneEnabledTypes[$type['name']] = in_array('phone', $options);
+                $mailEnabledTypes[$type['name']] = in_array('mail', $options);
+
+
             } else {
-                $visibleTypes[$type['name']] = $rssVisibleTypes[$type['name']] = false;
+                $displayEnabledTypes[$type['name']] = $rssEnabledTypes[$type['name']] = $phoneEnabledTypes[$type['name']] = $mailEnabledTypes[$type['name']] = false;
             }
         }
-        $userParameters->setDisplayEnabledTypes($visibleTypes);
-        $userParameters->setRssEnabledTypes($rssVisibleTypes);
+        $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
+        $userParameters->setRssEnabledTypes($rssEnabledTypes);
+        $userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
+        $userParameters->setMailEnabledTypes($mailEnabledTypes);
+
         $this->em->persist($userParameters);
         $this->em->flush();
 
         return $userParameters;
     }
+
+    public function editUserParameters($userId, $newDisplay, $newRss){
+        $userParameters = $this->getParametersByUserId($userId);
+        $allParameterTypes = $this->allTypesList($userParameters);
+
+        $displayEnabledTypes = array();
+        $rssEnabledTypes = array();
+
+        $phoneEnabledTypes = array();
+        $mailEnabledTypes = array();
+
+        foreach($allParameterTypes as $type){
+
+            $isDisplayChecked = false;
+            $isRssChecked = false;
+
+            if (isset($newDisplay[$type['name']])){
+                $isDisplayChecked = $newDisplay[$type['name']];
+            }
+
+            if (isset($newRss[$type['name']])){
+                $isRssChecked = $newRss[$type['name']];
+            }
+
+            $displayEnabledTypes[$type['name']] = $isDisplayChecked;
+            $rssEnabledTypes[$type['name']] = $isRssChecked;
+
+            /*
+            $isPhoneChecked = $newPhone[$type['name']];
+            $phoneEnabledTypes[$type['name']] = $isPhoneChecked;
+
+            $isMailChecked = $newMail[$type['name']];
+            $mailEnabledTypes[$type['name']] = $isMailChecked;
+            */
+            
+            
+
+            /*
+            if (!empty($type['children'])){
+                foreach($type['children'] as $child){
+                    $isDisplayChecked = $newDisplay[$child];
+                    $displayEnabledTypes[$child] = $isDisplayChecked;
+                }
+            }*/
+            
+        }
+        $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
+        /*$userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
+        $userParameters->setMailEnabledTypes($mailEnabledTypes);*/
+        $userParameters->setRssEnabledTypes($rssEnabledTypes);
+        $this->em->persist($userParameters);
+        $this->em->flush();
+
+        return $userParameters;
+    }
+
+    
 
     private function createEmptyParameters($userId)
     {

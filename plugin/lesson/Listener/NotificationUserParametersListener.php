@@ -28,6 +28,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('icap_lesson','icap_lesson');
+        $event->addTypes('icap_lesson',false,'icap_lesson');
     }
 }

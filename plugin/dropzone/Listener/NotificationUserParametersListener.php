@@ -32,7 +32,8 @@ class NotificationUserParametersListener
             'correction_received_by_trainer',
             'correction_available_for_learners'
         );
-        $event->addTypes('icap_dropzone','icap_dropzone',false,$children);
+        $event->addTypes('icap_dropzone', false,'icap_dropzone',$children);
+        $event->addTypes($children, true, 'icap_dropzone');
         
     }
 }

@@ -1,40 +1,61 @@
 export default class NotificationCtrl {
-	constructor(service, $http){
-		this._service = service
+
+	constructor(service, modal){
 		this.types = service.getTypes()
-		this.visibleChecked={}
-		this.phoneChecked={}
-		this.mailChecked={}
-		this.rssChecked = {}
+		this.http = service.getHttp()
+		this.service = service
 		this.isCollapsed = false
 
-		this.types.forEach(t=>{
+		this.editedParameters={}
+		this.editedParameters.original = service.getParameters()
 
-			if (t.children.length>0){
-				t.children.forEach(child=>{
+		this.editedParameters.newDisplayEnabledTypes = service.getDisplayEnabledTypes()
+		console.log('Récupération')
+		console.log(this.editedParameters.newDisplayEnabledTypes)
+		this.editedParameters.newPhoneEnabledTypes = service.getPhoneEnabledTypes()
+		this.editedParameters.newMailEnabledTypes = service.getMailEnabledTypes()
+		this.editedParameters.newRssEnabledTypes = service.getRssEnabledTypes()
 
-					this.visibleChecked[child] = true
-					this.phoneChecked[child] = false
-					this.mailChecked[child] = false
-					this.rssChecked[child] = false
-				})
+		this.id = service.getId()
+		this.userId = service.getUserId()
+
+		this.errorMessage = null
+		this.errors = []
+		this._modalFactory = modal
+		this._modalInstance = null
+
+	}
+
+	_modal(template, errorMessage, errors){
+		if (errorMessage){
+			this.errorMessage = errorMessage
+		}
+
+		if(errors){
+			this.errors = errors
+		}
+
+		this._modalInstance = this._modalFactory.open(template)
+	}
+
+	_closeModal(){
+		this._modalInstance.close()
+	}
+
+	isChildrenChecked(type){
+		type.children.forEach(c=>{
+			if (this.editedParameters.newDisplayEnabledTypes[c] || this.editedParameters.newPhoneEnabledTypes[c] || this.editedParameters.newMailEnabledTypes[c] || this.editedParameters.newRssEnabledTypes[c] ) {
+				return true
 			}
-			
-			this.visibleChecked[t.name] = true
-			this.phoneChecked[t.name] = false
-			this.mailChecked[t.name] = false
-			this.rssChecked[t.name] = false
 		})
-
-
-
+		return false
 	}
 
 
 
 	isRssEnabled(){
-		for (let index in this.rssChecked){
-			if (this.rssChecked[index]){
+		for (let index in this.editedParameters.newRssEnabledTypes){
+			if (this.editedParameters.newRssEnabledTypes[index]){
 				return true
 			}
 		}
@@ -42,62 +63,52 @@ export default class NotificationCtrl {
 	}
 
 	toggleAll(type){
-		let toggleVisibleStatus = this.visibleChecked[type.name] 
+		let toggleVisibleStatus = this.editedParameters.newDisplayEnabledTypes[type.name] 
 		type.children.forEach(c=>{
-			this.visibleChecked[c] = toggleVisibleStatus
+			this.editedParameters.newDisplayEnabledTypes[c] = toggleVisibleStatus
 
 		})
-		let togglePhoneStatus = this.phoneChecked[type.name] 
+		let togglePhoneStatus = this.editedParameters.newPhoneEnabledTypes[type.name] 
 		type.children.forEach(c=>{
-			this.phoneChecked[c] = togglePhoneStatus
+			this.editedParameters.newPhoneEnabledTypes[c] = togglePhoneStatus
 
 		})
-		let toggleMailStatus = this.mailChecked[type.name] 
+		let toggleMailStatus = this.editedParameters.newMailEnabledTypes[type.name] 
 		type.children.forEach(c=>{
-			this.mailChecked[c] = toggleMailStatus
+			this.editedParameters.newMailEnabledTypes[c] = toggleMailStatus
 
 		})
-		let toggleRssStatus = this.rssChecked[type.name] 
+		let toggleRssStatus = this.editedParameters.newRssEnabledTypes[type.name] 
 		type.children.forEach(c=>{
-			this.rssChecked[c] = toggleRssStatus
+			this.editedParameters.newRssEnabledTypes[c] = toggleRssStatus
 
 		})
 	}
 
 	optionToggled(type){
-		this.visibleChecked[type.name] = type.children.every(c=>{
-			return this.visibleChecked[c]
+		this.editedParameters.newDisplayEnabledTypes[type.name] = type.children.every(c=>{
+			return this.editedParameters.newDisplayEnabledTypes[c]
 		})
 
-		this.phoneChecked[type.name] = type.children.every(c=>{
-			return this.phoneChecked[c]
+		this.editedParameters.newPhoneEnabledTypes[type.name] = type.children.every(c=>{
+			return this.editedParameters.newPhoneEnabledTypes[c]
 		})
 
-		this.mailChecked[type.name] = type.children.every(c=>{
-			return this.mailChecked[c]
+		this.editedParameters.newMailEnabledTypes[type.name] = type.children.every(c=>{
+			return this.editedParameters.newMailEnabledTypes[c]
 		})
 
-		this.rssChecked[type.name] = type.children.every(c=>{
-			return this.rssChecked[c]
+		this.editedParameters.newRssEnabledTypes[type.name] = type.children.every(c=>{
+			return this.editedParameters.newRssEnabledTypes[c]
 		})
 
 	}
 
-	
+	save(){
+		this.service.saveParameters(this.editedParameters.original, this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
+	}
 
 
-
-	
-
-
-
-
-
-
-
-	
-
-	
 
 
 

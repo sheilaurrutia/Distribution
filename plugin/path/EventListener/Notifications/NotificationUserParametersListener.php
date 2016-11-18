@@ -19,6 +19,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('innova_path');
+        $event->addTypes('innova_path', false, 'innova_path');
     }
 }

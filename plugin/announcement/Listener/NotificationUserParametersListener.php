@@ -22,6 +22,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('claroline_announcement_aggregate','claroline_announcement_aggregate');
+        $event->addTypes('claroline_announcement_aggregate', false,'claroline_announcement_aggregate');
     }
 }

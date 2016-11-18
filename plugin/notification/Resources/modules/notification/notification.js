@@ -12,8 +12,15 @@ angular
 		'$http',
 		service
 	])
+	.factory('notificationModal',[
+		'$uibModal',
+		$modal=>({
+			open: template=>$modal.open({template})
+		})
+	])
 	.controller('notificationCtrl',[
 		'notificationService',
+		'notificationModal',
 		controller
 	])
 	.directive('notification',()=>({

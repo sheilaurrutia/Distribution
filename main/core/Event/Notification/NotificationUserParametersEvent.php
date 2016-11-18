@@ -27,7 +27,7 @@ class NotificationUserParametersEvent extends Event
         return $this->types;
     }
 
-    public function addTypes($typeNames ,$group=null,$hasParents=false, $children=array())
+    public function addTypes($typeNames, $hasParents, $group=null, $children=array())
     {
         if (is_string($typeNames)) {
             $typeNames = array($typeNames);
@@ -35,7 +35,7 @@ class NotificationUserParametersEvent extends Event
 
        
         foreach ($typeNames as $typeName) {
-            $this->types[] = array('name' => $typeName, 'hasParents'=>$hasParents,'group'=>$group, 'children'=>$children);
+            $this->types[] = array('name' => $typeName,'group'=>$group, 'hasParents'=>$hasParents, 'children'=>$children);
                 
         }
 

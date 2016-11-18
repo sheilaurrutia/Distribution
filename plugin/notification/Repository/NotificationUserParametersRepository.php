@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityRepository;
 
 class NotificationUserParametersRepository extends EntityRepository
 {
+	
     public function findParametersByUserId($userId)
     {
         $qb = $this->createQueryBuilder('parameters');
@@ -25,4 +26,7 @@ class NotificationUserParametersRepository extends EntityRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+
+    
 }

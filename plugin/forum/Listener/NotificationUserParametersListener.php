@@ -28,7 +28,8 @@ class NotificationUserParametersListener
             'resource-claroline_forum-new_message',
             'deletion_forum'
         );
-        $event->addTypes('forum','forum',false,$children);
+        $event->addTypes('forum',false,'forum',$children);
+        $event->addTypes($children, true, 'forum');
 
         
         

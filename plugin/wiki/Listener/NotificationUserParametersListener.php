@@ -36,7 +36,8 @@ class NotificationUserParametersListener
             'edit_section',
             'deletion_section'
         );
-        $event->addTypes('icap_wiki','icap_wiki',false,$children);
+        $event->addTypes('icap_wiki',false,'icap_wiki',$children);
+        $event->addTypes($children, true, 'icap_wiki');
 
         
     }
