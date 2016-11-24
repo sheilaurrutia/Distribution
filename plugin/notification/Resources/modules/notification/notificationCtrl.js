@@ -1,8 +1,7 @@
 export default class NotificationCtrl {
 
-	constructor(service, modal){
+	constructor(service){
 		this.types = service.getTypes()
-		this.http = service.getHttp()
 		this.service = service
 		this.isCollapsed = false
 
@@ -10,8 +9,6 @@ export default class NotificationCtrl {
 		this.editedParameters.original = service.getParameters()
 
 		this.editedParameters.newDisplayEnabledTypes = service.getDisplayEnabledTypes()
-		console.log('Récupération')
-		console.log(this.editedParameters.newDisplayEnabledTypes)
 		this.editedParameters.newPhoneEnabledTypes = service.getPhoneEnabledTypes()
 		this.editedParameters.newMailEnabledTypes = service.getMailEnabledTypes()
 		this.editedParameters.newRssEnabledTypes = service.getRssEnabledTypes()
@@ -19,37 +16,12 @@ export default class NotificationCtrl {
 		this.id = service.getId()
 		this.userId = service.getUserId()
 
-		this.errorMessage = null
-		this.errors = []
-		this._modalFactory = modal
-		this._modalInstance = null
+		
 
 	}
 
-	_modal(template, errorMessage, errors){
-		if (errorMessage){
-			this.errorMessage = errorMessage
-		}
 
-		if(errors){
-			this.errors = errors
-		}
 
-		this._modalInstance = this._modalFactory.open(template)
-	}
-
-	_closeModal(){
-		this._modalInstance.close()
-	}
-
-	isChildrenChecked(type){
-		type.children.forEach(c=>{
-			if (this.editedParameters.newDisplayEnabledTypes[c] || this.editedParameters.newPhoneEnabledTypes[c] || this.editedParameters.newMailEnabledTypes[c] || this.editedParameters.newRssEnabledTypes[c] ) {
-				return true
-			}
-		})
-		return false
-	}
 
 
 

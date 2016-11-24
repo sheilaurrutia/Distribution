@@ -154,6 +154,7 @@ class NotificationUserParametersManager
         return $userParameters;
     }
 
+    //For the moment, the smartphone and email notifications are disabled
     public function editUserParameters($userId, $newDisplay, $newRss){
         $userParameters = $this->getParametersByUserId($userId);
         $allParameterTypes = $this->allTypesList($userParameters);
@@ -188,15 +189,6 @@ class NotificationUserParametersManager
             $mailEnabledTypes[$type['name']] = $isMailChecked;
             */
             
-            
-
-            /*
-            if (!empty($type['children'])){
-                foreach($type['children'] as $child){
-                    $isDisplayChecked = $newDisplay[$child];
-                    $displayEnabledTypes[$child] = $isDisplayChecked;
-                }
-            }*/
             
         }
         $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
