@@ -80,8 +80,8 @@ class StepConditionManager
         //set the date condition
         $trimmedAvailableFromDate = trim($conditionStructure->availableFromDate, 'Zz');
         $trimmedAvailableUntilDate = trim($conditionStructure->availableUntilDate, 'Zz');
-        $availableFromDate = isset($trimmedAvailableFromDate) ? new \DateTime($trimmedAvailableFromDate) : null;
-        $availableUntilDate = isset($trimmedAvailableUntilDate) ? new \DateTime($trimmedAvailableUntilDate) : null;
+        $availableFromDate = ($trimmedAvailableFromDate !== '') ? new \DateTime($trimmedAvailableFromDate) : null;
+        $availableUntilDate = ($trimmedAvailableUntilDate !== '') ? new \DateTime($trimmedAvailableUntilDate) : null;
         $condition->setAvailableFromDate($availableFromDate);
         $condition->setAvailableUntilDate($availableUntilDate);
 

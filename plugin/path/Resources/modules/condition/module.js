@@ -55,8 +55,11 @@ angular
         })
 
         ctrl.$parsers.push((value) => {
-          const date = new Date(value.getTime() - (60000 * value.getTimezoneOffset()))
-
+          let date = null
+          //to allow null value in the picker
+          if (value) {
+              date = new Date(value.getTime() - (60000 * value.getTimezoneOffset()))
+          }
           return date
         })
       }
