@@ -13,6 +13,21 @@ export default class ConditionEditCtrl {
     this.Translator = Translator
     this.ConfirmService = ConfirmService
     this.ConditionService = StepConditionsService
+    this.filterAvailableFromDate = {
+      date: null,
+      format: 'dd/MM/yyyy',
+      open: false
+    }
+    this.filterAvailableUntilDate = {
+      date: null,
+      format: 'dd/MM/yyyy',
+      open: false
+    }
+    this.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1,
+      placeHolder: 'jj/mm/aaaa'
+    }
   }
 
   /**
@@ -36,5 +51,13 @@ export default class ConditionEditCtrl {
       //remove the condition (needs to be step.condition to trigger change and allow path save)
       this.step.condition = null
     })
+  }
+
+  openAvailableFromPicker () {
+    this.filterAvailableFromDate['open'] = true
+  }
+
+  openAvailableUntilPicker () {
+    this.filterAvailableUntilDate['open'] = true
   }
 }

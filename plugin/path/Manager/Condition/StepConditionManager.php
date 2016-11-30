@@ -77,6 +77,14 @@ class StepConditionManager
         // Clean CriteriaGroups to remove
         $this->cleanCriteriaGroups($condition, $createdGroups, $existingGroups);
 
+        //set the date condition
+        $trimmedAvailableFromDate = trim($conditionStructure->availableFromDate, 'Zz');
+        $trimmedAvailableUntilDate = trim($conditionStructure->availableUntilDate, 'Zz');
+        $availableFromDate = isset($trimmedAvailableFromDate) ? new \DateTime($trimmedAvailableFromDate) : null;
+        $availableUntilDate = isset($trimmedAvailableUntilDate) ? new \DateTime($trimmedAvailableUntilDate) : null;
+        $condition->setAvailableFromDate($availableFromDate);
+        $condition->setAvailableUntilDate($availableUntilDate);
+
         // Save modifications
         $this->om->persist($condition);
 

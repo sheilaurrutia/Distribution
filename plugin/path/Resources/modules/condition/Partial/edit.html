@@ -33,6 +33,50 @@
                 {{ 'condition_step_activity_notmanageable'|trans:{}:'path_wizards' }}
             </div>
 
+            <!-- if conditiondate is chosen -->
+            <div class="row form-group">
+                <label class="control-label col-md-3">{{ 'condition.date.name'|trans:{}:'path_wizards' }} :</label>
+                <div class="col-md-9 conditiondate">
+                    <ul>
+                        <li>
+                            {{ 'condition.date.availableFromDate'|trans:{}:'path_wizards' }}
+                            <span class="input-group">
+                                <input class="form-control" type="text" id="conditiondatefrom"
+                                    data-ng-model="conditionEditCtrl.step.condition.availableFromDate"
+                                    uib-datepicker-popup="{{ conditionEditCtrl.filterAvailableFromDate['format'] }}"
+                                    is-open="conditionEditCtrl.filterAvailableFromDate['open']"
+                                    datepicker-options="conditionEditCtrl.dateOptions"
+                                    placeholder="{{ conditionEditCtrl.dateOptions['placeHolder'] }}"
+                                    datetimepicker-neutral-timezone
+                                     />
+                                 <span class="input-group-btn">
+                                     <button type="button" class="btn btn-default" ng-click="conditionEditCtrl.openAvailableFromPicker()">
+                                         <i class="fa fa-calendar"></i>
+                                     </button>
+                                 </span>
+                            </span>
+                        </li>
+                        <li>{{ 'condition.date.availableUntilDate'|trans:{}:'path_wizards' }}
+                            <span class="input-group">
+                                <input class="form-control" type="text" id="conditiondateuntil"
+                                    data-ng-model="conditionEditCtrl.step.condition.availableUntilDate"
+                                    uib-datepicker-popup="{{ conditionEditCtrl.filterAvailableUntilDate['format'] }}"
+                                    is-open="conditionEditCtrl.filterAvailableUntilDate['open']"
+                                    datepicker-options="conditionEditCtrl.dateOptions"
+                                    placeholder="{{ conditionEditCtrl.dateOptions['placeHolder'] }}"
+                                    datetimepicker-neutral-timezone
+                                />
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="conditionEditCtrl.openAvailableUntilPicker()">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                           </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <ul class="criteria-group" data-ng-if="conditionEditCtrl.step.condition">
                 <li data-ng-repeat="group in conditionEditCtrl.step.condition.criteriagroups">
                     <criteria-group data-step="conditionEditCtrl.step" data-criteria-group="group"></criteria-group>
