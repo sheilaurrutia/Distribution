@@ -1,9 +1,12 @@
+import confirmTemplate from './confirmed.partial.html'
+
 export default class NotificationCtrl {
 
-	constructor(service){
+	constructor(service, modal){
 		this.types = service.getTypes()
 		this.service = service
 		this.isCollapsed = false
+
 
 		this.editedParameters={}
 		this.editedParameters.original = service.getParameters()
@@ -13,26 +16,94 @@ export default class NotificationCtrl {
 		this.editedParameters.newMailEnabledTypes = service.getMailEnabledTypes()
 		this.editedParameters.newRssEnabledTypes = service.getRssEnabledTypes()
 
-		this.id = service.getId()
-		this.userId = service.getUserId()
+		this.nbDisplayChecked = this.getNbDisplayChecked()
+		this.nbPhoneChecked = this.getNbPhoneChecked()
+		this.nbMailChecked = this.getNbMailChecked()
+		this.nbRssChecked = this.getNbRssChecked()
+
+		this._modalFactory = modal
+		this._modalInstance = null
 
 		
 
 	}
 
+	 _closeModal () {
+    	this._modalInstance.close()
+  	}
+
+  	_modal (template, errorMessage, errors) {
+	    if (errorMessage) {
+	      this.errorMessage = errorMessage
+	    }
+
+	    if (errors) {
+	      this.errors = errors
+	    }
+
+	    this._modalInstance = this._modalFactory.open(template)
+  	}
 
 
 
-
-
-	isRssEnabled(){
+	getNbRssChecked(){
+		let cpt = 0
 		for (let index in this.editedParameters.newRssEnabledTypes){
 			if (this.editedParameters.newRssEnabledTypes[index]){
-				return true
+				cpt++
 			}
 		}
-		return false
+		return cpt
 	}
+
+	getNbDisplayChecked(){
+		let cpt = 0
+		for (let index in this.editedParameters.newDisplayEnabledTypes){
+			if (this.editedParameters.newDisplayEnabledTypes[index]){
+				cpt++
+			}
+		}
+		return cpt
+	}
+
+	getNbPhoneChecked(){
+		let cpt = 0
+		for (let index in this.editedParameters.newPhoneEnabledTypes){
+			if (this.editedParameters.newPhoneEnabledTypes[index]){
+				cpt++
+			}
+		}
+		return cpt
+	}
+
+	getNbMailChecked(){
+		let cpt = 0
+		for (let index in this.editedParameters.newMailEnabledTypes){
+			if (this.editedParameters.newMailEnabledTypes[index]){
+				cpt++
+			}
+		}
+		return cpt
+	}
+
+	isEditable(){
+		let cptDisplay = this.getNbDisplayChecked()
+		let cptPhone = this.getNbPhoneChecked()
+		let cptMail = this.getNbMailChecked()
+		let cptRss = this.getNbRssChecked()
+
+		return this.nbDisplayChecked != cptDisplay || this.nbPhoneChecked != cptPhone || this.nbMailChecked != cptMail || this.nbRssChecked != cptRss
+	}
+
+	isRssEnabled(){
+
+		let cpt = this.getNbRssChecked()
+		return this.nbRssChecked != cpt
+	}
+
+	
+
+
 
 	toggleAll(type){
 		let toggleVisibleStatus = this.editedParameters.newDisplayEnabledTypes[type.name] 
@@ -76,8 +147,15 @@ export default class NotificationCtrl {
 
 	}
 
+
+
 	save(){
+
 		this.service.saveParameters(this.editedParameters.original, this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
+		
+		this._modal(confirmTemplate)
+		
+
 	}
 
 

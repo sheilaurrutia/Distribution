@@ -2,7 +2,7 @@
         <h3 class="panel-title">
             <p style="padding: 5px">
                 {{ 'notification_user_configuration'|trans:{}:'notification' }}
-                <button class="btn btn-primary pull-right" ng-disabled="!notif.isRssEnabled()" style="color: #FFFFFF" href="#">
+                <button class="btn btn-primary pull-right" ng-disabled="!notif.isRssEnabled()" style="color: #FFFFFF" href="#" ng-click="">
                      {{ 'rss_url_create'|trans:{}:'notification' }} <i class="fa fa-rss"></i>
                 </button>
                 <button class="btn btn-primary pull-right disabled" style="color: #FFFFFF" href="#">
@@ -104,13 +104,12 @@
                             <a class="btn btn-default" href="{{ path('claro_desktop_parameters_menu') }}">
                                 {{ 'cancel'|trans:{}:'platform' }}
                             </a>
-                            <button type="submit" id="edit-tools-btn"  class="btn btn-primary" ng-click="notif.save()">
+                            <button type="submit" id="edit-tools-btn"  class="btn btn-primary" ng-click="notif.save()" ng-disabled="!notif.isEditable()">
                                 {{ 'Save'|trans:{}:'platform' }}
                             </button>
                             
                         </div>
                 </form>
-              
         </uib-tab>
         <uib-tab index="1" heading="{{ 'followed_resources'|trans:{}:'platform' }}">
             <form id="notification-user-parameters-form" action="{{ path('icap_notification_save_user_parameters') }}" method="post">

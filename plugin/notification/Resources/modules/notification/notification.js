@@ -6,14 +6,22 @@ import controller from './notificationCtrl.js'
 
 angular
 	.module('NotificationModule', [
-		'ui.bootstrap'
+		'ui.bootstrap',
+		'ui.bootstrap.modal'
 	])
 	.service('notificationService',[
 		'$http',
 		service
 	])
+	.factory('notificationModal', [
+	    '$uibModal',
+	    $modal => ({
+	      open: template => $modal.open({ template })
+	    })
+  	])
 	.controller('notificationCtrl',[
 		'notificationService',
+		'notificationModal',
 		controller
 	])
 	.directive('notification',()=>({

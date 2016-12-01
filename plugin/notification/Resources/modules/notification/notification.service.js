@@ -14,19 +14,25 @@ export default class NotificationService{
 		this._parameters["mailEnabledTypes"] = this._mailEnabledTypes
 		this._parameters["rssEnabledTypes"] = this._rssEnabledTypes
 
-		this._id = NotificationService._getGlobal('id')
-		this._userId = NotificationService._getGlobal('userId')
-	
+
 		this._types.forEach(t => {
 			t['translated_group'] = Translator.trans(t['group'],{},'resource')
 			t['translated_group'] = Translator.trans(t['translated_group'],{},'notification')	
 		})
+
+		this._success = false
+
+
 
 
 	}
 
 	getTypes(){
 		return this._types
+	}
+
+	isEditable(){
+		return this._isEditable
 	}
 
 	getHttp(){
@@ -49,24 +55,20 @@ export default class NotificationService{
 		return this._parameters["rssEnabledTypes"]
 	}
 
-	getId(){
-		return this._id
-	}
-
-	getUserId(){
-		return this._userId
-	}
 
 	getParameters(){
 		return this._parameters
 	}
 
+	isSuccess(){
+		return this._success
+	}
+
+	
+	
+
 	saveParameters(originalParameters, newDisplay, newPhone, newMail, newRss){
 		
-		//if there are no edits
-		if (angular.equals(originalParameters.displayEnabledTypes, newDisplay) && angular.equals(originalParameters.phoneEnabledTypes, newPhone) && angular.equals(originalParameters.mailEnabledTypes, newMail) && angular.equals(originalParameters.rssEnabledTypes, newRss)){
-			return
-		}
 
 		const originalDisplay = originalParameters.displayEnabledTypes
 		const originalPhone = originalParameters.phoneEnabledTypes
@@ -83,20 +85,26 @@ export default class NotificationService{
 		originalParameters.mailEnabledTypes = newMail
 		originalParameters.rssEnabledTypes = newRss
 
-		//console.log(newDisplay)
+		
 		
 		this.$http
 		.put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
 		.then(()=>{
-			originalParameters.displayEnabledTypes = originalDisplay
-			originalParameters.phoneEnabledTypes = originalPhone
-			originalParameters.mailEnabledTypes = originalMail
-			originalParameters.rssEnabledTypes = originalRss
+
+				originalParameters.displayEnabledTypes = originalDisplay
+				originalParameters.phoneEnabledTypes = originalPhone
+				originalParameters.mailEnabledTypes = originalMail
+				originalParameters.rssEnabledTypes = originalRss
+			
+			
 		})
-		console.log("OK")
 
+	}
 
-
+	createRssFeed(){
+		const url = Routing.generate('icap_notification_regenerate_rss_url')
+		this.$http
+		.post(url)
 	}
 
 

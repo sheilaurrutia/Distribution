@@ -65,11 +65,12 @@ class NotificationUserParametersController extends Controller
 
         if (isset($newDisplay) && isset($newRss)){
             $this->getParametersManager()->editUserParameters( $user->getId(), $newDisplay, $newRss);
-            $response->setStatusCode(204);
+            $response->setData('Success');
+            $response->setStatusCode(200);
         } else {
 
             $response->setData('No Data available');
-            $response->setStatusCode(422);
+            $response->setStatusCode(400);
         }
         return $response;
 
@@ -94,7 +95,7 @@ class NotificationUserParametersController extends Controller
         $parameters = $parametersManager->regenerateRssId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return array('types' => $types, 'rssId' => $parameters->getRssId());
+        return array('types' => $types, 'rssId' => $parameters->getRssId(), 'parameters' => $parameters);
     }
 
     /**
