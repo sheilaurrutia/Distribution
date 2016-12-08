@@ -38,16 +38,16 @@
                                                     <i ng-show="type.children.length>0" class="fa" ng-class="{'fa-chevron-right' : isCollapsed, 'fa-chevron-down' : !isCollapsed }" ></i> 
                                                 </td>
                                                 <td class="text-center">
-                                                         <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click="notif.toggleAll(type)" />
+                                                         <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
                                                 </td>
                                                 <td class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click="notif.toggleAll(type)" disabled />
+                                                        <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"phone")' disabled />
                                                 </td>
                                                 <td class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[type.name]" ng-click="notif.toggleAll(type)" disabled/>
+                                                        <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"mail")' disabled/>
                                                  </td>
                                                  <td class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[type.name]" ng-click="notif.toggleAll(type)" />
+                                                        <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"rss")' />
                                                  </td>
                                              
                                             </tr>
@@ -101,7 +101,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <a class="btn btn-default" href="{{ path('claro_desktop_parameters_menu') }}">
+                            <a class="btn btn-default" href="{{ 'claro_desktop_open' | path:{} }}">
                                 {{ 'cancel'|trans:{}:'platform' }}
                             </a>
                             <button type="submit" id="edit-tools-btn"  class="btn btn-primary" ng-click="notif.save()" ng-disabled="!notif.isEditable()">

@@ -101,30 +101,36 @@ export default class NotificationCtrl {
 		return this.nbRssChecked != cpt
 	}
 
+
+
 	
 
 
 
-	toggleAll(type){
-		let toggleVisibleStatus = this.editedParameters.newDisplayEnabledTypes[type.name] 
-		type.children.forEach(c=>{
-			this.editedParameters.newDisplayEnabledTypes[c] = toggleVisibleStatus
+	toggleAll(type, column){
 
-		})
-		let togglePhoneStatus = this.editedParameters.newPhoneEnabledTypes[type.name] 
-		type.children.forEach(c=>{
-			this.editedParameters.newPhoneEnabledTypes[c] = togglePhoneStatus
+		let toggleStatus = null
+		let table = null
 
-		})
-		let toggleMailStatus = this.editedParameters.newMailEnabledTypes[type.name] 
-		type.children.forEach(c=>{
-			this.editedParameters.newMailEnabledTypes[c] = toggleMailStatus
+		if (angular.equals(column,"visible")){
+			toggleStatus = this.editedParameters.newDisplayEnabledTypes[type.name]
+			table = this.editedParameters.newDisplayEnabledTypes
+		} else if (angular.equals(column,"phone")) {
+			toggleStatus = this.editedParameters.newPhoneEnabledTypes[type.name]
+			table = this.editedParameters.newPhoneEnabledTypes
+		} else if (angular.equals(column,"mail")){
+			toggleStatus = this.editedParameters.newMailEnabledTypes[type.name] 
+			table = this.editedParameters.newMailEnabledTypes
+		} else if (angular.equals(column, "rss")){
+			toggleStatus = this.editedParameters.newRssEnabledTypes[type.name]
+			table = this.editedParameters.newRssEnabledTypes
+		} else {
+			console.log("The 2nd parameter must be (\"visible\" || \"phone\" || \"mail\" || \"rss\" )")
+			return 
+		}
 
-		})
-		let toggleRssStatus = this.editedParameters.newRssEnabledTypes[type.name] 
 		type.children.forEach(c=>{
-			this.editedParameters.newRssEnabledTypes[c] = toggleRssStatus
-
+			table[c] = toggleStatus
 		})
 	}
 

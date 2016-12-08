@@ -3,11 +3,13 @@ import {} from 'angular-bootstrap'
 import mainTemplate from './parameters_partial.html'
 import service from './notification.service.js'
 import controller from './notificationCtrl.js'
+import '#/main/core/fos-js-router/module'
 
 angular
 	.module('NotificationModule', [
 		'ui.bootstrap',
-		'ui.bootstrap.modal'
+		'ui.bootstrap.modal',
+		'ui.fos-js-router'
 	])
 	.service('notificationService',[
 		'$http',

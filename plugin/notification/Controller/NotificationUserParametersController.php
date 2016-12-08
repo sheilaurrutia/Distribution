@@ -37,12 +37,6 @@ class NotificationUserParametersController extends Controller
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
         
-        /*
-        foreach($types as $type){
-            echo "".$type['name']."<br>";
-            
-            
-        }*/
 
         return array('types' => $types, 'rssId' => $parameters->getRssId(), 'parameters' => $parameters);
     }
