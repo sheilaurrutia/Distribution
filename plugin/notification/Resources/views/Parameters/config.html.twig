@@ -1,4 +1,3 @@
-
 {% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% if isDesktop() %}
@@ -20,7 +19,7 @@
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'notification' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
-  	<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_blog' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_blog' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'innova_collecticiel' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_dropzone' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
@@ -35,8 +34,6 @@
         window.phoneEnabledTypes = {{ parameters.getPhoneEnabledTypes()|json_encode|raw }}
         window.mailEnabledTypes = {{ parameters.getMailEnabledTypes()|json_encode|raw }}
         window.rssEnabledTypes = {{ parameters.getRssEnabledTypes()|json_encode|raw }}
-
-
     </script>
      
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-notification-list.js') }}"></script>
