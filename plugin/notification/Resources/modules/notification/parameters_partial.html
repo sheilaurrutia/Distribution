@@ -31,14 +31,14 @@
                                     <tbody class="types-table-body" ng-repeat="type in notif.types | orderBy: 'translated_group'">
                                        
                                             <tr ng-show= "!type.hasParents"> 
-                                                <td ng-click="isCollapsed =! isCollapsed">
+                                                <td ng-click="notif.collapse[type.name] =! notif.collapse[type.name]">
                                                    <strong> 
                                                         {{ type.name|trans:{}:'notification'|trans:{}:'resource'|trans:{}:'icap_blog'|trans:{}:'innova_collecticiel'|trans:{}:'icap_dropzone'|trans:{}:'ujm_exo'|trans:{}:'forum'|trans:{}: 'icap_wiki'|trans:'survey' }}
                                                     </strong>
-                                                    <i ng-show="type.children.length>0" class="fa" ng-class="{'fa-chevron-right' : isCollapsed, 'fa-chevron-down' : !isCollapsed }" ></i> 
+                                                    <i ng-show="type.children.length>0" class="fa" ng-class="{'fa-chevron-right' : notif.collapse[type.name], 'fa-chevron-down' : !notif.collapse[type.name] }" ></i> 
                                                 </td>
                                                 <td class="text-center">
-                                                         <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
+                                                         <input type="checkbox"  class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
                                                 </td>
                                                 <td class="text-center">
                                                         <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"phone")' disabled />
@@ -53,10 +53,10 @@
                                             </tr>
                                         
                                         
-                                        <tr style="background-color:white;" ng-repeat="child in type.children" class="collapse-row" ng-hide="!isCollapsed">
+                                        <tr style="background-color:white;" ng-repeat="child in type.children" class="collapse-row" ng-show="notif.collapse[type.name]">
 
                                             <td>
-                                                <div uib-collapse="!isCollapsed">
+                                                <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
                                                         {{ child|trans:{}:'notification'|trans:{}:'resource'|trans:{}:'icap_blog'|trans:{}:'innova_collecticiel'|trans:{}:'icap_dropzone'|trans:{}:'ujm_exo'|trans:{}:'forum'|trans:{}: 'icap_wiki'|trans:'survey' }}
                                                     </div>
@@ -65,33 +65,33 @@
                                                 
                                             </td>
                                              <td class="text-center">
-                                                <div uib-collapse="!isCollapsed">
+                                                <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
-                                                        <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[child]" ng-change="notif.optionToggled(type)" />
+                                                        <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[child]" ng-change='notif.optionToggled(type,"visible")' />
                                                     </div>
                                                     
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <div uib-collapse="!isCollapsed">
+                                                <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
-                                                        <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[child]" ng-change="notif.optionToggled(type)" disabled/>
+                                                        <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[child]" ng-change='notif.optionToggled(type,"phone")' disabled/>
                                                     </div>
                                                     
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <div uib-collapse="!isCollapsed">
+                                                <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
-                                                        <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[child]" ng-change="notif.optionToggled(type)" disabled/>
+                                                        <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[child]" ng-change='notif.optionToggled(type,"mail")' disabled/>
                                                     </div>
                                                     
                                                 </div>
                                              </td>
                                              <td class="text-center">
-                                               <div uib-collapse="!isCollapsed">
+                                               <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
-                                                        <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[child]" ng-change="notif.optionToggled(type)" />
+                                                        <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[child]" ng-change='notif.optionToggled(type,"rss")' />
                                                     </div>
                                                     
                                                 </div>

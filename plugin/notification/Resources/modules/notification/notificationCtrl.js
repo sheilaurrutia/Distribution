@@ -7,7 +7,6 @@ export default class NotificationCtrl {
 		this.service = service
 		this.isCollapsed = false
 
-
 		this.editedParameters={}
 		this.editedParameters.original = service.getParameters()
 
@@ -21,12 +20,24 @@ export default class NotificationCtrl {
 		this.nbMailChecked = this.getNbMailChecked()
 		this.nbRssChecked = this.getNbRssChecked()
 
+		this.collapse = {} // we show the subcheckboxes if one of them is checked
+		this.types.forEach(type=>{
+			this.collapse[type.name] = false
+			type.children.forEach(c=>{
+				if(this.editedParameters.newDisplayEnabledTypes[c] || this.editedParameters.newPhoneEnabledTypes[c] || this.editedParameters.newMailEnabledTypes[c] || this.editedParameters.newRssEnabledTypes[c]){
+					this.collapse[type.name] = true
+				}
+			})
+		})
+
 		this._modalFactory = modal
 		this._modalInstance = null
 
 		
 
 	}
+
+	
 
 	 _closeModal () {
     	this._modalInstance.close()
@@ -101,12 +112,6 @@ export default class NotificationCtrl {
 		return this.nbRssChecked != cpt
 	}
 
-
-
-	
-
-
-
 	toggleAll(type, column){
 
 		let toggleStatus = null
@@ -125,33 +130,38 @@ export default class NotificationCtrl {
 			toggleStatus = this.editedParameters.newRssEnabledTypes[type.name]
 			table = this.editedParameters.newRssEnabledTypes
 		} else {
-			console.log("The 2nd parameter must be (\"visible\" || \"phone\" || \"mail\" || \"rss\" )")
+			console.log("The 2nd parameter for toggleAll function must be (\"visible\" || \"phone\" || \"mail\" || \"rss\" )")
 			return 
 		}
-
 		type.children.forEach(c=>{
 			table[c] = toggleStatus
 		})
 	}
 
-	optionToggled(type){
-		this.editedParameters.newDisplayEnabledTypes[type.name] = type.children.every(c=>{
-			return this.editedParameters.newDisplayEnabledTypes[c]
-		})
 
-		this.editedParameters.newPhoneEnabledTypes[type.name] = type.children.every(c=>{
-			return this.editedParameters.newPhoneEnabledTypes[c]
-		})
+	optionToggled(type, column){
 
-		this.editedParameters.newMailEnabledTypes[type.name] = type.children.every(c=>{
-			return this.editedParameters.newMailEnabledTypes[c]
-		})
+		let table = null
 
-		this.editedParameters.newRssEnabledTypes[type.name] = type.children.every(c=>{
-			return this.editedParameters.newRssEnabledTypes[c]
+		if (angular.equals(column,"visible")){
+			table = this.editedParameters.newDisplayEnabledTypes
+		} else if (angular.equals(column,"phone")) {
+			table = this.editedParameters.newPhoneEnabledTypes
+		} else if (angular.equals(column,"mail")){
+			table = this.editedParameters.newMailEnabledTypes
+		} else if (angular.equals(column, "rss")){
+			table = this.editedParameters.newRssEnabledTypes
+		} else {
+			console.log("The 2nd parameter for optionToggled function must be (\"visible\" || \"phone\" || \"mail\" || \"rss\" )")
+			return 
+		}
+
+		table[type.name] = type.children.every(c=>{
+			return table[c]
 		})
 
 	}
+
 
 
 

@@ -3,24 +3,20 @@ export default class NotificationService{
 	constructor($http){
 		this.$http = $http
 		this._types = NotificationService._getGlobal('types')
-		this._displayEnabledTypes = NotificationService._getGlobal('displayEnabledTypes')
-		this._phoneEnabledTypes = NotificationService._getGlobal('phoneEnabledTypes')
-		this._mailEnabledTypes = NotificationService._getGlobal('mailEnabledTypes')
-		this._rssEnabledTypes = NotificationService._getGlobal('rssEnabledTypes')
 
 		this._parameters = {}
-		this._parameters["displayEnabledTypes"] = this._displayEnabledTypes
-		this._parameters["phoneEnabledTypes"] = this._phoneEnabledTypes
-		this._parameters["mailEnabledTypes"] = this._mailEnabledTypes
-		this._parameters["rssEnabledTypes"] = this._rssEnabledTypes
+		this._parameters["displayEnabledTypes"] = NotificationService._getGlobal('displayEnabledTypes')
+		this._parameters["phoneEnabledTypes"] = NotificationService._getGlobal('phoneEnabledTypes')
+		this._parameters["mailEnabledTypes"] = NotificationService._getGlobal('mailEnabledTypes')
+		this._parameters["rssEnabledTypes"] = NotificationService._getGlobal('rssEnabledTypes')
 
 
 		this._types.forEach(t => {
 			t['translated_group'] = Translator.trans(t['group'],{},'resource')
 			t['translated_group'] = Translator.trans(t['translated_group'],{},'notification')	
+
 		})
 
-		this._success = false
 
 
 
@@ -31,8 +27,8 @@ export default class NotificationService{
 		return this._types
 	}
 
-	isEditable(){
-		return this._isEditable
+	getChildrenChecked(){
+		return this._childrenChecked
 	}
 
 	getHttp(){
@@ -60,9 +56,6 @@ export default class NotificationService{
 		return this._parameters
 	}
 
-	isSuccess(){
-		return this._success
-	}
 
 	
 	
