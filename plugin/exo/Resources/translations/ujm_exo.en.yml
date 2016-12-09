@@ -330,7 +330,6 @@ partially: Partially correct
 penalty: Penalty
 percentage: Percentage
 pic_manage: Manage my documents
-picture_name: Picture name
 points: Points
 point_answer: You must assign a point to the correct answer.
 # Preceding line to be checked in context !!! #
@@ -498,16 +497,3 @@ words_case_sensitive: The answer must respect the keyword case to be valid
 # Y
 yes: Yes
 your_answer: Your answer
-
-
-# Data in the DB
-InteractionGraphic: Graphic
-InteractionHole: Cloze text
-InteractionMatching: Matching
-InteractionOpen: Open
-InteractionQCM: QCM
-Multiple responses: Multiple responses
-oneWord: One word
-To drag: To drag
-To bind: To bind
-Unique response: Unique answer
