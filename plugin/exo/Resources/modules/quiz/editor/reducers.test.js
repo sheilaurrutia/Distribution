@@ -177,12 +177,15 @@ describe('Items reducer', () => {
 
   it('creates a base question object and delegates to question reducer', () => {
     registerFixtureType({
-      reduce: (item, action) => {
-        return action.type === ITEM_CREATE ?
-          Object.assign({}, item, {foo: 'bar'}) :
-          item
+      editor:{
+        reduce: (item, action) => {
+          return action.type === ITEM_CREATE ?
+            Object.assign({}, item, {foo: 'bar'}) :
+            item
+        }
       }
     })
+
     const items = reducers.items(freeze({}), actions.createItem('1', 'foo/bar'))
     assertEqual(Object.keys(items).length, 1)
     assertEqual(items[lastId()].type, 'foo/bar')
@@ -197,7 +200,9 @@ describe('Items reducer', () => {
 
   it('calls item validator on creation', () => {
     registerFixtureType({
-      validate: () => ({foo: 'Should be bar'})
+      editor:{
+        validate: () => ({foo: 'Should be bar'})
+      }
     })
     const items = reducers.items(freeze({}), actions.createItem('1', 'foo/bar'))
     const keys = Object.keys(items)
@@ -244,7 +249,9 @@ describe('Items reducer', () => {
 
   it('delegates to item type reducer on detail update', () => {
     registerFixtureType({
-      reduce: item => Object.assign({}, item, {reduced: true})
+      editor: {
+        reduce: item => Object.assign({}, item, {reduced: true})
+      }
     })
     const items = freeze({
       '1': {
@@ -266,8 +273,10 @@ describe('Items reducer', () => {
 
   it('calls item validator on detail update', () => {
     registerFixtureType({
-      validate: item => {
-        return item.foo !== 'bar' ? {foo: 'Should be bar'} : {}
+      editor: {        
+        validate: item => {
+          return item.foo !== 'bar' ? {foo: 'Should be bar'} : {}
+        }
       }
     })
     const items = freeze({
@@ -459,8 +468,14 @@ function registerFixtureType(properties = {}) {
     {
       name: 'foo',
       type: 'foo/bar',
-      component: {},
-      reduce: item => item
+      player:{
+        component: () => 'player',
+        reduce: item => item
+      },
+      editor: {
+        component: () => 'editor',
+        reduce: item => item
+      }
     },
     properties
   ))
