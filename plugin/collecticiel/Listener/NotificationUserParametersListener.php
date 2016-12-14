@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -27,16 +27,14 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
+    {
+        $children = [
             'create_collecticiel',
             'deletion_collecticiel',
             'Request comment',
-            'Answer comment'
-        );
-        $event->addTypes('innova_collecticiel',false,'innova_collecticiel',$children);
+            'Answer comment',
+        ];
+        $event->addTypes('innova_collecticiel', false, 'innova_collecticiel', $children);
         $event->addTypes($children, true, 'innova_collecticiel');
-
-        
     }
 }

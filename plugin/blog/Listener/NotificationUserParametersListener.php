@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -27,17 +27,16 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
+    {
+        $children = [
             'new_blog',
             'add_new_comment',
             'add_new_post',
             'deletion_blog',
             'delete_comment',
-            'delete_post'
-        );
-        $event->addTypes('icap_blog', false, 'icap_blog',$children);
+            'delete_post',
+        ];
+        $event->addTypes('icap_blog', false, 'icap_blog', $children);
         $event->addTypes($children, true, 'icap_blog');
-        
     }
 }

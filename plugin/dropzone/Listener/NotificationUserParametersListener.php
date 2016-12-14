@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -27,13 +27,12 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
+    {
+        $children = [
             'correction_received_by_trainer',
-            'correction_available_for_learners'
-        );
-        $event->addTypes('icap_dropzone', false,'icap_dropzone',$children);
+            'correction_available_for_learners',
+        ];
+        $event->addTypes('icap_dropzone', false, 'icap_dropzone', $children);
         $event->addTypes($children, true, 'icap_dropzone');
-        
     }
 }

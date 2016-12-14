@@ -34,7 +34,7 @@ class NotificationUserParameters implements \JsonSerializable
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
      */
-    protected $displayEnabledTypes = array();
+    protected $displayEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="phone_enabled_types", nullable=true)
@@ -49,7 +49,7 @@ class NotificationUserParameters implements \JsonSerializable
     /**
      * @ORM\Column(type="array", name="rss_enabled_types")
      */
-    protected $rssEnabledTypes = array();
+    protected $rssEnabledTypes = [];
 
     /**
      * @ORM\Column(type="string", name="rss_id", unique=true)
@@ -109,7 +109,7 @@ class NotificationUserParameters implements \JsonSerializable
         return $this->phoneEnabledTypes;
     }
 
-     /**
+    /**
      * @param mixed $phoneEnabledTypes
      */
     public function setPhoneEnabledTypes($phoneEnabledTypes)
@@ -125,7 +125,7 @@ class NotificationUserParameters implements \JsonSerializable
         return $this->mailEnabledTypes;
     }
 
-     /**
+    /**
      * @param mixed $mailEnabledTypes
      */
     public function setMailEnabledTypes($mailEnabledTypes)
@@ -181,15 +181,16 @@ class NotificationUserParameters implements \JsonSerializable
         $this->isNew = $isNew;
     }
 
-    public function jsonSerialize(){
+    public function jsonSerialize()
+    {
         return [
-            'id'=>$this->id,
-            'userId'=>$this->userId,
-            'rssId'=>$this->rssId,
-            'displayEnabledTypes'=>$this->displayEnabledTypes,
-            'phoneEnabledTypes'=>$this->phoneEnabledTypes,
-            'mailEnabledTypes'=>$this->mailEnabledTypes,
-            'rssEnabledTypes'=>$this->rssEnabledTypes,
+            'id' => $this->id,
+            'userId' => $this->userId,
+            'rssId' => $this->rssId,
+            'displayEnabledTypes' => $this->displayEnabledTypes,
+            'phoneEnabledTypes' => $this->phoneEnabledTypes,
+            'mailEnabledTypes' => $this->mailEnabledTypes,
+            'rssEnabledTypes' => $this->rssEnabledTypes,
         ];
     }
 }

@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -27,18 +27,16 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
+    {
+        $children = [
             'create_wiki',
             'edit_wiki',
             'deletion_wiki',
             'Create_section',
             'edit_section',
-            'deletion_section'
-        );
-        $event->addTypes('icap_wiki',false,'icap_wiki',$children);
+            'deletion_section',
+        ];
+        $event->addTypes('icap_wiki', false, 'icap_wiki', $children);
         $event->addTypes($children, true, 'icap_wiki');
-
-        
     }
 }

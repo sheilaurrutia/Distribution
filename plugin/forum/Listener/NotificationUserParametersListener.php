@@ -21,17 +21,14 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-        $children = array(
+    {
+        $children = [
             'new_forum',
             'add_subject',
             'resource-claroline_forum-new_message',
-            'deletion_forum'
-        );
-        $event->addTypes('forum',false,'forum',$children);
+            'deletion_forum',
+        ];
+        $event->addTypes('forum', false, 'forum', $children);
         $event->addTypes($children, true, 'forum');
-
-        
-        
     }
 }

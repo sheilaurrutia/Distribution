@@ -3,7 +3,6 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
  */
 
 namespace Claroline\SurveyBundle\Listener;
@@ -24,17 +23,14 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-         $children = array(
+    {
+        $children = [
             'create_survey',
             'delete_survey',
             'closed_survey',
-            'answers_to_survey'
-        );
-        $event->addTypes('claroline_survey',false, 'claroline_survey',$children);
+            'answers_to_survey',
+        ];
+        $event->addTypes('claroline_survey', false, 'claroline_survey', $children);
         $event->addTypes($children, true, 'claroline_survey');
-     
-        
-
     }
 }

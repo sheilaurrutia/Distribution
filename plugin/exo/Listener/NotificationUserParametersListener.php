@@ -4,8 +4,6 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
- *
  */
 
 namespace UJM\ExoBundle\Listener;
@@ -26,15 +24,14 @@ class NotificationUserParametersListener
      * @DI\Observe("icap_notification_user_parameters_event")
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
-    {   
-         $children = array(
+    {
+        $children = [
             'create_exercises',
             'correction_requested',
             'correction_available',
-            'deletion_exercises'
-        );
-        $event->addTypes('ujm_exercise',false,'ujm_exercise',$children);
+            'deletion_exercises',
+        ];
+        $event->addTypes('ujm_exercise', false, 'ujm_exercise', $children);
         $event->addTypes($children, true, 'ujm_exercise');
-       
     }
 }

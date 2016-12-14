@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/8/15
  */
 
@@ -85,8 +85,7 @@ class NotificationUserParametersManager
 
     public function allTypesList(NotificationUserParameters $parameters)
     {
-
-        $allTypes = array();
+        $allTypes = [];
 
         $this->ed->dispatch(
             'icap_notification_user_parameters_event',
@@ -100,45 +99,36 @@ class NotificationUserParametersManager
         $mailEnabledTypes = $parameters->getMailEnabledTypes();
 
         foreach ($allTypes as $key => $type) {
-
             $allTypes[$key]['display'] = (isset($displayEnabledTypes[$type['name']])) ? $displayEnabledTypes[$type['name']] : true;
             $allTypes[$key]['rss'] = (isset($rssEnabledTypes[$type['name']])) ? $rssEnabledTypes[$type['name']] : false;
 
-
             $allTypes[$key]['phone'] = (isset($phoneEnabledTypes[$type['name']])) ? $phoneEnabledTypes[$type['name']] : false;
             $allTypes[$key]['mail'] = (isset($mailEnabledTypes[$type['name']])) ? $mailEnabledTypes[$type['name']] : false;
-
         }
 
         return $allTypes;
     }
-
-
 
     public function processUpdate($newParameters, $userId)
     {
         $userParameters = $this->getParametersByUserId($userId);
         $allParameterTypes = $this->allTypesList($userParameters);
 
-        $displayEnabledTypes = array();
-        $rssEnabledTypes = array();
+        $displayEnabledTypes = [];
+        $rssEnabledTypes = [];
 
-        $phoneEnabledTypes = array();
-        $mailEnabledTypes = array();
+        $phoneEnabledTypes = [];
+        $mailEnabledTypes = [];
 
         foreach ($allParameterTypes as $type) {
             if (isset($newParameters[$type['name']])) {
-
                 $options = $newParameters[$type['name']];
-                
 
                 $displayEnabledTypes[$type['name']] = in_array('visible', $options);
                 $rssEnabledTypes[$type['name']] = in_array('rss', $options);
 
                 $phoneEnabledTypes[$type['name']] = in_array('phone', $options);
                 $mailEnabledTypes[$type['name']] = in_array('mail', $options);
-
-
             } else {
                 $displayEnabledTypes[$type['name']] = $rssEnabledTypes[$type['name']] = $phoneEnabledTypes[$type['name']] = $mailEnabledTypes[$type['name']] = false;
             }
@@ -155,26 +145,26 @@ class NotificationUserParametersManager
     }
 
     //For the moment, the smartphone and email notifications are disabled
-    public function editUserParameters($userId, $newDisplay, $newRss){
+    public function editUserParameters($userId, $newDisplay, $newRss)
+    {
         $userParameters = $this->getParametersByUserId($userId);
         $allParameterTypes = $this->allTypesList($userParameters);
 
-        $displayEnabledTypes = array();
-        $rssEnabledTypes = array();
+        $displayEnabledTypes = [];
+        $rssEnabledTypes = [];
 
-        $phoneEnabledTypes = array();
-        $mailEnabledTypes = array();
+        $phoneEnabledTypes = [];
+        $mailEnabledTypes = [];
 
-        foreach($allParameterTypes as $type){
-
+        foreach ($allParameterTypes as $type) {
             $isDisplayChecked = false;
             $isRssChecked = false;
 
-            if (isset($newDisplay[$type['name']])){
+            if (isset($newDisplay[$type['name']])) {
                 $isDisplayChecked = $newDisplay[$type['name']];
             }
 
-            if (isset($newRss[$type['name']])){
+            if (isset($newRss[$type['name']])) {
                 $isRssChecked = $newRss[$type['name']];
             }
 
@@ -188,8 +178,6 @@ class NotificationUserParametersManager
             $isMailChecked = $newMail[$type['name']];
             $mailEnabledTypes[$type['name']] = $isMailChecked;
             */
-            
-            
         }
         $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
         /*$userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
@@ -200,8 +188,6 @@ class NotificationUserParametersManager
 
         return $userParameters;
     }
-
-    
 
     private function createEmptyParameters($userId)
     {

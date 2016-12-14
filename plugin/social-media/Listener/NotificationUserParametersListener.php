@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 5/18/15
  */
 
@@ -28,6 +28,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('icap_socialmedia',false,'icap_socialmedia');
+        $event->addTypes('icap_socialmedia', false, 'icap_socialmedia');
     }
 }
