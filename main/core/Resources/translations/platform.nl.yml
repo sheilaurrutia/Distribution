@@ -495,7 +495,7 @@ jqplot_date_output_format: %d-%m-%Y
 keep_me_logged_in: Gebruikersnaam onthouden
 language: Taal
 language_select: Kies een taal
->>>>>>> efd697df5269ed8211a89f624e7c3c077ccaedf1
+
 lastName: Naam
 last_30_days_activity: Activiteiten van de laatste 30 dagen
 last_action: '{1} Laatste actie|[1,Inf] %logAmount% laatste acties'
