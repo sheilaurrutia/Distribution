@@ -109,6 +109,7 @@ class NotificationUserParametersManager
         return $allTypes;
     }
 
+    //Function not used anymore
     public function processUpdate($newParameters, $userId)
     {
         $userParameters = $this->getParametersByUserId($userId);
@@ -144,8 +145,7 @@ class NotificationUserParametersManager
         return $userParameters;
     }
 
-    //For the moment, the smartphone and email notifications are disabled
-    public function editUserParameters($userId, $newDisplay, $newRss)
+    public function editUserParameters($userId, $newDisplay, $newRss, $newPhone, $newMail)
     {
         $userParameters = $this->getParametersByUserId($userId);
         $allParameterTypes = $this->allTypesList($userParameters);
@@ -159,6 +159,8 @@ class NotificationUserParametersManager
         foreach ($allParameterTypes as $type) {
             $isDisplayChecked = false;
             $isRssChecked = false;
+            $isPhoneChecked = false;
+            $isMailChecked = false;
 
             if (isset($newDisplay[$type['name']])) {
                 $isDisplayChecked = $newDisplay[$type['name']];
@@ -168,20 +170,22 @@ class NotificationUserParametersManager
                 $isRssChecked = $newRss[$type['name']];
             }
 
+            if (isset($newPhone[$type['name']])) {
+                $isPhoneChecked = $newPhone[$type['name']];
+            }
+
+            if (isset($newMail[$type['name']])) {
+                $isMailChecked = $newMail[$type['name']];
+            }
+
             $displayEnabledTypes[$type['name']] = $isDisplayChecked;
             $rssEnabledTypes[$type['name']] = $isRssChecked;
-
-            /*
-            $isPhoneChecked = $newPhone[$type['name']];
             $phoneEnabledTypes[$type['name']] = $isPhoneChecked;
-
-            $isMailChecked = $newMail[$type['name']];
             $mailEnabledTypes[$type['name']] = $isMailChecked;
-            */
         }
         $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
-        /*$userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
-        $userParameters->setMailEnabledTypes($mailEnabledTypes);*/
+        $userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
+        $userParameters->setMailEnabledTypes($mailEnabledTypes);
         $userParameters->setRssEnabledTypes($rssEnabledTypes);
         $this->em->persist($userParameters);
         $this->em->flush();

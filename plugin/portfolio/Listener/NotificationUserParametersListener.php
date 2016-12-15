@@ -17,6 +17,6 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('portfolio',false, 'portfolio');
+        $event->addTypes('portfolio', false, 'portfolio');
     }
 }

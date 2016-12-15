@@ -115,7 +115,6 @@ export default class NotificationCtrl {
       toggleStatus = this.editedParameters.newRssEnabledTypes[type.name]
       table = this.editedParameters.newRssEnabledTypes
     } else {
-      //console.log('The 2nd parameter for toggleAll function must be (\'visible\' || \'phone\' || \'mail\' || \'rss\' )')
       return 
     }
     type.children.forEach(c=>{
@@ -137,7 +136,6 @@ export default class NotificationCtrl {
     } else if (angular.equals(column, 'rss')){
       table = this.editedParameters.newRssEnabledTypes
     } else {
-      //console.log('The 2nd parameter for toggleAll function must be (\'visible\' || \'phone\' || \'mail\' || \'rss\' )')
       return 
     }
 

@@ -46,14 +46,14 @@ class NotificationUserParametersController extends Controller
     public function postAction(Request $request, User $user)
     {
         $newDisplay = $request->request->get('display');
-        //$newPhone = $request->request->get('phone');
-        //$newMail = $request->request->get('mail');
+        $newPhone = $request->request->get('phone');
+        $newMail = $request->request->get('mail');
         $newRss = $request->request->get('rss');
 
         $response = new JsonResponse();
 
         if (isset($newDisplay) && isset($newRss)) {
-            $this->getParametersManager()->editUserParameters($user->getId(), $newDisplay, $newRss);
+            $this->getParametersManager()->editUserParameters($user->getId(), $newDisplay, $newRss, $newPhone, $newMail);
             $response->setData('Success');
             $response->setStatusCode(200);
         } else {
