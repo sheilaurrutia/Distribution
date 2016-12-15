@@ -8,6 +8,10 @@
                 <button class="btn btn-primary pull-right disabled" style="color: #FFFFFF" href="#">
                      {{ 'rss_url_subscribe'|trans:{}:'notification' }}
                 </button>
+                <span>
+                    <i class="fa fa-toggle-on active" ng-if="notif.status == true" ng-click="notif.changeStatus()" style="color: #5cb85c; font-size:40px; cursor:pointer"></i>
+                    <i class="fa fa-toggle-on fa-rotate-180 inactive" ng-if="notif.status == false" ng-click="notif.changeStatus()" style="color: #d9534f; font-size:40px; cursor:pointer"></i>
+                </span>
             </p>
         </h3>
  </div>
@@ -23,8 +27,8 @@
                                         <tr>
                                             <th style="color: white; background-color: #337ab7">{{'object'|trans:'platform'}}</th>
                                             <th class="text-center" style="color: white; background-color: #337ab7">{{'notification_platform'|trans:{}:'notification'}}</th>
-                                            <th class="text-center" style="color: white; background-color: #337ab7">{{'notification_smartphone'|trans:{}:'notification'}}</th>
-                                            <th class="text-center" style="color: white; background-color: #337ab7">{{'email'|trans:{}:'notification'}}</th>
+                                            <th ng-show="notif.status" class="text-center" style="color: white; background-color: #337ab7">{{'notification_smartphone'|trans:{}:'notification'}}</th>
+                                            <th ng-show="notif.status"  class="text-center" style="color: white; background-color: #337ab7">{{'email'|trans:{}:'notification'}}</th>
                                             <th class="text-center" style="color: white; background-color: #337ab7">{{'rss_add'|trans:{}:'notification'}} <i class="fa fa-rss"></i></th>
                                         </tr>
                                     </thead>
@@ -40,10 +44,10 @@
                                                 <td class="text-center">
                                                          <input type="checkbox"  class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
                                                 </td>
-                                                <td class="text-center">
+                                                <td ng-show="notif.status"  class="text-center">
                                                         <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"phone")' disabled />
                                                 </td>
-                                                <td class="text-center">
+                                                <td ng-show="notif.status"  class="text-center">
                                                         <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"mail")' disabled/>
                                                  </td>
                                                  <td class="text-center">
@@ -72,7 +76,7 @@
                                                     
                                                 </div>
                                             </td>
-                                            <td class="text-center">
+                                            <td ng-show="notif.status"  class="text-center">
                                                 <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
                                                         <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[child]" ng-change='notif.optionToggled(type,"phone")' disabled/>
@@ -80,7 +84,7 @@
                                                     
                                                 </div>
                                             </td>
-                                            <td class="text-center">
+                                            <td ng-show="notif.status"  class="text-center">
                                                 <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
                                                         <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[child]" ng-change='notif.optionToggled(type,"mail")' disabled/>

@@ -16,6 +16,7 @@ open: 'Open'
 open-tracking: 'View tracking'
 rename: 'Rename'
 resource_copy_warning: 'An error occured while copying resource <%resourceName%>'
+resource_follow: Follow the resource
 resource_name_form_name: 'Resource name'
 resource_shortcut: 'Shortcut'
 text: 'Text'

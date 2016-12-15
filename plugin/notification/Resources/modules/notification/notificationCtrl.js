@@ -26,6 +26,12 @@ export default class NotificationCtrl {
     })
     this._modalFactory = modal
     this._modalInstance = null
+
+    this.status = false
+  }
+
+  changeStatus(){
+    this.status = !this.status
   }
   
   _closeModal() {
