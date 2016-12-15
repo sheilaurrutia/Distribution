@@ -8,7 +8,7 @@ import {makeSortable, SORT_VERTICAL} from './../../../utils/sortable'
 import {getDefinition} from './../../../items/item-types'
 import {StepForm} from './step-form.jsx'
 import {ItemForm} from './item-form.jsx'
-import {MODAL_DELETE_CONFIRM, MODAL_ADD_ITEM} from './modals.jsx'
+import {MODAL_DELETE_CONFIRM, MODAL_ADD_ITEM, MODAL_IMPORT_ITEMS} from './modals.jsx'
 
 const ParametersHeader = props =>
   <div onClick={props.onClick} className="panel-title">
@@ -161,25 +161,46 @@ ItemPanel = makeSortable(ItemPanel, 'STEP_ITEM')
 
 const StepFooter = props =>
   <div className="step-footer">
-    <button
-      className="btn btn-primary"
-      onClick={() => props.showModal(MODAL_ADD_ITEM, {
-        title: tex('add_question'),
-        handleSelect: type => {
-          props.closeModal()
-          props.handleItemCreate(props.stepId, type)
-        }
-      })}
-    >
-      <span className="fa fa-plus"></span>
-      &nbsp;{tex('add_question')}
-    </button>
+      <div className="btn-group ">
+        <button
+          className="btn btn-primary btn-sm dropdown-toggle"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          >
+          <span className="fa fa-plus"></span>
+          &nbsp;{tex('add_question')}&nbsp;
+          <span className="caret"></span>
+        </button>
+        <ul className="dropdown-menu">
+          <li>
+            <a role="button" onClick={() => props.showModal(MODAL_ADD_ITEM, {
+              title: tex('add_question_from_new'),
+              handleSelect: type => {
+                props.closeModal()
+                props.handleItemCreate(props.stepId, type)
+              }
+            })}>{tex('add_question_from_new')}</a>
+          </li>
+          <li>
+            <a role="button" onClick={() => props.showModal(MODAL_IMPORT_ITEMS, {
+              title: tex('add_question_from_existing'),
+              handleSelect: selected => {
+                props.closeModal()
+                props.handleItemsImport(props.stepId, selected)
+              }
+            })}>{tex('add_question_from_existing')}</a>
+          </li>
+        </ul>
+      </div>
   </div>
 
 StepFooter.propTypes = {
   stepId: T.string.isRequired,
   showModal: T.func.isRequired,
-  handleItemCreate: T.func.isRequired
+  handleItemCreate: T.func.isRequired,
+  handleItemsImport: T.func.isRequired
 }
 
 export const StepEditor = props =>
@@ -228,6 +249,7 @@ export const StepEditor = props =>
       showModal={props.showModal}
       closeModal={props.closeModal}
       handleItemCreate={props.handleItemCreate}
+      handleItemsImport={props.handleItemsImport}
     />
   </div>
 
@@ -249,6 +271,7 @@ StepEditor.propTypes = {
   handleItemCreate: T.func.isRequired,
   handleItemUpdate: T.func.isRequired,
   handleItemHintsUpdate: T.func.isRequired,
+  handleItemsImport: T.func.isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired
 }

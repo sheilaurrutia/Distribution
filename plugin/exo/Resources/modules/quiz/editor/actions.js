@@ -9,6 +9,7 @@ export const ITEM_MOVE = 'ITEM_MOVE'
 export const ITEM_HINTS_UPDATE = 'ITEM_HINTS_UPDATE'
 export const ITEM_DETAIL_UPDATE = 'ITEM_DETAIL_UPDATE'
 export const ITEMS_DELETE = 'ITEMS_DELETE'
+export const ITEMS_IMPORT = 'ITEMS_IMPORT'
 export const MODAL_FADE = 'MODAL_FADE'
 export const MODAL_HIDE = 'MODAL_HIDE'
 export const MODAL_SHOW = 'MODAL_SHOW'
@@ -44,6 +45,7 @@ actions.updateItem = makeActionCreator(ITEM_UPDATE, 'id', 'propertyPath', 'value
 actions.updateItemDetail = makeActionCreator(ITEM_DETAIL_UPDATE, 'id', 'subAction')
 actions.updateItemHints = makeActionCreator(ITEM_HINTS_UPDATE, 'itemId', 'updateType', 'payload')
 actions.updateStep = makeActionCreator(STEP_UPDATE, 'id', 'newProperties')
+actions.importItems = makeActionCreator(ITEMS_IMPORT, 'stepId', 'items')
 
 actions.createItem = (stepId, type) => {
   invariant(stepId, 'stepId is mandatory')

@@ -234,6 +234,10 @@
   cursor: not-allowed;
 }
 
+.import-items-modal .question-list-table {
+  margin-bottom: 0;
+}
+
 .add-item-modal .modal-body {
   padding: 0;
 }
