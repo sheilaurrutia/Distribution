@@ -261,6 +261,7 @@ date_range.week: s
 date_range.yesterday: Hier
 db_table: 'Table de la base de données'
 decline: Refuser
+default_following: Followed by default
 default_language: 'Langue par défaut'
 default_role: 'Rôle par défaut'
 deletable: Supprimable
@@ -365,6 +366,7 @@ filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Vorname
 first_name: vorname
+followed_resources: followed_resources
 footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
@@ -838,6 +840,7 @@ roles_facet_form_explanation: 'Ce formulaire vous permet de spécifier quels rô
 roles_fields_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l''utilisateur.'
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
+Save: Enregistrer
 save_as_template: 'Sauvegarder comme modèle'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 saved_changes: 'Vos changements ont été sauvegardés'

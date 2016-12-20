@@ -22,6 +22,13 @@ class NotificationUserParametersListener
      */
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
-        $event->addTypes('forum');
+        $children = [
+            'new_forum',
+            'add_subject',
+            'resource-claroline_forum-new_message',
+            'deletion_forum',
+        ];
+        $event->addTypes('forum', false, 'forum', $children);
+        $event->addTypes($children, true, 'forum');
     }
 }

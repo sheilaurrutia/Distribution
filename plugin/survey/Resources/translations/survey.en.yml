@@ -10,12 +10,28 @@ allow_multiple_response: Multiple response
 an_answer_is_required: An answer is required
 answer: Answer
 answers: Answers
-answer_to_survey: Answer to survey
+answers_to_survey: - Answers to survey
+answer_to_survey: 'Answer to survey'
 choice: Choice
 choice_display: Choice display
 choices_management: Choices management
 close: Close
 closed: Closed
+closed_survey: - Closed survey
+closed_survey_message: 'The survey is closed. Nobody can answer it anymore.'
+closed_user_message: 'The survey is closed.'
+closing_date: 'Closing date'
+closing_date_next: 'Next closing date'
+comment: Comment
+comments: Comments
+create_model_from_question: 'Create a model from question'
+create_question: 'Create a question'
+create_survey: - Survey created
+create_title: 'Create a title'
+delete_all_answers: 'Delete all answers'
+delete_question_title_btn_explanation: 'Delete title'
+delete_selected_answers: 'Delete selected answers'
+delete_survey: - Survey deleted
 closed_survey_message: The survey is closed. Nobody can answer it anymore.
 closed_user_message: The survey is closed.
 closing_date: Closing date

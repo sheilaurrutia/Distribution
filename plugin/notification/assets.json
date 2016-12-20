@@ -1,0 +1,8 @@
+
+{
+  "webpack": {
+    "entry": {
+      "list": "notification/notification.js"
+    }
+  }
+}

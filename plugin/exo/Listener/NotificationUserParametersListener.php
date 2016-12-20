@@ -1,15 +1,12 @@
 <?php
+
 /**
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
- * Author: Panagiotis TSAVDARIS
- *
- * Date: 4/13/15
  */
 
-namespace Icap\WikiBundle\Listener;
+namespace UJM\ExoBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,14 +26,12 @@ class NotificationUserParametersListener
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
         $children = [
-            'create_wiki',
-            'edit_wiki',
-            'deletion_wiki',
-            'Create_section',
-            'edit_section',
-            'deletion_section',
+            'create_exercises',
+            'correction_requested',
+            'correction_available',
+            'deletion_exercises',
         ];
-        $event->addTypes('icap_wiki', false, 'icap_wiki', $children);
-        $event->addTypes($children, true, 'icap_wiki');
+        $event->addTypes('ujm_exercise', false, 'ujm_exercise', $children);
+        $event->addTypes($children, true, 'ujm_exercise');
     }
 }

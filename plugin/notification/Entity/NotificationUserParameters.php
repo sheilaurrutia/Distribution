@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationUserParametersRepository")
  * @ORM\Table(name="icap__notification_user_parameters")
  */
-class NotificationUserParameters
+class NotificationUserParameters implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -34,12 +34,22 @@ class NotificationUserParameters
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
      */
-    protected $displayEnabledTypes = array();
+    protected $displayEnabledTypes = [];
+
+    /**
+     * @ORM\Column(type="array", name="phone_enabled_types", nullable=true)
+     */
+    protected $phoneEnabledTypes = [];
+
+    /**
+     * @ORM\Column(type="array", name="mail_enabled_types", nullable=true)
+     */
+    protected $mailEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="rss_enabled_types")
      */
-    protected $rssEnabledTypes = array();
+    protected $rssEnabledTypes = [];
 
     /**
      * @ORM\Column(type="string", name="rss_id", unique=true)
@@ -94,6 +104,38 @@ class NotificationUserParameters
     /**
      * @return mixed
      */
+    public function getPhoneEnabledTypes()
+    {
+        return $this->phoneEnabledTypes;
+    }
+
+    /**
+     * @param mixed $phoneEnabledTypes
+     */
+    public function setPhoneEnabledTypes($phoneEnabledTypes)
+    {
+        $this->phoneEnabledTypes = $phoneEnabledTypes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailEnabledTypes()
+    {
+        return $this->mailEnabledTypes;
+    }
+
+    /**
+     * @param mixed $mailEnabledTypes
+     */
+    public function setMailEnabledTypes($mailEnabledTypes)
+    {
+        $this->mailEnabledTypes = $mailEnabledTypes;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getRssEnabledTypes()
     {
         return $this->rssEnabledTypes;
@@ -137,5 +179,18 @@ class NotificationUserParameters
     public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'userId' => $this->userId,
+            'rssId' => $this->rssId,
+            'displayEnabledTypes' => $this->displayEnabledTypes,
+            'phoneEnabledTypes' => $this->phoneEnabledTypes,
+            'mailEnabledTypes' => $this->mailEnabledTypes,
+            'rssEnabledTypes' => $this->rssEnabledTypes,
+        ];
     }
 }

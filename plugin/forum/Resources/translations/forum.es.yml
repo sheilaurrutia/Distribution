@@ -1,7 +1,9 @@
+add_subject: - Nuevo tema
 author: Autor
 category: Categoría
 category_form_name: Categoría
 edit_message: 'Editar un mensaje'
+deletion_forum: -
 field_content_required: 'Se requiere campo Contenido.'
 forum: Foro
 forum_back_to_categories: Volver a los foros
@@ -25,6 +27,7 @@ move_message: 'Mover un mensaje'
 move_subject: 'Mover un tema'
 move_to: 'Mover a'
 new_category: 'Nueva categoría'
+new_forum: - Nuevo foro
 new_message: Nuevo mensaje
 new_subject: 'Nuevo tema'
 notifications: Notificaciones

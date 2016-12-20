@@ -3,13 +3,9 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
- * Author: Panagiotis TSAVDARIS
- *
- * Date: 4/13/15
  */
 
-namespace Icap\WikiBundle\Listener;
+namespace Claroline\SurveyBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -29,14 +25,12 @@ class NotificationUserParametersListener
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)
     {
         $children = [
-            'create_wiki',
-            'edit_wiki',
-            'deletion_wiki',
-            'Create_section',
-            'edit_section',
-            'deletion_section',
+            'create_survey',
+            'delete_survey',
+            'closed_survey',
+            'answers_to_survey',
         ];
-        $event->addTypes('icap_wiki', false, 'icap_wiki', $children);
-        $event->addTypes($children, true, 'icap_wiki');
+        $event->addTypes('claroline_survey', false, 'claroline_survey', $children);
+        $event->addTypes($children, true, 'claroline_survey');
     }
 }
