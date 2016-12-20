@@ -1,20 +1,20 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 
+import PageHeader from './../../components/layout/page-header.jsx'
 import {TopBar} from './top-bar.jsx'
 import {Overview} from './../overview/overview.jsx'
 import Player from './../player/components/player.jsx'
 import {Editor} from './../editor/components/editor.jsx'
 import select from './../selectors'
 import {actions as editorActions} from './../editor/actions'
+import {actions as playerActions} from './../player/actions'
 import {actions} from './../actions'
 import {VIEW_OVERVIEW, VIEW_PLAYER, VIEW_EDITOR} from './../enums'
 
 let Quiz = props =>
-  <div className="exercise-container">
-    <div className="panel-heading">
-      <h3 className="panel-title">{props.title}</h3>
-    </div>
+  <div>
+    <PageHeader title={props.title} />
     {props.editable &&
       <TopBar {...props} />
     }
@@ -27,6 +27,7 @@ Quiz.propTypes = {
   editable: T.bool.isRequired,
   viewMode: T.string.isRequired,
   updateViewMode: T.func.isRequired,
+  playQuiz: T.func.isRequired,
   saveQuiz: T.func.isRequired
 }
 
@@ -59,6 +60,9 @@ function mapDispatchToProps(dispatch) {
   return {
     updateViewMode(mode) {
       dispatch(actions.updateViewMode(mode))
+    },
+    playQuiz(id) {
+      dispatch(playerActions.playQuiz(id))
     },
     saveQuiz() {
       dispatch(editorActions.saveQuiz())
