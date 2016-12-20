@@ -101,7 +101,6 @@ class NotificationUserParametersManager
         foreach ($allTypes as $key => $type) {
             $allTypes[$key]['display'] = (isset($displayEnabledTypes[$type['name']])) ? $displayEnabledTypes[$type['name']] : true;
             $allTypes[$key]['rss'] = (isset($rssEnabledTypes[$type['name']])) ? $rssEnabledTypes[$type['name']] : false;
-
             $allTypes[$key]['phone'] = (isset($phoneEnabledTypes[$type['name']])) ? $phoneEnabledTypes[$type['name']] : false;
             $allTypes[$key]['mail'] = (isset($mailEnabledTypes[$type['name']])) ? $mailEnabledTypes[$type['name']] : false;
         }
@@ -152,7 +151,6 @@ class NotificationUserParametersManager
 
         $displayEnabledTypes = [];
         $rssEnabledTypes = [];
-
         $phoneEnabledTypes = [];
         $mailEnabledTypes = [];
 

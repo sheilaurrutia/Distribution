@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -25,6 +25,12 @@ class AdditionalInstaller extends BaseInstaller
             );
             $updater040200->setLogger($this->logger);
             $updater040200->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '9.0.0', '<')) {
+            $updater090000 = new Updater09000($this->container);
+            $updater090000->setLogger($this->logger);
+            $updater090000->postUpdate();
         }
     }
 }

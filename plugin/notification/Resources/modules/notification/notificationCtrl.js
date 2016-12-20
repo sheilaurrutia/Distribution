@@ -5,7 +5,7 @@ export default class NotificationCtrl {
   constructor(service, modal){
     this.types = service.getTypes()
     this.service = service
-    this.editedParameters={}
+    this.editedParameters = {}
     this.editedParameters.original = service.getParameters()
     this.editedParameters.newDisplayEnabledTypes = service.getDisplayEnabledTypes()
     this.editedParameters.newPhoneEnabledTypes = service.getPhoneEnabledTypes()
@@ -16,14 +16,21 @@ export default class NotificationCtrl {
     this.nbMailChecked = this.getNbMailChecked()
     this.nbRssChecked = this.getNbRssChecked()
     this.collapse = {} // we show the subcheckboxes if one of them is checked
-    this.types.forEach(type=>{
+
+    this.types.forEach(type => {
       this.collapse[type.name] = false
-      type.children.forEach(c=>{
-        if(this.editedParameters.newDisplayEnabledTypes[c] || this.editedParameters.newPhoneEnabledTypes[c] || this.editedParameters.newMailEnabledTypes[c] || this.editedParameters.newRssEnabledTypes[c]){
+      type.children.forEach(c => {
+        if (
+            this.editedParameters.newDisplayEnabledTypes[c] ||
+            this.editedParameters.newPhoneEnabledTypes[c] ||
+            this.editedParameters.newMailEnabledTypes[c] ||
+            this.editedParameters.newRssEnabledTypes[c]
+        ) {
           this.collapse[type.name] = true
         }
       })
     })
+
     this._modalFactory = modal
     this._modalInstance = null
 
@@ -33,7 +40,7 @@ export default class NotificationCtrl {
   changeStatus(){
     this.status = !this.status
   }
-  
+
   _closeModal() {
     this._modalInstance.close()
   }
@@ -115,13 +122,13 @@ export default class NotificationCtrl {
       toggleStatus = this.editedParameters.newPhoneEnabledTypes[type.name]
       table = this.editedParameters.newPhoneEnabledTypes
     } else if (angular.equals(column,'mail')){
-      toggleStatus = this.editedParameters.newMailEnabledTypes[type.name] 
+      toggleStatus = this.editedParameters.newMailEnabledTypes[type.name]
       table = this.editedParameters.newMailEnabledTypes
     } else if (angular.equals(column, 'rss')){
       toggleStatus = this.editedParameters.newRssEnabledTypes[type.name]
       table = this.editedParameters.newRssEnabledTypes
     } else {
-      return 
+      return
     }
     type.children.forEach(c=>{
       table[c] = toggleStatus
@@ -142,7 +149,7 @@ export default class NotificationCtrl {
     } else if (angular.equals(column, 'rss')){
       table = this.editedParameters.newRssEnabledTypes
     } else {
-      return 
+      return
     }
 
     table[type.name] = type.children.every(c=>{
@@ -151,22 +158,8 @@ export default class NotificationCtrl {
 
   }
 
-
-
-
   save(){
-
     this.service.saveParameters(this.editedParameters.original, this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
-    
     this._modal(confirmTemplate)
-    
-
   }
-
-
-
-
-
-
-  
 }

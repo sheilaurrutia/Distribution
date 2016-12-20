@@ -19,12 +19,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NotificationUserParameters implements \JsonSerializable
 {
+    const TYPE_ADMIN = 0;
+    const TYPE_USER = 1;
+    const TYPE_WORKSPACE = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    protected $type;
 
     /**
      * @ORM\Column(type="integer", name="user_id", nullable=true)
@@ -90,7 +99,7 @@ class NotificationUserParameters implements \JsonSerializable
      */
     public function getDisplayEnabledTypes()
     {
-        return $this->displayEnabledTypes;
+        return $this->displayEnabledTypes ? $this->displayEnabledTypes : [];
     }
 
     /**
@@ -103,10 +112,11 @@ class NotificationUserParameters implements \JsonSerializable
 
     /**
      * @return mixed
-     */
-    public function getPhoneEnabledTypes()
+     */    public function setType($type)
     {
-        return $this->phoneEnabledTypes;
+        $this->type = $type;
+    }
+        return $this->phoneEnabledTypes ? $this->phoneEnabledTypes : [];
     }
 
     /**
@@ -122,7 +132,7 @@ class NotificationUserParameters implements \JsonSerializable
      */
     public function getMailEnabledTypes()
     {
-        return $this->mailEnabledTypes;
+        return $this->mailEnabledTypes ? $this->mailEnabledTypes : [];
     }
 
     /**
@@ -138,7 +148,7 @@ class NotificationUserParameters implements \JsonSerializable
      */
     public function getRssEnabledTypes()
     {
-        return $this->rssEnabledTypes;
+        return $this->rssEnabledTypes ? $this->rssEnabledTypes : [];
     }
 
     /**
@@ -179,6 +189,16 @@ class NotificationUserParameters implements \JsonSerializable
     public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 
     public function jsonSerialize()
