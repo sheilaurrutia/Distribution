@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class NotificationUserParametersController extends Controller
+class NotificationParametersController extends Controller
 {
     /**
      * @Route("/parameters", name="icap_notification_user_parameters")
@@ -79,7 +79,7 @@ class NotificationUserParametersController extends Controller
     }
 
     /**
-     * @return \Icap\NotificationBundle\Manager\NotificationUserParametersManager
+     * @return \Icap\NotificationBundle\Manager\NotificationParametersManager
      */
     private function getParametersManager()
     {

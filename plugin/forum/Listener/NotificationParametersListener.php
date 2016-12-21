@@ -7,20 +7,20 @@
 
 namespace Claroline\ForumBundle\Listener;
 
-use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
+use Claroline\CoreBundle\Event\Notification\NotificationParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
  */
-class NotificationUserParametersListener
+class NotificationParametersListener
 {
     /**
-     * @param NotificationUserParametersEvent $event
+     * @param NotificationParametersEvent $event
      *
      * @DI\Observe("icap_notification_user_parameters_event")
      */
-    public function onGetTypesForParameters(NotificationUserParametersEvent $event)
+    public function onGetTypesForParameters(NotificationParametersEvent $event)
     {
         $children = [
             'new_forum',

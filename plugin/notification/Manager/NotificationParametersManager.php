@@ -11,22 +11,22 @@
 
 namespace Icap\NotificationBundle\Manager;
 
-use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
+use Claroline\CoreBundle\Event\Notification\NotificationParametersEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
-use Icap\NotificationBundle\Entity\NotificationUserParameters;
+use Icap\NotificationBundle\Entity\NotificationParameters;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class NotificationUserParametersManager.
+ * Class NotificationParametersManager.
  *
  * @DI\Service("icap.notification.manager.notification_user_parameters")
  */
-class NotificationUserParametersManager
+class NotificationParametersManager
 {
     /**
-     * @var \Icap\NotificationBundle\Repository\NotificationUserParametersRepository
+     * @var \Icap\NotificationBundle\Repository\NotificationParametersRepository
      */
     private $notificationUserParametersRepository;
 
@@ -51,7 +51,7 @@ class NotificationUserParametersManager
         $this->em = $em;
         $this->ed = $ed;
         $this->notificationUserParametersRepository = $em
-            ->getRepository('IcapNotificationBundle:NotificationUserParameters');
+            ->getRepository('IcapNotificationBundle:NotificationParameters');
     }
 
     public function getParametersByUserId($userId)
@@ -83,13 +83,13 @@ class NotificationUserParametersManager
         return $parameters;
     }
 
-    public function allTypesList(NotificationUserParameters $parameters)
+    public function allTypesList(NotificationParameters $parameters)
     {
         $allTypes = [];
 
         $this->ed->dispatch(
             'icap_notification_user_parameters_event',
-            new NotificationUserParametersEvent($allTypes)
+            new NotificationParametersEvent($allTypes)
         );
 
         $displayEnabledTypes = $parameters->getDisplayEnabledTypes();
@@ -193,11 +193,11 @@ class NotificationUserParametersManager
 
     private function createEmptyParameters($userId)
     {
-        $parameters = new NotificationUserParameters();
+        $parameters = new NotificationParameters();
         $parameters->setUserId($userId);
         $parameters->setRssId($this->uniqueRssId());
         $parameters->setIsNew(true);
-        $parameters->setType(NotificationUserParameters::TYPE_USER);
+        $parameters->setType(NotificationParameters::TYPE_USER);
         $this->em->persist($parameters);
         $this->em->flush();
 

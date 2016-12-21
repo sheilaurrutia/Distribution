@@ -44,7 +44,7 @@ class NotificationManager
      */
     protected $platformName;
     /**
-     * @var NotificationUserParametersManager
+     * @var NotificationParametersManager
      */
     protected $notificationParametersManager;
     /**
@@ -69,7 +69,7 @@ class NotificationManager
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
-        NotificationUserParametersManager $notificationParametersManager,
+        NotificationParametersManager $notificationParametersManager,
         NotificationPluginConfigurationManager $notificationPluginConfigurationManager
     ) {
         $this->em = $em;

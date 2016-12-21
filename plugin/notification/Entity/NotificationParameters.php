@@ -15,10 +15,10 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationUserParametersRepository")
+ * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationParametersRepository")
  * @ORM\Table(name="icap__notification_user_parameters")
  */
-class NotificationUserParameters implements \JsonSerializable
+class NotificationParameters implements \JsonSerializable
 {
     const TYPE_ADMIN = 0;
     const TYPE_USER = 1;

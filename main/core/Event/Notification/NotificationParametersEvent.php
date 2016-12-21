@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Event\Notification;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class NotificationUserParametersEvent extends Event
+class NotificationParametersEvent extends Event
 {
     private $types;
 

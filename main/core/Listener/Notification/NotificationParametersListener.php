@@ -11,22 +11,22 @@
 
 namespace Claroline\CoreBundle\Listener\Notification;
 
-use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
+use Claroline\CoreBundle\Event\Notification\NotificationParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Class NotificationUserParametersListener.
+ * Class NotificationParametersListener.
  *
  * @DI\Service()
  */
-class NotificationUserParametersListener
+class NotificationParametersListener
 {
     /**
-     * @param NotificationUserParametersEvent $event
+     * @param NotificationParametersEvent $event
      *
      * @DI\Observe("icap_notification_user_parameters_event")
      */
-    public function onGetTypesForParameters(NotificationUserParametersEvent $event)
+    public function onGetTypesForParameters(NotificationParametersEvent $event)
     {
         $event->addTypes('role-change_right', false, 'role-change_right');
         $event->addTypes('badge-award', false, 'badge-award');

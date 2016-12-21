@@ -12,7 +12,7 @@
 namespace Icap\NotificationBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
-use Icap\NotificationBundle\Entity\NotificationUserParameters;
+use Icap\NotificationBundle\Entity\NotificationParameters;
 
 class Updater090000 extends Updater
 {
@@ -36,7 +36,7 @@ class Updater090000 extends Updater
 
     private function updateNotificatonParametersType()
     {
-        $notificationRepo = $this->om->getRepository('Icap\NotificationBundle\Entity\NotificationUserParameters');
+        $notificationRepo = $this->om->getRepository('Icap\NotificationBundle\Entity\NotificationParameters');
         $parameters = $notificationRepo->findUserParameters();
 
         $this->om->startFlushSuite();
@@ -45,7 +45,7 @@ class Updater090000 extends Updater
         $this->log('Updating configuration parameters...');
 
         foreach ($parameters as $parameter) {
-            $parameter->setType(NotificationUserParameters::TYPE_WORKSPACE);
+            $parameter->setType(NotificationParameters::TYPE_WORKSPACE);
             ++$i;
             if ($i % 100 === 0) {
                 $this->om->forceFlush();

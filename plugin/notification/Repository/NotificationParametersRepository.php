@@ -13,7 +13,7 @@ namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class NotificationUserParametersRepository extends EntityRepository
+class NotificationParametersRepository extends EntityRepository
 {
     public function findParametersByUserId($userId)
     {
