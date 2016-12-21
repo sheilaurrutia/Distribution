@@ -197,6 +197,7 @@ class NotificationUserParametersManager
         $parameters->setUserId($userId);
         $parameters->setRssId($this->uniqueRssId());
         $parameters->setIsNew(true);
+        $parameters->setType(NotificationUserParameters::TYPE_USER);
         $this->em->persist($parameters);
         $this->em->flush();
 

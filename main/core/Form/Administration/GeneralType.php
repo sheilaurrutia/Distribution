@@ -217,15 +217,6 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'isNotificationActive',
-                'checkbox',
-                [
-                    'label' => 'activate_notifications',
-                    'required' => false,
-                    'disabled' => isset($this->lockedParams['is_notification_active']),
-                ]
-            )
-            ->add(
                 'maxStorageSize',
                 'text',
                 [

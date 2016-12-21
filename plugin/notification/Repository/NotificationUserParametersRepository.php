@@ -25,4 +25,13 @@ class NotificationUserParametersRepository extends EntityRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    public function findUserParameters()
+    {
+        $qb = $this->createQueryBuilder('parameters');
+        $qb->select('parameters')
+            ->andWhere('parameters.userId is not null');
+
+        return $qb->getQuery()->getResult();
+    }
 }

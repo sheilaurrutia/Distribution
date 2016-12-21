@@ -5,12 +5,13 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/14/15
  */
 
 namespace Icap\NotificationBundle\Manager;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\ORM\EntityManager;
 use Icap\NotificationBundle\Entity\NotificationPluginConfiguration;
 use Icap\NotificationBundle\Exception\InvalidNotificationFormException;
@@ -40,18 +41,25 @@ class NotificationPluginConfigurationManager
      */
     private $formFactory;
 
+    private $ch;
+
     /**
      * @DI\InjectParams({
      *      "em"            = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "formFactory"   = @DI\Inject("form.factory")
+     *      "formFactory"   = @DI\Inject("form.factory"),
+     *      "ch"              = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(EntityManager $em, FormFactoryInterface $formFactory)
-    {
+    public function __construct(
+        EntityManager $em,
+        FormFactoryInterface $formFactory,
+        PlatformConfigurationHandler $ch
+    ) {
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->notificationPluginConfigurationRepository =
             $em->getRepository('IcapNotificationBundle:NotificationPluginConfiguration');
+        $this->ch = $ch;
     }
 
     /**
@@ -80,6 +88,7 @@ class NotificationPluginConfigurationManager
         if ($config === null) {
             $config = $this->getConfigOrEmpty();
         }
+
         $form = $this->formFactory->create(
             'icap_notification_type_pluginConfiguration',
             $config
@@ -94,6 +103,7 @@ class NotificationPluginConfigurationManager
         $form->handleRequest($request);
         if ($form->isValid()) {
             $config = $form->getData();
+            $this->ch->setParameter('is_notification_active', $form['isNotificationActive']->getData());
             $this->em->persist($config);
             $this->em->flush();
 

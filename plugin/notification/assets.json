@@ -2,8 +2,7 @@
 {
   "webpack": {
     "entry": {
-      "list": "notification/notification.js",
-      "administration": "notification/administration.js"
+      "list": "notification/notification.js"
     }
   }
 }

@@ -11,6 +11,7 @@
 
 namespace Icap\NotificationBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,6 +40,17 @@ class NotificationUserParameters implements \JsonSerializable
      * @ORM\Column(type="integer", name="user_id", nullable=true)
      */
     protected $userId;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE", nullable=true)
+     */
+    protected $workspace;
 
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
@@ -110,12 +122,21 @@ class NotificationUserParameters implements \JsonSerializable
         $this->displayEnabledTypes = $displayEnabledTypes;
     }
 
-    /**
-     * @return mixed
-     */    public function setType($type)
+    public function setType($type)
     {
         $this->type = $type;
     }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhoneEnabledTypes()
+    {
         return $this->phoneEnabledTypes ? $this->phoneEnabledTypes : [];
     }
 
@@ -191,14 +212,14 @@ class NotificationUserParameters implements \JsonSerializable
         $this->isNew = $isNew;
     }
 
-    public function setType($type)
+    public function setWorkspace(Workspace $workspace)
     {
-        $this->type = $type;
+        $this->workspace = $workspace;
     }
 
-    public function getType()
+    public function getWorkspace()
     {
-        return $this->type;
+        return $this->workspace;
     }
 
     public function jsonSerialize()
