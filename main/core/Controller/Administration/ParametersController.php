@@ -191,7 +191,15 @@ class ParametersController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 try {
-                    $this->configHandler->setPlatformConfig($form->getData());
+                    $platformConfig = $form->getData();
+                    $portfolioOptions = $request->get('portfolioUrlOptions', 0);
+                    $platformConfig->setPortfolioUrlOptions($portfolioOptions);
+
+                    if ($portfolioOptions === 0 || $portfolioOptions === '0') {
+                        $platformConfig->setPortfolioUrl(null);
+                    }
+
+                    $this->configHandler->setPlatformConfig($platformConfig);
                     $content = $request->get('platform_parameters_form');
 
                     if (isset($content['description'])) {

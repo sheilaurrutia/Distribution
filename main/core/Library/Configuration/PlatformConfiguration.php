@@ -46,13 +46,29 @@ class PlatformConfiguration
 
     public function __call($name, $parameters)
     {
-        $property = lcfirst(str_replace('get', '', $name));
+        if (strpos($name, 'get') !== false) {
+            $property = lcfirst(str_replace('get', '', $name));
 
-        if (property_exists($this, $property)) {
-            return $this->$property;
+            if (property_exists($this, $property)) {
+                return $this->$property;
+            } else {
+                throw new \RuntimeException("Property {$property} doesn't exist in the configuration file");
+            }
         } else {
-            throw new \RuntimeException("Property {$property} doesn't exist in the configuration file");
+            if (strpos($name, 'set') !== false) {
+                $property = lcfirst(str_replace('set', '', $name));
+
+                if (property_exists($this, $property)) {
+                    $this->$property = $parameters[0];
+
+                    return;
+                } else {
+                    throw new \RuntimeException("Property {$property} doesn't exist in the configuration file");
+                }
+            }
         }
+
+        throw new \RuntimeException("The function {$name} doesn't exist.");
     }
 
     public function __get($key)

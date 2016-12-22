@@ -140,7 +140,7 @@ class PlatformConfigurationHandler
 
     public function getDefaultParameters()
     {
-        return $this->defaultConfig;
+        return $this->parameters;
     }
 
     protected function generateLockedParameters($lockedConfigFile)
