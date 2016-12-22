@@ -24,6 +24,11 @@ class DefaultNotificationPlatformConfiguration implements PlatformConfigurationP
     {
         return [
             'is_notification_active' => true,
+            'notification_dropdown_items' => 10,
+            'notification_max_per_page' => 50,
+            'notification_purge_enabled' => true,
+            'notification_purge_after_days' => 60,
+            'notification_last_purge_date' => (new \DateTime())->setTime(0, 0, 0),
         ];
     }
 }
