@@ -17,51 +17,37 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class NotificationParametersController extends Controller
 {
     /**
-     * @Route("/parameters", name="icap_notification_user_parameters")
+     * @Route("/parameters/user", name="icap_notification_user_parameters")
      * @Method({"GET"})
-     * @Template("IcapNotificationBundle:Parameters:config.html.twig")
+     * @Template("IcapNotificationBundle:UserParameters:config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function getAction(User $user)
+    public function getUserParametersAction(User $user)
     {
         $parametersManager = $this->getParametersManager();
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return ['types' => $types, 'rssId' => $parameters->getRssId(), 'parameters' => $parameters];
+        return ['types' => $types, 'parameters' => $parameters];
     }
 
     /**
-     * @Route("/parameters", name="icap_notification_save_user_parameters", options = {"expose"=true})
-     * @Method({"POST", "PUT"})
-     * @Template("IcapNotificationBundle:Parameters:config.html.twig")
+     * @Route("/parameters/admin", name="icap_notification_admin_parameters")
+     * @Method({"GET"})
+     * @Template("IcapNotificationBundle:AdminParameters:admin.config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function postAction(Request $request, User $user)
+    public function getAdminParametersAction(User $user)
     {
-        $newDisplay = $request->request->get('display');
-        $newPhone = $request->request->get('phone');
-        $newMail = $request->request->get('mail');
-        $newRss = $request->request->get('rss');
+        $parametersManager = $this->getParametersManager();
+        $parameters = $parametersManager->getParametersByUserId($user->getId());
+        $types = $parametersManager->allTypesList($parameters);
 
-        $response = new JsonResponse();
-
-        if (isset($newDisplay) && isset($newRss)) {
-            $this->getParametersManager()->editUserParameters($user->getId(), $newDisplay, $newRss, $newPhone, $newMail);
-            $response->setData('Success');
-            $response->setStatusCode(200);
-        } else {
-            $response->setData('No Data available');
-            $response->setStatusCode(400);
-        }
-
-        return $response;
+        return ['types' => $types, 'parameters' => $parameters];
     }
 
     /**
@@ -83,6 +69,6 @@ class NotificationParametersController extends Controller
      */
     private function getParametersManager()
     {
-        return $this->get('icap.notification.manager.notification_user_parameters');
+        return $this->get('icap.notification.manager.notification_parameters');
     }
 }

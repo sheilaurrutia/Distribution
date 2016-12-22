@@ -3,14 +3,10 @@ export default class NotificationService{
   constructor($http){
     this.$http = $http
     this._types = NotificationService._getGlobal('types')
-    this._parameters = {}
-    this._parameters['displayEnabledTypes'] = NotificationService._getGlobal('displayEnabledTypes')
-    this._parameters['phoneEnabledTypes'] = NotificationService._getGlobal('phoneEnabledTypes')
-    this._parameters['mailEnabledTypes'] = NotificationService._getGlobal('mailEnabledTypes')
-    this._parameters['rssEnabledTypes'] = NotificationService._getGlobal('rssEnabledTypes')
+    this._parameters = NotificationService._getGlobal('parameters')
     this._types.forEach(t => {
       t['translated_group'] = window.Translator.trans(t['group'],{},'resource')
-      t['translated_group'] = window.Translator.trans(t['translated_group'],{},'notification')	
+      t['translated_group'] = window.Translator.trans(t['translated_group'],{},'notification')
     })
   }
 
@@ -27,43 +23,29 @@ export default class NotificationService{
   }
 
   getDisplayEnabledTypes(){
-    return this._parameters['displayEnabledTypes']
+    return this._parameters['display_enabled_types']
   }
 
   getPhoneEnabledTypes(){
-    return this._parameters['phoneEnabledTypes']
+    return this._parameters['phone_enabled_types']
   }
 
   getMailEnabledTypes(){
-    return this._parameters['mailEnabledTypes']
+    return this._parameters['mail_enabled_types']
   }
 
   getRssEnabledTypes(){
-    return this._parameters['rssEnabledTypes']
+    return this._parameters['rss_enabled_types']
   }
 
   getParameters(){
     return this._parameters
   }
 
-  saveParameters(originalParameters, newDisplay, newPhone, newMail, newRss){
-    const originalDisplay = originalParameters.displayEnabledTypes
-    const originalPhone = originalParameters.phoneEnabledTypes
-    const originalMail = originalParameters.mailEnabledTypes
-    const originalRss = originalParameters.rssEnabledTypes
-    const url = window.Routing.generate('icap_notification_save_user_parameters')
-    originalParameters.displayEnabledTypes = newDisplay
-    originalParameters.phoneEnabledTypes = newPhone
-    originalParameters.mailEnabledTypes = newMail
-    originalParameters.rssEnabledTypes = newRss
+  saveParameters(newDisplay, newPhone, newMail, newRss){
+    const url = window.Routing.generate('icap_notifications_user_put_parameters')
     this.$http
     .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
-    .then(()=>{
-      originalParameters.displayEnabledTypes = originalDisplay
-      originalParameters.phoneEnabledTypes = originalPhone
-      originalParameters.mailEnabledTypes = originalMail
-      originalParameters.rssEnabledTypes = originalRss
-    })
   }
 
   createRssFeed(){

@@ -13,7 +13,7 @@ class NotificationParametersListener
     /**
      * @param NotificationParametersEvent $event
      *
-     * @DI\Observe("icap_notification_user_parameters_event")
+     * @DI\Observe("icap_notification_parameters_event")
      */
     public function onGetTypesForParameters(NotificationParametersEvent $event)
     {

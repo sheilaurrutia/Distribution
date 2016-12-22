@@ -13,6 +13,7 @@ namespace Icap\NotificationBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\NotificationBundle\Repository\NotificationParametersRepository")
@@ -20,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class NotificationParameters implements \JsonSerializable
 {
-    const TYPE_ADMIN = 0;
     const TYPE_USER = 1;
     const TYPE_WORKSPACE = 2;
 
@@ -28,16 +28,13 @@ class NotificationParameters implements \JsonSerializable
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Groups({"api_notification"})
      */
     protected $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    protected $type;
-
-    /**
      * @ORM\Column(type="integer", name="user_id", nullable=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $userId;
 
@@ -49,38 +46,39 @@ class NotificationParameters implements \JsonSerializable
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE", nullable=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $workspace;
 
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
+     * @JMS\Groups({"api_notification"})
      */
     protected $displayEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="phone_enabled_types", nullable=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $phoneEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="mail_enabled_types", nullable=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $mailEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="rss_enabled_types")
+     * @JMS\Groups({"api_notification"})
      */
     protected $rssEnabledTypes = [];
 
     /**
      * @ORM\Column(type="string", name="rss_id", unique=true)
+     * @JMS\Groups({"api_notification"})
      */
     protected $rssId;
-
-    /**
-     * @var bool
-     */
-    protected $isNew = false;
 
     /**
      * @return mixed

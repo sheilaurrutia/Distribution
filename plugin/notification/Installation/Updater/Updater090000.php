@@ -45,7 +45,7 @@ class Updater090000 extends Updater
         $this->log('Updating configuration parameters...');
 
         foreach ($parameters as $parameter) {
-            $parameter->setType(NotificationParameters::TYPE_WORKSPACE);
+            $parameter->setType(NotificationParameters::TYPR_USER);
             ++$i;
             if ($i % 100 === 0) {
                 $this->om->forceFlush();

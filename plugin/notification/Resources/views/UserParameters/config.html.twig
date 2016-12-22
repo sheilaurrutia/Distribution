@@ -1,0 +1,36 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+
+{% block title %}{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading"></div>
+    <div data-notification data-ng-app="NotificationModule"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'notification' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_blog' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'innova_collecticiel' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_dropzone' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'forum' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_wiki' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'survey' }) }}"></script>
+    <script>
+        window.parameters = {{ parameters|json_serialize('api_notification')|raw }}
+        window.types =  {{ types|json_encode|raw }}
+    </script>
+
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-notification-list.js') }}"></script>
+
+{% endblock %}
