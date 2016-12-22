@@ -4,6 +4,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from './../../../utils/translate'
 import {getDefinition} from './../../../items/item-types'
+import selectQuiz from './../../selectors'
 import {select} from './../selectors'
 
 import {actions as playerActions} from './../actions'
@@ -41,13 +42,11 @@ class Player extends Component {
             expanded={true}
           >
             <ItemPlayer item={item}>
-              {React.createElement(
-                getDefinition(item.type).player.component,
-                {
-                  item: item,
-                  onChange: () => true
-                }
-              )}
+              {React.createElement(getDefinition(item.type).player.component, {
+                item: item,
+                answer: this.props.answers[item.id] ? this.props.answers[item.id].data : undefined,
+                onChange: (answerData) => this.props.updateAnswer(item.id, answerData)
+              })}
             </ItemPlayer>
           </Panel>
         ))}
@@ -55,8 +54,9 @@ class Player extends Component {
         <PlayerNav
           previous={this.props.previous}
           next={this.props.next}
-          navigateTo={this.props.navigateTo}
-          finishAttempt={this.props.finishAttempt}
+          navigateTo={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers)}
+          finish={() => this.props.finish(this.props.quizId, this.props.paper.id, this.props.answers)}
+          submit={() => this.props.submit(this.props.quizId, this.props.paper.id, this.props.answers)}
         />
       </div>
     )
@@ -64,16 +64,30 @@ class Player extends Component {
 }
 
 Player.propTypes = {
+  quizId: T.string.isRequired,
   number: T.number.isRequired,
   step: T.shape({
     title: T.string,
     description: T.string
   }),
   items: T.array.isRequired,
-  next: T.string,
-  previous: T.string,
+  answers: T.object.isRequired,
+  paper: T.shape({
+    id: T.string.isRequired,
+    number: T.number.isRequired
+  }).isRequired,
+  next: T.shape({
+    id: T.string.isRequired,
+    items: T.arrayOf.arrayOf
+  }),
+  previous: T.shape({
+    id: T.string.isRequired,
+    items: T.arrayOf.arrayOf
+  }),
+  updateAnswer: T.func.isRequired,
   navigateTo: T.func.isRequired,
-  finishAttempt: T.func.isRequired
+  submit: T.func.isRequired,
+  finish: T.func.isRequired
 }
 
 Player.defaultProps = {
@@ -83,21 +97,41 @@ Player.defaultProps = {
 
 function mapStateToProps(state) {
   return {
+    quizId: selectQuiz.id(state),
     number: select.currentStepNumber(state),
     step: select.currentStep(state),
     items: select.currentStepItems(state),
-    next: select.nextStep(state),
-    previous: select.previousStep(state)
+    paper: select.paper(state),
+    answers: select.currentStepAnswers(state),
+    next: select.next(state),
+    previous: select.previous(state)
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    navigateTo(stepId) {
-      dispatch(playerActions.changeCurrentStep(stepId))
+    updateAnswer(questionId, answerData) {
+      dispatch(playerActions.updateAnswer(questionId, answerData))
     },
-    finishAttempt() {
-      dispatch(quizActions.updateViewMode(VIEW_OVERVIEW))
+    navigateTo(quizId, paperId, step, currentStepAnswers) {
+      // Submit answers
+      dispatch(playerActions.submitQuiz(quizId, paperId, currentStepAnswers, (dispatch) => {
+        // Go to the requested step
+        dispatch(playerActions.openStep(step.id, step.items))
+      }))
+    },
+    submit(quizId, paperId, answers) {
+      dispatch(playerActions.submitQuiz(quizId, paperId, answers))
+    },
+    finish(quizId, paperId, currentStepAnswers) {
+      // Submit answers
+      dispatch(playerActions.submitQuiz(quizId, paperId, currentStepAnswers, (dispatch) => {
+        // Mark paper as finished
+        dispatch(playerActions.finishQuiz(quizId, paperId, (dispatch) => {
+          // Close player
+          dispatch(quizActions.updateViewMode(VIEW_OVERVIEW))
+        }))
+      }))
     }
   }
 }

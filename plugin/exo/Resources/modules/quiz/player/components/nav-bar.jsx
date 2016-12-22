@@ -53,17 +53,23 @@ const PlayerNav = props =>
     <div className="forward">
       {props.next ?
         <NextButton onClick={() => props.navigateTo(props.next)} /> :
-        <FinishButton onClick={props.finishAttempt} />
+        <FinishButton onClick={props.finish} />
       }
     </div>
   </nav>
 
 PlayerNav.propTypes = {
-  previous: T.string,
-  next: T.string,
+  next: T.shape({
+    id: T.string.isRequired,
+    items: T.arrayOf.arrayOf
+  }),
+  previous: T.shape({
+    id: T.string.isRequired,
+    items: T.arrayOf.arrayOf
+  }),
   navigateTo: T.func.isRequired,
-  finishAttempt: T.func.isRequired,
-  submitAnswers: T.func
+  finish: T.func.isRequired,
+  submit: T.func
 }
 
 PlayerNav.defaultProps = {

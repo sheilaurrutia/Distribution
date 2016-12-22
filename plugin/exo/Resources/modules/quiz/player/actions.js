@@ -4,37 +4,75 @@ import {actions as quizActions} from './../actions'
 import {VIEW_PLAYER} from './../enums'
 import {normalize} from './normalizer'
 
-export const ATTEMPT_START  = 'ATTEMPT_START'
-export const ATTEMPT_FINISH = 'ATTEMPT_FINISH'
-
-export const ANSWER_UPDATE  = 'ANSWER_UPDATE'
-export const ANSWERS_SET    = 'ANSWERS_SET'
-export const ANSWERS_SUBMIT = 'ANSWERS_SUBMIT'
-
-export const CURRENT_STEP_CHANGE = 'CURRENT_STEP_CHANGE'
+export const ATTEMPT_START = 'ATTEMPT_START'
+export const STEP_OPEN     = 'STEP_OPEN'
+export const ANSWER_UPDATE = 'ANSWER_UPDATE'
 
 export const actions = {}
 
+// TODO : display loader on ajax call
+// TODO : catch any error in the network call.
+
 actions.playQuiz = (quizId) => {
   return function (dispatch) {
-    return fetch(generateUrl('exercise_attempt_start', {exerciseId: quizId}), {credentials: 'include', method: 'POST'})
-      .then(response => response.json())
-      .then(json => {
-        const normalized = normalize(json)
+    return fetch(generateUrl('exercise_attempt_start', {exerciseId: quizId}), {
+      credentials: 'include',
+      method: 'POST'
+    })
+    .then(response => response.json())
+    .then(json => {
+      const normalized = normalize(json)
 
-        dispatch(actions.startAttempt(normalized.paper))
-        dispatch(actions.setAnswers(normalized.answers))
-        dispatch(actions.changeCurrentStep(normalized.paper.structure[0].id))
-        dispatch(quizActions.updateViewMode(VIEW_PLAYER))
-      })
+      dispatch(actions.startAttempt(normalized.paper, normalized.answers))
 
-    // TODO : catch any error in the network call.
+      const firstStep = normalized.paper.structure[0]
+      dispatch(actions.openStep(firstStep.id, firstStep.items))
+      dispatch(quizActions.updateViewMode(VIEW_PLAYER))
+    })
   }
 }
 
-actions.startAttempt = makeActionCreator(ATTEMPT_START, 'paper')
-actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'quiz')
-actions.submitAnswers = makeActionCreator(ANSWERS_SUBMIT, 'quiz', 'paper')
+actions.submitQuiz = (quizId, paperId, answers, nextActions) => {
+  return function (dispatch) {
+    const answerRequest = []
+    for (let answer in answers) {
+      if (answers.hasOwnProperty(answer) && answers[answer]._touched) {
+        // Answer has been modified => send it to the server
+        answerRequest.push(answers[answer])
+      }
+    }
+
+    if (0 !== answerRequest.length) {
+      return fetch(generateUrl('exercise_attempt_submit', {exerciseId: quizId, id: paperId}), {
+        credentials: 'include',
+        method: 'PUT',
+        body: JSON.stringify(answerRequest)
+      })
+      .then(() => {
+        if (nextActions) {
+          nextActions(dispatch)
+        }
+      })
+
+      // TODO : catch any error in the network call.
+    } else {
+      nextActions(dispatch)
+    }
+  }
+}
+
+actions.finishQuiz = (quizId, paperId, nextActions) => {
+  return function (dispatch) {
+    return fetch(generateUrl('exercise_attempt_finish', {exerciseId: quizId, id: paperId}), {
+      credentials: 'include',
+      method: 'PUT'
+    })
+    .then(() => {
+      nextActions(dispatch)
+    })
+  }
+}
+
+actions.startAttempt = makeActionCreator(ATTEMPT_START, 'paper', 'answers')
 actions.updateAnswer = makeActionCreator(ANSWER_UPDATE, 'questionId', 'answerData')
-actions.setAnswers = makeActionCreator(ANSWERS_SET, 'answers')
-actions.changeCurrentStep = makeActionCreator(CURRENT_STEP_CHANGE, 'id')
+actions.openStep = makeActionCreator(STEP_OPEN, 'id', 'items')
