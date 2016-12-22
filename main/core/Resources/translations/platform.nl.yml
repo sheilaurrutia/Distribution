@@ -1,3 +1,4 @@
+
 6_parameters_min_msg: Het CSV-bestand moet tenminste 6 elementen per regel bevatten.
 7_parameters_min_msg: Het CSV-bestand moet tenminste 7 elementen per regel bevatten.
 accept: Aanvaarden
@@ -495,6 +496,7 @@ jqplot_date_output_format: %d-%m-%Y
 keep_me_logged_in: Gebruikersnaam onthouden
 language: Taal
 language_select: Kies een taal
+
 lastName: Naam
 last_30_days_activity: Activiteiten van de laatste 30 dagen
 last_action: '{1} Laatste actie|[1,Inf] %logAmount% laatste acties'

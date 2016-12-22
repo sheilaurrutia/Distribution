@@ -33,8 +33,9 @@
             <div class="notification-info">
                 <span class="notification-icon {% if notification.iconColor is empty %} default-notification-icon " {% else %} " style="background-color: {{ notification.iconColor }} " {% endif %}
                 >
+                                </span>
                 {% if notification.getIconLetter() is empty %} {{ systemName|first }} {% else %} {{ notification.getIconLetter() }} {% endif %}
-                </span>
+
                 <span class="notification-widget-date">{{ notification.creationDate|smartDate }}</span>
             </div>
         </div>

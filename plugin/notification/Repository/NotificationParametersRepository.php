@@ -13,7 +13,7 @@ namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class NotificationUserParametersRepository extends EntityRepository
+class NotificationParametersRepository extends EntityRepository
 {
     public function findParametersByUserId($userId)
     {
@@ -24,5 +24,14 @@ class NotificationUserParametersRepository extends EntityRepository
             ->setParameter('userId', $userId);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function findUserParameters()
+    {
+        $qb = $this->createQueryBuilder('parameters');
+        $qb->select('parameters')
+            ->andWhere('parameters.userId is not null');
+
+        return $qb->getQuery()->getResult();
     }
 }

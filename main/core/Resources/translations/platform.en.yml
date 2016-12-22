@@ -267,6 +267,7 @@ date_range.week: w
 date_range.yesterday: Yesterday
 db_table: 'Database table'
 decline: Decline
+default_following: Followed by default
 default_language: 'Default Language'
 default_role: 'Default role'
 deletable: Deletable
@@ -374,6 +375,7 @@ filters: Filters
 find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
+followed_resources: Resources that I follow
 footer: Footer
 for_period: 'for period'
 forgot_password: 'Forgot your password?'
@@ -865,6 +867,7 @@ roles_fields_form_explanation: 'This form allows you to set which roles can see 
 roles_for_desktop_widget: Roles (Desktop)
 roles_management: 'Roles management'
 save: Save
+Save: Save
 save_as_template: 'Export'
 save_workspace_as_template: 'Save workspace as template'
 saved_changes: 'Your changes have been saved'

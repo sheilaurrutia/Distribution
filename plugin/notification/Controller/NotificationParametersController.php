@@ -12,15 +12,15 @@
 namespace Icap\NotificationBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class NotificationUserParametersController extends Controller
+class NotificationParametersController extends Controller
 {
     /**
      * @Route("/parameters", name="icap_notification_user_parameters")
@@ -34,20 +34,34 @@ class NotificationUserParametersController extends Controller
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return array('types' => $types, 'rssId' => $parameters->getRssId());
+        return ['types' => $types, 'rssId' => $parameters->getRssId(), 'parameters' => $parameters];
     }
 
     /**
-     * @Route("/parameters", name="icap_notification_save_user_parameters")
-     * @Method({"POST"})
+     * @Route("/parameters", name="icap_notification_save_user_parameters", options = {"expose"=true})
+     * @Method({"POST", "PUT"})
      * @Template("IcapNotificationBundle:Parameters:config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function postAction(Request $request, User $user)
     {
-        $this->getParametersManager()->processUpdate($request->request->all(), $user->getId());
+        $newDisplay = $request->request->get('display');
+        $newPhone = $request->request->get('phone');
+        $newMail = $request->request->get('mail');
+        $newRss = $request->request->get('rss');
 
-        return new RedirectResponse($this->generateUrl('claro_desktop_parameters_menu'));
+        $response = new JsonResponse();
+
+        if (isset($newDisplay) && isset($newRss)) {
+            $this->getParametersManager()->editUserParameters($user->getId(), $newDisplay, $newRss, $newPhone, $newMail);
+            $response->setData('Success');
+            $response->setStatusCode(200);
+        } else {
+            $response->setData('No Data available');
+            $response->setStatusCode(400);
+        }
+
+        return $response;
     }
 
     /**
@@ -61,11 +75,11 @@ class NotificationUserParametersController extends Controller
         $parameters = $parametersManager->regenerateRssId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return array('types' => $types, 'rssId' => $parameters->getRssId());
+        return ['types' => $types, 'rssId' => $parameters->getRssId(), 'parameters' => $parameters];
     }
 
     /**
-     * @return \Icap\NotificationBundle\Manager\NotificationUserParametersManager
+     * @return \Icap\NotificationBundle\Manager\NotificationParametersManager
      */
     private function getParametersManager()
     {

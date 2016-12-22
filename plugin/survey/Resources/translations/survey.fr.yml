@@ -10,12 +10,28 @@ allow_multiple_response: Réponses multiples
 an_answer_is_required: Une réponse est requise
 answer: Réponse
 answers: Réponses
-answer_to_survey: Répondre au sondage
+answers_to_survey: - Réponses aux sondages
+answer_to_survey: 'Répondre au sondage'
 choice: Choix
 choice_display: Affichage des choix
 choices_management: Gestion des choix
 close: Fermer
 closed: Fermé
+closed_survey: - Sondages clôturés
+closed_survey_message: 'Le sondage est fermé. Plus personne ne peut y répondre.'
+closed_user_message: 'Le sondage est clôturé.'
+closing_date: 'Date de clôture'
+closing_date_next: 'Prochaine date de clôture'
+comment: Commentaire
+comments: Commentaires
+create_model_from_question: 'Créer un modèle à partir de la question'
+create_question: 'Créer une question'
+create_survey: - Création de sondage
+create_title: 'Créer un titre'
+delete_all_answers: 'Supprimer toutes les réponses'
+delete_question_title_btn_explanation: 'Supprimer le titre'
+delete_selected_answers: 'Supprimer les réponses sélectionnées'
+delete_survey: - Suppression de sondage
 closed_survey_message: Le sondage est fermé. Plus personne ne peut y répondre.
 closed_user_message: Le sondage est clôturé.
 closing_date: Date de clôture

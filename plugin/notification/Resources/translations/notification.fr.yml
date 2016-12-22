@@ -3,6 +3,22 @@ enable_notifications_info: Être notifié des nouveautés de cette ressource
 disable_notifications: Ne pas suivre cette ressource
 disable_notifications_info: Ne pas être notifié des nouveautés de cette ressource
 now: Maintenant
+few_seconds_ago: "Il y a quelques secondes"
+yesterday: "Hier"
+seconds_ago: "{0} Il y a 0 secondes|{1} Il y a 1 seconde|]1,Inf] Il y a %count% secondes"
+minutes_ago: "{0} Il y a 0 minutes|{1} Il y a 1 minute|]1,Inf] Il y a %count% minutes"
+hours_ago: "{0} Il y a 0 heures|{1} Il y a 1 heure|]1,Inf] Il y a %count% heures"
+days_ago: "{0} Il y a 0 jours|{1} Il y a 1 jour|]1,Inf] Il y a %count% jours"
+date_format: "d/m/Y \\à H:i"
+day_format: "%day% %month%"
+hour_format: " \\à H:i"
+months: "Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Décembre"
+days: "Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche"
+see_more: "Voir plus"
+zero_notifications: "Aucune notification"
+notifications_title: "Liste des notifications"
+
+email: Recevoir un courriel
 few_seconds_ago: Il y a quelques secondes
 yesterday: Hier
 seconds_ago: '{0} Il y a 0 secondes|{1} Il y a 1 seconde|]1,Inf] Il y a %count% secondes'
@@ -10,7 +26,7 @@ minutes_ago: '{0} Il y a 0 minutes|{1} Il y a 1 minute|]1,Inf] Il y a %count% mi
 hours_ago: '{0} Il y a 0 heures|{1} Il y a 1 heure|]1,Inf] Il y a %count% heures'
 days_ago: '{0} Il y a 0 jours|{1} Il y a 1 jour|]1,Inf] Il y a %count% jours'
 date_format: d/m/Y \\à H:i
-day_format: %day% %month%
+day_format: '%day% %month%'
 hour_format:  \\à H:i
 months: Janvier, Février, Mars, Avril, Mai, Juin, Juillet, Aout, Septembre, Octobre, Novembre, Décembre
 days: Lundi, Mardi, Mercredi, Jeudi, Vendredi, Samedi, Dimanche
@@ -19,8 +35,15 @@ zero_notifications: Aucune notification
 notifications_title: Liste des notifications
 notification_user_configuration: Paramètres des notifications
 notification_configuration: Configuration des notifications
+notification_platform: Recevoir une notification sur la plateforme
+notification_smartphone: Recevoir une notification sur mon smartphone
+rss_add: Ajouter au flux RSS
 rss_visible: Flux RSS
+rss_url_create: Créer le flux RSS
 rss_url_regenerate: Régénérer l'URL du flux RSS
+rss_url_subscribe: S'abonner au flux RSS
+dropdown_items: Eléments dans la liste
+max_per_page: Eléments par page
 dropdown_items: Éléments dans la liste
 max_per_page: Éléments par page
 purge_enabled: Effacement automatique
@@ -35,6 +58,7 @@ lesson: Cours
 socialmedia: Médias sociaux
 website: Site web
 forum: Forum
+notifications_updated: Vos modifications ont bien été prises en compte
 dropzone: Evaluation
 document: Document pour évaluation
 portfolio: Portfolio

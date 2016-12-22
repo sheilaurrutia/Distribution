@@ -69,7 +69,9 @@ consult_hint: Consulter l'indice entraîne une pénalité de X points. Voulez-vo
 contain_search: Dont la question contient
 correct: Correcte
 correction: Correction
+correction_available: - Corrections disponibles
 correction_date: Date de la correction
+correction_requested: - Demandes de corrections
 correspondence: correspondance
 correspondence_empty: Vous n'avez réalisé aucune correspondance !
 correspondence_error: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
@@ -77,7 +79,9 @@ create: Créer
 create_a_new_category: Créer une nouvelle catégorie
 create_a_new_entry: Créer une nouvelle question
 creation_date: Date de création
+create_exercises: - Création d'exercices
 create_hole : Créer un trou
+
 
 # D
 date: Date
@@ -87,6 +91,7 @@ delete_of_my_bank: Supprimer de ma banque
 delete_of_my_exercise: Supprimer de mon exercice
 delete_papers: Supprimer les copies
 delete_question: Supprimer l'étape
+deletion_exercises: - Suppression d'exercices
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page

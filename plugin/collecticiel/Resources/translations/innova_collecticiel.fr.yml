@@ -29,6 +29,7 @@ allowDrop:  Dépots autorisés
 allowDropAndPeerReview: Dépots autorisés et corrections par les pairs
 allowDropAndPeerReviewManualState: Les apprenants peuvent rendre leur copie ET peuvent corriger les copies. (Évaluation par les pairs).
 allowDropManualState: Ouvert
+Answer comment: '- Réponse aux commentaires'
 Already reported: Déjà signalé
 Appreciation : Appréciation
 Are you sure to want to close this collecticiel: Voulez-vous fermer le collecticiel ?
@@ -116,6 +117,7 @@ corrections were already created: one: Une correction a déjà été créee.|som
 corrections_denied: Corrections faites par le correcteur qui ont été signalées
 Corrector: Correcteur :
 Create: Créer
+create_collecticiel: '- Création d''un collecticiel'
 created by a manager: créée par un gestionnaire
 Criteria number: Le nombre de critères nest pas limité.
 criteria_explication: Le nombre de critères nest pas limité.<br/>Vous pouvez proposer une zone de commentaire libre au correcteur.
@@ -139,6 +141,7 @@ Delete a document: Suppression dun document
 Delete copy: Supprimer le document
 Delete:  Supprimer
 Deleted drop: Document supprimé
+deletion_collecticiel: '- Suppression d''un collecticiel'
 Deny correction: Dénoncer cette correction
 Deposit phase of the %dropzonename% evaluation: Phase de dépôt de %dropzonename%
 Deposit phase: Phase de dépôt
@@ -345,7 +348,7 @@ Parameters : Paramètres
 Participant: Participant
 Participants_: Participants :
 Participate in an evaluation requires authentication. Please login.: Participer à une évaluation requiert une authentification. Veuillez vous identifier.
-Peer review criteria: Critères d'évaluation par les pairs ou par les apprenants eux-mêmes grâce à l'évaluation par les pairs.<br/>L'outil de planification vous permet de gérer les différentes phases de l'évaluation	manuellement ou automatiquement par dates.
+Peer review criteria: Critères d'évaluation par les pairs ou par les apprenants eux-mêmes grâce à l'évaluation par les pairs.<br/>L'outil de planification vous permet de gérer les différentes phases de l'évaluation  manuellement ou automatiquement par dates.
 Peer review evaluation: Les apprenants se corrigent entre eux. (Évaluation par les pairs)
 Peer Review is starting in %dropzonename% evaluation: Phase de correction par les pairs de %dropzonename%.
 Peer review phase: Phase d'évaluation par les pairs.
@@ -358,7 +361,7 @@ peerReviewManualState: Les apprenants peuvent corriger les copies. (Évaluation 
 People that have a copy in this dropzone: Personnes ayant déposé un document dans la zone de dépôt.
 People will not be able to drop anymore: Fermeture du collecticiel
 Picture: Image de profil
-Planification instruction: L'ouverture du collecticiel peut se réaliser de manière manuelle ou en fonction des dates	de début (ouverture du collecticiel) et de fin (fermeture).
+Planification instruction: L'ouverture du collecticiel peut se réaliser de manière manuelle ou en fonction des dates  de début (ouverture du collecticiel) et de fin (fermeture).
 Planification peer review instruction: Elle se divise en plusieurs étapes: l'ouverture de l'évaluation en autorisant le dépôt, début de l'évaluation par les pairs qui clôture le dépôt et la fin de l'évaluation.
 Planning: Ouverture
 Please comment: Merci de laisser un commentaire
@@ -391,7 +394,7 @@ Report: Signaler
 reportComment: Commentaire du signalement
 Reported copy : Document signalé
 Reported: A signalé
-Request comment: Demande de commentaire
+Request comment: '- Demande de commentaire'
 Request for comment: Transmettre une demande de commentaire
 Request sent: Demande transmise
 Requests: Demandes adressées
@@ -465,9 +468,9 @@ The drop was deleted by administator: Le document a été supprimé par un admin
 The evaluation has been successfully saved: L'évaluation a été correctement sauvegardée.
 The peer review is not enabled: L'évaluation par les pairs n'est pas activée.
 There are no evaluation criterion: 'Aucun critère d''évaluation'
-There are only nb days before the beginning of the peer review: one: Plus qu'un jour avant le début de l'évaluation par les pairs|some: Plus que %count% jours avant le début de l'évaluation par les pairs	 la note pour ce critère sera de 0 par défaut.
+There are only nb days before the beginning of the peer review: one: Plus qu'un jour avant le début de l'évaluation par les pairs|some: Plus que %count% jours avant le début de l'évaluation par les pairs  la note pour ce critère sera de 0 par défaut.
 There are only nb days before the end of the peer review: one: Plus qu'un jour avant la fin de l'évaluation par les pairs|some: Plus que %count% jours avant la fin de l'évaluation par les pairs
-There are only nb days to get your copy: one: Plus qu'un jour pour rendre votre copie|some: Plus que %count% jours pour rendre votre copie	 ajouter ou supprimer des critères n'affectera que les nouvelles corrections.  Pour mettre à jour les anciennes corrections	 vous devrez recalculer les notes de celles ci.
+There are only nb days to get your copy: one: Plus qu'un jour pour rendre votre copie|some: Plus que %count% jours pour rendre votre copie   ajouter ou supprimer des critères n'affectera que les nouvelles corrections.  Pour mettre à jour les anciennes corrections  vous devrez recalculer les notes de celles ci.
 There are only nb hours before the beginning of the peer review: one: Plus qu'une heure avant le début de l'évaluation par les pairs|some: Plus que %count% heures avant le début de l'évaluation par les pairs
 There are only nb hours before the end of the peer review: one: Plus qu'une heure avant la fin de l'évaluation par les pairs|some: Plus que %count% heures avant la fin de l'évaluation par les pairs
 There are only nb hours to get your copy: one: Plus qu'une heure pour rendre votre copie|some: Plus que %count% heures pour rendre votre copie
@@ -508,7 +511,7 @@ Unfortunately there is no copy to correct for the moment. Please try again later
 Unlock copy: Débloquer mon document
 unlock user: débloquer
 unlock_all: débloquer tous
-unlock_user_tooltip: Débloquer un utilisateur lui permettra de voir sa copie sans qu'il ait besoin de faire les corrections requises.	 mais n'ont pas encore cliqué sur le bouton "Terminer" afin de valider leurs copies. Si vous ne faites rien	 ces copies seront considérées comme non rendues et n'apparaîtront pas dans la liste des copies en cours d'évaluation.
+unlock_user_tooltip: Débloquer un utilisateur lui permettra de voir sa copie sans qu'il ait besoin de faire les corrections requises.  mais n'ont pas encore cliqué sur le bouton "Terminer" afin de valider leurs copies. Si vous ne faites rien  ces copies seront considérées comme non rendues et n'apparaîtront pas dans la liste des copies en cours d'évaluation.
 unlocked user: utilisateur débloqué
 Unrecognized type: Type non reconnu
 unterminated drops: copie(s) non terminée(s)
@@ -536,23 +539,5 @@ Would you like to comment?: Souhaitez vous ajouter un commentaire ?
 # Y
 
 yes: 'oui'
-You are about to delete a correction. This action is not without consequence.: Vous êtes sur le point de supprimer une correction. Cela n'est pas sans conséquences.
-You are about to make your copy. This action is final. Are you sure you have done: Vous êtes sur le point de soumettre votre document. Cette action est définitive. Êtes-vous sûr d'avoir terminé ?
-You are about to make your correction. This action is final. The rating is %grade%/20: Vous êtes sur le point de soumettre votre correction. Cette action est définitive. La note attribuée sera %grade%/20.
-You are about to remove a report. What do you do: Vous êtes sur le point de retirer un signalement. Que voulez vous faire ?
-You are about to report a copy. This action is not without consequence.: Vous êtes sur le point de signaler un document. Cette action nest pas sans conséquence.
-You are about to report a correction. This action is not without consequence.: Vous êtes sur le point de signaler une correction. Cette action nest pas sans conséquence.
-You have already begun a correction.: Vous avez déjà commencé une correction.
-You have an incomplete copy in progress: Vous avez un document incomplet en cours.
-You have not made ​​a copy. It is too late to take part in this evaluation.: Vous n'avez pas rendu de travail. Il est trop tard pour prendre part à cette évaluation.
-You have not yet made a copy: Vous n'avez pas encore rendu de travail
-You must have made ​​your copy before correcting: Vous devez avoir rendu votre document avant de pouvoir corriger
-You need at least one correction on the copy to unlock it: Il faut au moins une correction sur le document pour pouvoir la débloquer.
-You no longer have any copies to correct: Vous n'avez plus aucun document à corriger
-You ve already made ​​your copy for this review: Vous avez déjà rendu votre document pour cette évaluation
-You will be abble to do it later if you want: Remarque: Vous avez la possibilité de le faire plus tard.
-You will reactivate a correction but the expected number of correction is already reached. Are you sure ?: Vous êtes sur le point de revalider une correction. Cependant, le nombre attendu de corrections est déjà atteint. Êtes-vous sûr de vouloir continuer ?
-Your copy has been saved: Votre document a été sauvegardé
-Your correction has been saved: Votre correction a été sauvegardé
-Your modifications will only affect new corrections. For older, do you want to apply modification and recalculate grades: Vos modifications vont affecter seulement les nouvelles corrections. Voulez-vous appliquer ces modifications aux corrections déjà créées et recalculer les notes déjà données? Cette opération peut prendre du temps.
-Your report has been saved: Votre sigalement a été enregistré.
+no: 'non'
+

@@ -5,12 +5,13 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/14/15
  */
 
 namespace Icap\NotificationBundle\Form;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,33 +24,53 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NotificationPluginConfigurationType extends AbstractType
 {
+    /**
+     * @DI\InjectParams({
+     *     "ch" = @DI\Inject("claroline.config.platform_config_handler")
+     * })
+     */
+    public function __construct(PlatformConfigurationHandler $ch)
+    {
+        $this->ch = $ch;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('dropdownItems', 'integer',
-                array(
+                [
                     'label' => 'dropdown_items',
-                    'theme_options' => array('control_width' => 'col-md-2'),
-                )
+                    'theme_options' => ['control_width' => 'col-md-2'],
+                ]
             )
             ->add('maxPerPage', 'integer',
-                array(
+                [
                     'label' => 'max_per_page',
-                    'theme_options' => array('control_width' => 'col-md-2'),
-                )
+                    'theme_options' => ['control_width' => 'col-md-2'],
+                ]
             )
             ->add('purgeEnabled', 'checkbox',
-                array(
+                [
                     'required' => false,
                     'label' => 'purge_enabled',
-                    'theme_options' => array('control_width' => 'col-md-2'),
-                )
+                    'theme_options' => ['control_width' => 'col-md-2'],
+                ]
             )
             ->add('purgeAfterDays', 'integer',
-                array(
+                [
                     'label' => 'purge_after_days',
-                    'theme_options' => array('control_width' => 'col-md-2'),
-                )
+                    'theme_options' => ['control_width' => 'col-md-2'],
+                ]
+            )
+            ->add(
+                'isNotificationActive',
+                'checkbox',
+                [
+                    'label' => 'activate_notifications',
+                    'required' => false,
+                    'data' => $this->ch->getParameter('is_notification_active'),
+                    'mapped' => false,
+                ]
             );
     }
 
@@ -66,11 +87,11 @@ class NotificationPluginConfigurationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'translation_domain' => 'notification',
                 'data_class' => 'Icap\NotificationBundle\Entity\NotificationPluginConfiguration',
                 'csrf_protection' => true,
-            )
+            ]
         );
     }
 }
