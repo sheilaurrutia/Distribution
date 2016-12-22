@@ -77,7 +77,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'support_email',
+                'supportEmail',
                 'email',
                 [
                     'label' => 'support_email',
@@ -104,7 +104,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'selfRegistration',
+                'allowSelfRegistration',
                 'checkbox',
                 [
                     'required' => false,
@@ -169,7 +169,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'redirect_after_login_option',
+                'redirectAfterLoginOption',
                 'choice',
                 [
                     'choices' => $this->buildRedirectOptions(),
@@ -183,7 +183,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'redirect_after_login_url',
+                'redirectAfterLoginUrl',
                 'text',
                 [
                     'label' => 'redirect_after_login_url',
@@ -191,7 +191,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'account_duration',
+                'accountDuration',
                 'integer',
                 [
                     'label' => 'account_duration_label',
@@ -199,7 +199,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'anonymous_public_profile',
+                'anonymousPublicProfile',
                 'checkbox',
                 [
                     'label' => 'show_profile_for_anonymous',
@@ -208,7 +208,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'portfolio_url',
+                'portfolioUrl',
                 'url',
                 [
                     'label' => 'portfolio_url',
@@ -245,7 +245,7 @@ class GeneralType extends AbstractType
                 ]
             )
             ->add(
-                'workspaceMaxUsers',
+                'maxWorkspaceUsers',
                 'integer',
                 [
                     'required' => false,
@@ -333,7 +333,7 @@ class GeneralType extends AbstractType
 
             $form
                 ->add(
-                    'platform_init_date',
+                    'platformInitDate',
                     'datepicker',
                     [
                         'input' => 'timestamp',
@@ -345,7 +345,7 @@ class GeneralType extends AbstractType
                     ]
                 )
                 ->add(
-                    'platform_limit_date',
+                    'platformLimitDate',
                     'datepicker',
                     [
                         'input' => 'timestamp',
@@ -377,6 +377,7 @@ class GeneralType extends AbstractType
     {
         $options = DefaultCorePlatformConfiguration::$REDIRECT_OPTIONS;
         $choices = [];
+
         foreach ($options as $option) {
             $choices['redirect_after_login_option_'.strtolower($option)] = $option;
         }
