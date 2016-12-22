@@ -43,6 +43,8 @@
                     {{ form_rest(form) }}
                 </div>
             </div>
+
+
             <div class="form-actions">
                 <button type="submit" id="edit-tools-btn" href="{{ path('claro_admin_index') }}" class="btn btn-primary">
                     {{ 'edit'|trans({}, 'platform') }}
@@ -50,7 +52,13 @@
                 <a class="btn btn-default" href="{{ path('claro_admin_index') }}">
                     {{ 'cancel'|trans({}, 'platform') }}
                 </a>
+
+                <a class="btn btn-default" href="{{path('icap_notification_admin_parameters')}}">
+                    {{'edit_default_notification_parameters'|trans({},'notification')}}
+                </a>
             </div>
         </form>
+
+
     </div>
 {% endblock %}

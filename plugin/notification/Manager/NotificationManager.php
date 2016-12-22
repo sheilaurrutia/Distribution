@@ -27,9 +27,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class NotificationManager
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
     protected $em;
     /**
      * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
@@ -60,7 +57,7 @@ class NotificationManager
      *      "tokenStorage" = @DI\Inject("security.token_storage"),
      *      "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters"),
+     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_parameters"),
      *      "notificationPluginConfigurationManager" = @DI\Inject("icap.notification.manager.plugin_configuration")
      * })
      */

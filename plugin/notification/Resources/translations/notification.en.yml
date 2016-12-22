@@ -65,3 +65,4 @@ dropzone: 'Evaluation'
 document: 'Document'
 portfolio: 'Portfolio'
 path: 'Path'
+edit_default_notification_parameters: Edit default notification parameters
