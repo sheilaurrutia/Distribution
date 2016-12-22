@@ -17,6 +17,7 @@ class PlatformConfiguration
     const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     const REGISTRATION_MAIL_VALIDATION_FULL = 2;
     const DEFAULT_REDIRECT_OPTION = 'DESKTOP';
+
     public static $REDIRECT_OPTIONS = [
         'DESKTOP' => 'DESKTOP',
         'LAST' => 'LAST',

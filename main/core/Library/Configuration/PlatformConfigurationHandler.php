@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use RuntimeException;
 use Symfony\Component\Yaml\Yaml;
@@ -25,81 +24,6 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
-
-    public static $defaultParameters = [
-        'name' => 'claroline',
-        'nameActive' => true,
-        'support_email' => null,
-        'footer' => null,
-        'logo' => 'clarolineconnect.png',
-        'allow_self_registration' => true,
-        'locale_language' => 'fr',
-        'theme' => 'claroline',
-        'default_role' => 'ROLE_USER',
-        'cookie_lifetime' => 3600,
-        'mailer_transport' => 'smtp',
-        'mailer_host' => null,
-        'mailer_port' => null,
-        'mailer_encryption' => null,
-        'mailer_username' => null,
-        'mailer_password' => null,
-        'mailer_auth_mode' => null,
-        'terms_of_service' => true,
-        'google_meta_tag' => null,
-        'redirect_after_login_option' => PlatformConfiguration::DEFAULT_REDIRECT_OPTION,
-        'redirect_after_login_url' => null,
-        'session_storage_type' => 'native',
-        'session_db_table' => null,
-        'session_db_id_col' => null,
-        'session_db_data_col' => null,
-        'session_db_time_col' => null,
-        'session_db_dsn' => null,
-        'session_db_user' => null,
-        'session_db_password' => null,
-        'form_captcha' => true,
-        'form_honeypot' => false,
-        'platform_limit_date' => 1559350861, //1 june 2019
-        'platform_init_date' => 1388534461, //1 june 2014
-        'account_duration' => null,
-        'username_regex' => '/^[a-zA-Z0-9@\-_\.]*$/',
-        'anonymous_public_profile' => false,
-        'home_menu' => null,
-        'footer_login' => false,
-        'footer_workspaces' => false,
-        'header_locale' => false,
-        'portfolio_url' => null,
-        'is_notification_active' => true,
-        'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
-        'max_workspace_users' => Workspace::DEFAULT_MAX_USERS,
-        'confirm_send_datas' => null,
-        'token' => null,
-        'country' => '-',
-        'datas_sending_url' => 'http://stats.claroline.net/insert.php',
-        'repository_api' => 'http://packages.claroline.net/api.php',
-        'use_repository_test' => false,
-        'auto_logging_after_registration' => false,
-        'registration_mail_validation' => PlatformConfiguration::REGISTRATION_MAIL_VALIDATION_PARTIAL,
-        'resource_soft_delete' => false,
-        'show_help_button' => false,
-        'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
-        'register_button_at_login' => false,
-        'send_mail_at_workspace_registration' => true,
-        'locales' => ['fr', 'en', 'es'],
-        'domain_name' => null,
-        'platform_url' => null,
-        'mailer_from' => null,
-        'default_workspace_tag' => null,
-        'is_pdf_export_active' => false,
-        'google_geocoding_client_id' => null,
-        'google_geocoding_signature' => null,
-        'google_geocoding_key' => null,
-        'portal_enabled_resources' => null,
-        'ssl_enabled' => false,
-        'enable_rich_text_file_import' => false,
-        'login_target_route' => 'claro_security_login',
-        'enable_opengraph' => true,
-    ];
     private $lockedParameters;
 
     /**
@@ -110,7 +34,7 @@ class PlatformConfigurationHandler
      */
     public function __construct($configFile, $lockedConfigFile)
     {
-        self::$defaultParameters['tmp_dir'] = sys_get_temp_dir();
+        $this->parameters = [];
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
         $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
@@ -163,11 +87,16 @@ class PlatformConfigurationHandler
         return $this->parameters['redirect_after_login_option'] === $option;
     }
 
+    public function addDefaultParameters(PlatformConfigurationParametersInterface $config)
+    {
+        $this->parameters = array_merge($config->getDefaultParameters(), $this->parameters);
+    }
+
     public function getPlatformConfig()
     {
         $config = new PlatformConfiguration();
         $config->setName($this->parameters['name']);
-        $config->setNameActive($this->parameters['nameActive']);
+        $config->setNameActive($this->parameters['name_active']);
         $config->setSupportEmail($this->parameters['support_email']);
         $config->setFooter($this->parameters['footer']);
         $config->setSelfRegistration($this->parameters['allow_self_registration']);
@@ -242,13 +171,12 @@ class PlatformConfigurationHandler
         }
 
         $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: [];
-        $parameters = self::$defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
-            $parameters[$parameter] = $value;
+            $this->parameters[$parameter] = $value;
         }
 
-        return $parameters;
+        return $this->parameters;
     }
 
     protected function saveParameters()
@@ -265,14 +193,14 @@ class PlatformConfigurationHandler
         }
     }
 
-    public function getDefaultParameters()
-    {
-        return self::$defaultParameters;
-    }
-
     public function getLockedParamaters()
     {
         return $this->lockedParameters;
+    }
+
+    public function getDefaultParameters()
+    {
+        return $this->defaultConfig;
     }
 
     protected function generateLockedParameters($lockedConfigFile)
