@@ -29,6 +29,15 @@ class DefaultNotificationPlatformConfiguration implements PlatformConfigurationP
             'notification_purge_enabled' => true,
             'notification_purge_after_days' => 60,
             'notification_last_purge_date' => (new \DateTime())->setTime(0, 0, 0),
+            'notification_allow_phone_and_mail' => false,
+            'notification_display_enabled_types' => [],
+            'notification_phone_enabled_types' => [],
+            'notification_mail_enabled_types' => [],
+            'notification_rss_enabled_types' => [],
+            'notification_locked_display_enabled_types' => [],
+            'notification_locked_phone_enabled_types' => [],
+            'notification_locked_mail_enabled_types' => [],
+            'notification_locked_rss_enabled_types' => [],
         ];
     }
 }

@@ -1,7 +1,8 @@
 export default class NotificationService{
 
-  constructor($http){
+  constructor($http, FormBuilderService){
     this.$http = $http
+    this.FormBuilderService = FormBuilderService
     this._types = NotificationService._getGlobal('types')
     this._parameters = NotificationService._getGlobal('parameters')
     this._types.forEach(t => {
@@ -38,14 +39,34 @@ export default class NotificationService{
     return this._parameters['rss_enabled_types']
   }
 
+  getAllowPhoneAndMail() {
+      return NotificationService._getGlobal('allowPhoneAndMail')
+  }
+
   getParameters(){
     return this._parameters
   }
 
   saveParameters(newDisplay, newPhone, newMail, newRss){
-    const url = window.Routing.generate('icap_notifications_user_put_parameters')
+    let url = ''
+    switch (this.getMode()) {
+        case 'admin': url =  window.Routing.generate('icap_notifications_admin_post_parameters'); break;
+        case 'user': url = window.Routing.generate('icap_notifications_user_put_parameters'); break;
+    }
+
     this.$http
-    .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
+       .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
+  }
+
+  setAllowPhoneAndMail(boolean) {
+      const url = window.Routing.generate('api_post_parameters')
+      this.FormBuilderService.submit(url, {
+          'notification_allow_phone_and_mail': boolean
+      })
+  }
+
+  getMode() {
+      return NotificationService._getGlobal('mode')
   }
 
   createRssFeed(){

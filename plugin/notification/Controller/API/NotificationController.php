@@ -100,4 +100,25 @@ class NotificationController extends FOSRestController
 
         return $parameters;
     }
+
+    /**
+     * @Put("/notifications/parameters/admin", name="icap_notifications_admin_post_parameters", defaults={"_format":"json"})
+     * @View(serializerGroups={"api_notification"})
+     */
+    public function putAdminParametersAction()
+    {
+        $newDisplay = $this->request->request->get('display');
+        $newPhone = $this->request->request->get('phone');
+        $newMail = $this->request->request->get('mail');
+        $newRss = $this->request->request->get('rss');
+
+        $parameters = $this->parametersManager->editAdminParameters(
+            $newDisplay,
+            $newRss,
+            $newPhone,
+            $newMail
+        );
+
+        return $parameters;
+    }
 }

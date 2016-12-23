@@ -33,12 +33,14 @@ export default class NotificationCtrl {
 
     this._modalFactory = modal
     this._modalInstance = null
-
-    this.status = false
+    this.allowPhoneAndMail = this.service.getAllowPhoneAndMail()
+    this.mode = this.service.getMode()
+    this.isAdmin = this.mode === 'admin'
   }
 
-  changeStatus(){
-    this.status = !this.status
+  changeAllowPhoneAndMail() {
+    this.allowPhoneAndMail = !this.allowPhoneAndMail
+    this.service.setAllowPhoneAndMail(this.allowPhoneAndMail)
   }
 
   _closeModal() {
@@ -55,16 +57,10 @@ export default class NotificationCtrl {
     this._modalInstance = this._modalFactory.open(template)
   }
 
-
-
   getNbRssChecked(){
-    let cpt = 0
-    for (let index in this.editedParameters.newRssEnabledTypes){
-      if (this.editedParameters.newRssEnabledTypes[index]){
-        cpt++
-      }
-    }
-    return cpt
+    return Object.keys(this.editedParameters.newRssEnabledTypes).filter((index) => {
+        return this.editedParameters.newRssEnabledTypes[index]
+    }).length
   }
 
   getNbDisplayChecked(){
@@ -159,7 +155,12 @@ export default class NotificationCtrl {
   }
 
   save(){
-    this.service.saveParameters(this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
+    this.service.saveParameters(
+        this.editedParameters.newDisplayEnabledTypes,
+        this.editedParameters.newPhoneEnabledTypes,
+        this.editedParameters.newMailEnabledType,
+        this.editedParameters.newRssEnabledTypes
+    )
     this._modal(confirmTemplate)
   }
 }

@@ -27,8 +27,10 @@
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_wiki' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'survey' }) }}"></script>
     <script>
-        window.parameters = {{ parameters|json_serialize('api_notification')|raw }}
-        window.types =  {{ types|json_encode|raw }}
+        window.parameters = {{ parameters|json_serialize('api_notification')|raw }};
+        window.types =  {{ types|json_encode|raw }};
+        window.allowPhoneAndMail = {% if allowPhoneAndMail %} true {% else %} false {% endif %};
+        window.mode = 'admin';
     </script>
 
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-notification-list.js') }}"></script>
