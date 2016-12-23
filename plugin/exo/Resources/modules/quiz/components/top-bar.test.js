@@ -20,9 +20,10 @@ describe('<TopBar/>', () => {
         'id',
         'empty',
         'published',
+        'viewMode',
         'updateViewMode',
         'saveQuiz',
-        'playQuiz',
+        'testQuiz',
         'hasPapers'
       ]
     )
@@ -34,14 +35,15 @@ describe('<TopBar/>', () => {
         id={[]}
         empty={[]}
         published={{}}
+        viewMode={[]}
         updateViewMode={[]}
         saveQuiz={[]}
-        playQuiz={[]}
+        testQuiz={[]}
       />
     )
     ensure.invalidProps(
       'TopBar',
-      ['id', 'empty', 'published', 'updateViewMode', 'saveQuiz', 'playQuiz']
+      ['id', 'empty', 'published', 'viewMode', 'updateViewMode', 'saveQuiz', 'testQuiz']
     )
   })
 
@@ -52,9 +54,10 @@ describe('<TopBar/>', () => {
         empty={true}
         published={false}
         hasPapers={false}
+        viewMode="editor"
         updateViewMode={() => {}}
         saveQuiz={() => {}}
-        playQuiz={() => {}}
+        testQuiz={() => {}}
       />
     )
     ensure.propTypesOk()

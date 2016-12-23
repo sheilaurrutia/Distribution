@@ -33,7 +33,7 @@ SubmitButton.propTypes = {
 }
 
 const FinishButton = props =>
-  <button className="btn btn-primary" onClick={props.onClick}>
+  <button className="btn btn-finish btn-primary" onClick={props.onClick}>
     <span className="fa fa-fw fa-sign-out"></span>
     Finish
   </button>
@@ -46,7 +46,7 @@ const PlayerNav = props =>
   <nav className="player-nav">
     <div className="backward">
       {props.previous &&
-      <PreviousButton onClick={() => props.navigateTo(props.previous)} />
+        <PreviousButton onClick={() => props.navigateTo(props.previous)} />
       }
     </div>
 
@@ -61,15 +61,15 @@ const PlayerNav = props =>
 PlayerNav.propTypes = {
   next: T.shape({
     id: T.string.isRequired,
-    items: T.arrayOf.arrayOf
+    items: T.arrayOf(T.string).isRequired
   }),
   previous: T.shape({
     id: T.string.isRequired,
-    items: T.arrayOf.arrayOf
+    items: T.arrayOf(T.string).isRequired
   }),
   navigateTo: T.func.isRequired,
   finish: T.func.isRequired,
-  submit: T.func
+  submit: T.func.isRequired
 }
 
 PlayerNav.defaultProps = {

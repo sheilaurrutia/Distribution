@@ -27,9 +27,8 @@ describe('<Overview/>', () => {
         /* can't tests these ones because selectors are hard-coded */
         // 'empty',
         // 'editable',
-        'meta',
-        'description',
-        'parameters'
+        'steps',
+        'quiz.parameters'
       ]
     )
   })
@@ -40,7 +39,8 @@ describe('<Overview/>', () => {
         description: 456,
         parameters: true,
         meta: true
-      }
+      },
+      steps: 123
     })
     shallow(<Overview store={store}/>)
     ensure.invalidProps(
@@ -49,9 +49,8 @@ describe('<Overview/>', () => {
         /* same than above */
         // 'empty',
         // 'editable',
-        'meta',
-        'description',
-        'parameters'
+        'quiz.description',
+        'steps'
       ]
     )
   })
@@ -71,14 +70,15 @@ describe('<Overview/>', () => {
           interruptible: true,
           showCorrectionAt: SHOW_CORRECTION_AT_DATE,
           correctionDate: '2015/05/12',
-          anonymous: true,
+          anonymizeAttempts: true,
           showScoreAt: SHOW_SCORE_AT_CORRECTION
         },
         meta: {
           created: '2016-12-12',
           published: true
         }
-      }
+      },
+      steps: {}
     })
     const overview = mount(<Overview store={store}/>)
 
