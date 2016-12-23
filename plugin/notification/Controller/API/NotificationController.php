@@ -121,4 +121,21 @@ class NotificationController extends FOSRestController
 
         return $parameters;
     }
+
+    public function putAdminLockAction()
+    {
+        $newDisplay = $this->request->request->get('display');
+        $newPhone = $this->request->request->get('phone');
+        $newMail = $this->request->request->get('mail');
+        $newRss = $this->request->request->get('rss');
+
+        $parameters = $this->parametersManager->editAdminLock(
+            $newDisplay,
+            $newRss,
+            $newPhone,
+            $newMail
+        );
+
+        return $parameters;
+    }
 }

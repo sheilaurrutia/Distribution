@@ -53,24 +53,28 @@ class NotificationParameters implements \JsonSerializable
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
      * @JMS\Groups({"api_notification"})
+     * @JMS\Accessor(getter="getDisplayEnabledTypes")
      */
     protected $displayEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="phone_enabled_types", nullable=true)
      * @JMS\Groups({"api_notification"})
+     * @JMS\Accessor(getter="getPhoneEnabledTypes")
      */
     protected $phoneEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="mail_enabled_types", nullable=true)
      * @JMS\Groups({"api_notification"})
+     * @JMS\Accessor(getter="getMailEnabledTypes")
      */
     protected $mailEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="rss_enabled_types")
      * @JMS\Groups({"api_notification"})
+     * @JMS\Accessor(getter="getRssEnabledTypes")
      */
     protected $rssEnabledTypes = [];
 
@@ -109,7 +113,7 @@ class NotificationParameters implements \JsonSerializable
      */
     public function getDisplayEnabledTypes()
     {
-        return $this->displayEnabledTypes ? $this->displayEnabledTypes : [];
+        return is_array($this->displayEnabledTypes) ? $this->displayEnabledTypes : [];
     }
 
     /**
@@ -135,7 +139,7 @@ class NotificationParameters implements \JsonSerializable
      */
     public function getPhoneEnabledTypes()
     {
-        return $this->phoneEnabledTypes ? $this->phoneEnabledTypes : [];
+        return is_array($this->phoneEnabledTypes) ? $this->phoneEnabledTypes : [];
     }
 
     /**
@@ -151,7 +155,7 @@ class NotificationParameters implements \JsonSerializable
      */
     public function getMailEnabledTypes()
     {
-        return $this->mailEnabledTypes ? $this->mailEnabledTypes : [];
+        return is_array($this->mailEnabledTypes) ? $this->mailEnabledTypes : [];
     }
 
     /**
@@ -167,7 +171,7 @@ class NotificationParameters implements \JsonSerializable
      */
     public function getRssEnabledTypes()
     {
-        return $this->rssEnabledTypes ? $this->rssEnabledTypes : [];
+        return is_array($this->rssEnabledTypes) ? $this->rssEnabledTypes : [];
     }
 
     /**

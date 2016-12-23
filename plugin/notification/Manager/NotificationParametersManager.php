@@ -139,76 +139,42 @@ class NotificationParametersManager
     /**
      * Keep in mind that we need to check the admin parameters before.
      */
-    public function editUserParameters(
-        $newDisplay,
-        $newRss,
-        $newPhone,
-        $newMail,
-        $userId = null,
-        Workspace $workspace = null
-    ) {
+    public function editUserParameters(array $newDisplay, array $newRss, array $newPhone, array $newMail, $userId = null)
+    {
         $userParameters = $this->getParametersByUserId($userId);
-        $allParameterTypes = $this->allTypesList($userParameters);
+        $userParameters->setDisplayEnabledTypes($newDisplay);
+        $userParameters->setPhoneEnabledTypes($newPhone);
+        $userParameters->setMailEnabledTypes($newMail);
+        $userParameters->setRssEnabledTypes($newRss);
 
-        $displayEnabledTypes = [];
-        $rssEnabledTypes = [];
-        $phoneEnabledTypes = [];
-        $mailEnabledTypes = [];
-
-        foreach ($allParameterTypes as $type) {
-            $displayEnabledTypes[$type['name']] = isset($newDisplay[$type['name']]) ? $newDisplay[$type['name']] : false;
-            $rssEnabledTypes[$type['name']] = isset($newRss[$type['name']]) ? $newRss[$type['name']] : false;
-            $phoneEnabledTypes[$type['name']] = isset($newPhone[$type['name']]) ? $newPhone[$type['name']] : false;
-            $mailEnabledTypes[$type['name']] = isset($newMail[$type['name']]) ? $newMail[$type['name']] : false;
-        }
-        $userParameters->setDisplayEnabledTypes($displayEnabledTypes);
-        $userParameters->setPhoneEnabledTypes($phoneEnabledTypes);
-        $userParameters->setMailEnabledTypes($mailEnabledTypes);
-        $userParameters->setRssEnabledTypes($rssEnabledTypes);
         $this->em->persist($userParameters);
         $this->em->flush();
 
         return $userParameters;
     }
 
-    /**
-     * Keep in mind that we need to check the admin parameters before.
-     */
-    public function editAdminParameters(
-        $newDisplay,
-        $newRss,
-        $newPhone,
-        $newMail
-    ) {
-        $adminParameters = $this->getAdminParameters();
-        $allParameterTypes = $this->allTypesList($adminParameters);
+    public function editAdminParameters(array $newDisplay, array $newRss, array $newPhone, array $newMail)
+    {
+        $this->configHandler->setParameter('notification_display_enabled_types', $newDisplay);
+        $this->configHandler->setParameter('notification_phone_enabled_types', $newPhone);
+        $this->configHandler->setParameter('notification_mail_enabled_types', $newMail);
+        $this->configHandler->setParameter('notification_rss_enabled_types', $newRss);
 
-        /*
-        $displayEnabledTypes = [];
-        $rssEnabledTypes = [];
-        $phoneEnabledTypes = [];
-        $mailEnabledTypes = [];
-*/
-        foreach ($allParameterTypes as $type) {
-            $displayEnabledTypes[$type['name']] = isset($newDisplay[$type['name']]) ? $newDisplay[$type['name']] : false;
-            $rssEnabledTypes[$type['name']] = isset($newRss[$type['name']]) ? $newRss[$type['name']] : false;
-            $phoneEnabledTypes[$type['name']] = isset($newPhone[$type['name']]) ? $newPhone[$type['name']] : false;
-            $mailEnabledTypes[$type['name']] = isset($newMail[$type['name']]) ? $newMail[$type['name']] : false;
-        }
+        return $this->getAdminParameters();
+    }
 
-        $this->configHandler->setParameter('notification_display_enabled_types', $displayEnabledTypes);
-        $this->configHandler->setParameter('notification_phone_enabled_types', $phoneEnabledTypes);
-        $this->configHandler->setParameter('notification_mail_enabled_types', $mailEnabledTypes);
-        $this->configHandler->setParameter('notification_rss_enabled_types', $rssEnabledTypes);
-
-        return $adminParameters;
+    public function editLockParameters(array $newDisplay, array $newRss, array $newPhone, array $newMail)
+    {
+        $this->configHandler->setParameter('notification_locked_display_enabled_types', $newDisplay);
+        $this->configHandler->setParameter('notification_locked_phone_enabled_types', $newPhone);
+        $this->configHandler->setParameter('notification_locked_mail_enabled_types', $newMail);
+        $this->configHandler->setParameter('notification_locked_rss_enabled_types', $newRss);
     }
 
     private function createEmptyParameters()
     {
         $parameters = new NotificationParameters();
         $parameters->setRssId($this->uniqueRssId());
-        $parameters->setIsNew(true);
         $parameters->setType(NotificationParameters::TYPE_USER);
         $this->em->persist($parameters);
         $this->em->flush();
