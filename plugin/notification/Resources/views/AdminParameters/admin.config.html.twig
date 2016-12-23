@@ -31,6 +31,10 @@
         window.types =  {{ types|json_encode|raw }};
         window.allowPhoneAndMail = {% if allowPhoneAndMail %} true {% else %} false {% endif %};
         window.mode = 'admin';
+        window.lockedDisplay = {{ lockedDisplay|json_encode|raw }}
+        window.lockedPhone = {{ lockedPhone|json_encode|raw }}
+        window.lockedMail = {{ lockedMail|json_encode|raw }}
+        window.lockedRss = {{ lockedRss|json_encode|raw }}
     </script>
 
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-notification-list.js') }}"></script>
