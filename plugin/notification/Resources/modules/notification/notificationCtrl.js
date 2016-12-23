@@ -15,7 +15,7 @@ export default class NotificationCtrl {
     this.nbPhoneChecked = this.getNbPhoneChecked()
     this.nbMailChecked = this.getNbMailChecked()
     this.nbRssChecked = this.getNbRssChecked()
-    this.collapse = {} // we show the subcheckboxes if one of them is checked
+    this.collapse = {} //for every category who has subcategories, the list is collapsed if one of these subcategories is checked
 
     this.types.forEach(type => {
       this.collapse[type.name] = false
@@ -35,6 +35,8 @@ export default class NotificationCtrl {
     this._modalInstance = null
 
     this.status = false
+
+    this.isAdmin = service.isAdmin()
   }
 
   changeStatus(){
@@ -54,6 +56,7 @@ export default class NotificationCtrl {
     }
     this._modalInstance = this._modalFactory.open(template)
   }
+
 
 
 
@@ -159,7 +162,7 @@ export default class NotificationCtrl {
   }
 
   save(){
-    this.service.saveParameters(this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
+    this.service.saveParameters(this.editedParameters.original,this.editedParameters.newDisplayEnabledTypes, this.editedParameters.newPhoneEnabledTypes, this.editedParameters.newMailEnabledType, this.editedParameters.newRssEnabledTypes)
     this._modal(confirmTemplate)
   }
 }

@@ -32,7 +32,9 @@ class NotificationParametersController extends Controller
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return ['types' => $types, 'parameters' => $parameters];
+
+
+        return ['types' => $types, 'parameters' => $parameters, 'user'=>$user];
     }
 
     /**
@@ -47,7 +49,7 @@ class NotificationParametersController extends Controller
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return ['types' => $types, 'parameters' => $parameters];
+        return ['types' => $types, 'parameters' => $parameters, 'user'=>$user];
     }
 
     /**

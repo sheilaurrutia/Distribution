@@ -29,6 +29,7 @@
     <script>
         window.parameters = {{ parameters|json_serialize('api_notification')|raw }}
         window.types =  {{ types|json_encode|raw }}
+        window.roles = {{ user.getRoles()|json_encode|raw}}
     </script>
 
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-notification-list.js') }}"></script>
