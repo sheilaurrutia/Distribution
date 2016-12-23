@@ -36,6 +36,7 @@ export default class NotificationCtrl {
     this.allowPhoneAndMail = this.service.getAllowPhoneAndMail()
     this.mode = this.service.getMode()
     this.isAdmin = this.mode === 'admin'
+
   }
 
   changeAllowPhoneAndMail() {
@@ -64,33 +65,21 @@ export default class NotificationCtrl {
   }
 
   getNbDisplayChecked(){
-    let cpt = 0
-    for (let index in this.editedParameters.newDisplayEnabledTypes){
-      if (this.editedParameters.newDisplayEnabledTypes[index]){
-        cpt++
-      }
-    }
-    return cpt
+    return Object.keys(this.editedParameters.newDisplayEnabledTypes).filter((index) => {
+      return this.editedParameters.newDisplayEnabledTypes[index]
+    }).length
   }
 
   getNbPhoneChecked(){
-    let cpt = 0
-    for (let index in this.editedParameters.newPhoneEnabledTypes){
-      if (this.editedParameters.newPhoneEnabledTypes[index]){
-        cpt++
-      }
-    }
-    return cpt
+    return Object.keys(this.editedParameters.newPhoneEnabledTypes).filter((index) => {
+      return this.editedParameters.newPhoneEnabledTypes[index]
+    }).length
   }
 
   getNbMailChecked(){
-    let cpt = 0
-    for (let index in this.editedParameters.newMailEnabledTypes){
-      if (this.editedParameters.newMailEnabledTypes[index]){
-        cpt++
-      }
-    }
-    return cpt
+    return Object.keys(this.editedParameters.newMailEnabledTypes).filter((index) => {
+      return this.editedParameters.newMailEnabledTypes[index]
+    }).length
   }
 
   isEditable(){
@@ -156,6 +145,7 @@ export default class NotificationCtrl {
 
   save(){
     this.service.saveParameters(
+        this.editedParameters.original,
         this.editedParameters.newDisplayEnabledTypes,
         this.editedParameters.newPhoneEnabledTypes,
         this.editedParameters.newMailEnabledType,

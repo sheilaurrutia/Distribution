@@ -5,6 +5,7 @@ export default class NotificationService{
     this.FormBuilderService = FormBuilderService
     this._types = NotificationService._getGlobal('types')
     this._parameters = NotificationService._getGlobal('parameters')
+    this._mode = NotificationService._getGlobal('mode')
     this._types.forEach(t => {
       t['translated_group'] = window.Translator.trans(t['group'],{},'resource')
       t['translated_group'] = window.Translator.trans(t['translated_group'],{},'notification')
@@ -47,15 +48,31 @@ export default class NotificationService{
     return this._parameters
   }
 
-  saveParameters(newDisplay, newPhone, newMail, newRss){
+  saveParameters(originalParameters, newDisplay, newPhone, newMail, newRss){
+    const originalDisplay = originalParameters.displayEnabledTypes
+    const originalPhone = originalParameters.phoneEnabledTypes
+    const originalMail = originalParameters.mailEnabledTypes
+    const originalRss = originalParameters.rssEnabledTypes
+
+    originalParameters.displayEnabledTypes = newDisplay
+    originalParameters.phoneEnabledTypes = newPhone
+    originalParameters.mailEnabledTypes = newMail
+    originalParameters.rssEnabledTypes = newRss
+
     let url = ''
     switch (this.getMode()) {
-        case 'admin': url =  window.Routing.generate('icap_notifications_admin_post_parameters'); break;
+        case 'admin': url =  window.Routing.generate('icap_notifications_admin_put_parameters'); break;
         case 'user': url = window.Routing.generate('icap_notifications_user_put_parameters'); break;
     }
 
     this.$http
-       .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
+    .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
+    .then(()=>{
+      originalParameters.displayEnabledTypes = originalDisplay
+      originalParameters.phoneEnabledTypes = originalPhone
+      originalParameters.mailEnabledTypes = originalMail
+      originalParameters.rssEnabledTypes = originalRss
+    })
   }
 
   setAllowPhoneAndMail(boolean) {
@@ -69,6 +86,7 @@ export default class NotificationService{
       return NotificationService._getGlobal('mode')
   }
 
+  //incomplete method
   createRssFeed(){
     const url = window.Routing.generate('icap_notification_regenerate_rss_url')
     this.$http

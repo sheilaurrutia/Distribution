@@ -102,7 +102,7 @@ class NotificationController extends FOSRestController
     }
 
     /**
-     * @Put("/notifications/parameters/admin", name="icap_notifications_admin_post_parameters", defaults={"_format":"json"})
+     * @Put("/notifications/parameters/admin", name="icap_notifications_admin_put_parameters", defaults={"_format":"json"})
      * @View(serializerGroups={"api_notification"})
      */
     public function putAdminParametersAction()

@@ -26,10 +26,29 @@
                                     <thead>
                                         <tr>
                                             <th style="color: white; background-color: #337ab7">{{'object'|trans:'platform'}}</th>
-                                            <th class="text-center" style="color: white; background-color: #337ab7">{{'notification_platform'|trans:{}:'notification'}}</th>
-                                            <th ng-show="notif.allowPhoneAndMail" class="text-center" style="color: white; background-color: #337ab7">{{'notification_smartphone'|trans:{}:'notification'}}</th>
-                                            <th ng-show="notif.allowPhoneAndMail"  class="text-center" style="color: white; background-color: #337ab7">{{'email'|trans:{}:'notification'}}</th>
-                                            <th class="text-center" style="color: white; background-color: #337ab7">{{'rss_add'|trans:{}:'notification'}} <i class="fa fa-rss"></i></th>
+                                            <th class="text-center" style="color: white; background-color: #337ab7">
+                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
+                                                    <i class="fa fa-unlock-alt ng-scope"></i>
+                                                </span> 
+                                                {{'notification_platform'|trans:{}:'notification'}}
+                                            </th>
+                                            <th ng-show="notif.allowPhoneAndMail" class="text-center" style="color: white; background-color: #337ab7">
+                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
+                                                    <i class="fa fa-unlock-alt ng-scope"></i> 
+                                                </span>
+                                                {{'notification_smartphone'|trans:{}:'notification'}}
+                                            </th>
+                                            <th ng-show="notif.allowPhoneAndMail"  class="text-center" style="color: white; background-color: #337ab7">
+                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
+                                                    <i class="fa fa-unlock-alt ng-scope"></i>
+                                                </span>
+                                                 {{'email'|trans:{}:'notification'}}
+                                            </th>
+                                            <th class="text-center" style="color: white; background-color: #337ab7">
+                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
+                                                    <i class="fa fa-unlock-alt ng-scope"></i> 
+                                                </span>
+                                                {{'rss_add'|trans:{}:'notification'}} <i class="fa fa-rss"></i></th>
                                         </tr>
                                     </thead>
                                     <tbody class="types-table-body" ng-repeat="type in notif.types | orderBy: 'translated_group'">
