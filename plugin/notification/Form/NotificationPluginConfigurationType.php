@@ -37,26 +37,26 @@ class NotificationPluginConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dropdownItems', 'integer',
+            ->add('notificationDropdownItems', 'integer',
                 [
                     'label' => 'dropdown_items',
                     'theme_options' => ['control_width' => 'col-md-2'],
                 ]
             )
-            ->add('maxPerPage', 'integer',
+            ->add('notificationMaxPerPage', 'integer',
                 [
                     'label' => 'max_per_page',
                     'theme_options' => ['control_width' => 'col-md-2'],
                 ]
             )
-            ->add('purgeEnabled', 'checkbox',
+            ->add('notificationPurgeEnabled', 'checkbox',
                 [
                     'required' => false,
                     'label' => 'purge_enabled',
                     'theme_options' => ['control_width' => 'col-md-2'],
                 ]
             )
-            ->add('purgeAfterDays', 'integer',
+            ->add('notificationPurgeAfterDays', 'integer',
                 [
                     'label' => 'purge_after_days',
                     'theme_options' => ['control_width' => 'col-md-2'],
@@ -68,8 +68,6 @@ class NotificationPluginConfigurationType extends AbstractType
                 [
                     'label' => 'activate_notifications',
                     'required' => false,
-                    'data' => $this->ch->getParameter('is_notification_active'),
-                    'mapped' => false,
                 ]
             );
     }
@@ -89,7 +87,6 @@ class NotificationPluginConfigurationType extends AbstractType
         $resolver->setDefaults(
             [
                 'translation_domain' => 'notification',
-                'data_class' => 'Icap\NotificationBundle\Entity\NotificationPluginConfiguration',
                 'csrf_protection' => true,
             ]
         );

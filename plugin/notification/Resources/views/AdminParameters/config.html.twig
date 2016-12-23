@@ -31,12 +31,12 @@
             {{ form_errors(form) }}
             <div class="row">
                 <div class="col-md-10">
-                    {{ form_row(form.dropdownItems) }}
-                    {{ form_row(form.maxPerPage) }}
+                    {{ form_row(form.notificationDropdownItems) }}
+                    {{ form_row(form.notificationMaxPerPage) }}
                     <div class="form-group row">
-                        {{ form_label(form.purgeEnabled) }}
+                        {{ form_label(form.notificationPurgeEnabled) }}
                         <div class="col-md-9">
-                            {{ form_widget(form.purgeEnabled) }}
+                            {{ form_widget(form.notificationPurgeEnabled) }}
                             <span class="text-muted">{{ 'purge_explain_text'|trans({}, 'notification') }}</span>
                         </div>
                     </div>

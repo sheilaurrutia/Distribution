@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Icap\NotificationBundle\Entity\Notification;
-use Icap\NotificationBundle\Entity\NotificationPluginConfiguration;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use Icap\NotificationBundle\Library\ColorChooser;
@@ -53,11 +52,11 @@ class NotificationManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *      "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "tokenStorage" = @DI\Inject("security.token_storage"),
-     *      "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_parameters"),
+     *      "em"                                     = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "tokenStorage"                           = @DI\Inject("security.token_storage"),
+     *      "eventDispatcher"                        = @DI\Inject("event_dispatcher"),
+     *      "configHandler"                          = @DI\Inject("claroline.config.platform_config_handler"),
+     *      "notificationParametersManager"          = @DI\Inject("icap.notification.manager.notification_parameters"),
      *      "notificationPluginConfigurationManager" = @DI\Inject("icap.notification.manager.plugin_configuration")
      * })
      */
@@ -93,28 +92,19 @@ class NotificationManager
         return $doer;
     }
 
-    private function getConfigurationAndPurge()
+    private function purgeNotifications()
     {
-        $config = $this->notificationPluginConfigurationManager->getConfigOrEmpty();
-        if ($config->getPurgeEnabled()) {
-            $this->purgeNotifications($config);
-        }
-
-        return $config;
-    }
-
-    private function purgeNotifications(NotificationPluginConfiguration $config)
-    {
+        $config = $this->configHandler->getPlatformConfig();
         $lastPurgeDate = $config->getLastPurgeDate();
         $today = (new \DateTime())->setTime(0, 0, 0);
+
         if ($lastPurgeDate === null || $today > $lastPurgeDate) {
             $purgeBeforeDate = clone $today;
             $purgeBeforeDate->sub(new \DateInterval('P'.$config->getPurgeAfterDays().'D'));
             $this->getNotificationRepository()->deleteNotificationsBeforeDate($purgeBeforeDate);
 
             $config->setLastPurgeDate($today);
-            $this->em->persist($config);
-            $this->em->flush();
+            $this->configHandler->setPlatformConfig($config);
         }
     }
 
@@ -379,14 +369,14 @@ class NotificationManager
 
     public function getDropdownNotifications($userId)
     {
-        $config = $this->getConfigurationAndPurge();
+        $config = $this->purgeNotifications();
 
         return $this->getUserNotificationsList($userId, 1, $config->getDropdownItems());
     }
 
     public function getPaginatedNotifications($userId, $page = 1, $category = null)
     {
-        $config = $this->getConfigurationAndPurge();
+        $config = $this->purgeNotifications();
 
         return $this->getUserNotificationsList($userId, $page, $config->getMaxPerPage(), false, null, $category);
     }
@@ -452,7 +442,7 @@ class NotificationManager
 
     public function getUserNotificationsListRss($rssId)
     {
-        $config = $this->getConfigurationAndPurge();
+        $config = $this->purgeNotifications();
         $notificationUserParameters = $this
             ->notificationParametersManager
             ->getParametersByRssId($rssId);

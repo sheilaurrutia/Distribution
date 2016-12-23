@@ -12,21 +12,11 @@
 namespace Icap\NotificationBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
-use Icap\NotificationBundle\Installation\Updater\Updater040200;
 
 class AdditionalInstaller extends BaseInstaller
 {
     public function postUpdate($currentVersion, $targetVersion)
     {
-        if (version_compare($currentVersion, '4.1.0', '<')) {
-            $updater040200 = new Updater040200(
-                $this->container->get('doctrine.orm.entity_manager'),
-                $this->container->get('doctrine.dbal.default_connection')
-            );
-            $updater040200->setLogger($this->logger);
-            $updater040200->postUpdate();
-        }
-
         if (version_compare($currentVersion, '9.0.0', '<')) {
             $updater090000 = new Updater\Updater090000($this->container);
             $updater090000->setLogger($this->logger);
