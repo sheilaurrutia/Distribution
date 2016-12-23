@@ -12,6 +12,7 @@
 namespace Icap\NotificationBundle\Manager;
 
 use Claroline\CoreBundle\Event\Notification\NotificationParametersEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\NotificationParameters;
@@ -41,15 +42,25 @@ class NotificationParametersManager
     private $em;
 
     /**
+     * @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+     */
+    private $configHandler;
+
+    /**
      * @DI\InjectParams({
-     *      "em"    = @DI\Inject("claroline.persistence.object_manager"),
-     *      "ed"    = @DI\Inject("event_dispatcher")
+     *      "em"            = @DI\Inject("claroline.persistence.object_manager"),
+     *      "ed"            = @DI\Inject("event_dispatcher"),
+     *      "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      * })
      */
-    public function __construct(ObjectManager $em, EventDispatcherInterface $ed)
-    {
+    public function __construct(
+        ObjectManager $em,
+        EventDispatcherInterface $ed,
+        PlatformConfigurationHandler $configHandler
+    ) {
         $this->em = $em;
         $this->ed = $ed;
+        $this->configHandler = $configHandler;
         $this->notificationParametersRepository = $em
             ->getRepository('IcapNotificationBundle:NotificationParameters');
     }
@@ -66,6 +77,17 @@ class NotificationParametersManager
             $this->em->persist($parameters);
             $this->em->endFlushSuite();
         }
+
+        return $parameters;
+    }
+
+    public function getAdminParameters()
+    {
+        $parameters = new NotificationParameters();
+        $parameters->setDisplayEnabledTypes($this->configHandler->getParameter('notification_display_enabled_types'));
+        $parameters->setPhoneEnabledTypes($this->configHandler->getParameter('notification_phone_enabled_types'));
+        $parameters->setMailEnabledTypes($this->configHandler->getParameter('notification_mail_enabled_types'));
+        $parameters->setRssEnabledTypes($this->configHandler->getParameter('notification_rss_enabled_types'));
 
         return $parameters;
     }
@@ -147,6 +169,39 @@ class NotificationParametersManager
         $this->em->flush();
 
         return $userParameters;
+    }
+
+    /**
+     * Keep in mind that we need to check the admin parameters before.
+     */
+    public function editAdminParameters(
+        $newDisplay,
+        $newRss,
+        $newPhone,
+        $newMail
+    ) {
+        $adminParameters = $this->getAdminParameters();
+        $allParameterTypes = $this->allTypesList($adminParameters);
+
+        /*
+        $displayEnabledTypes = [];
+        $rssEnabledTypes = [];
+        $phoneEnabledTypes = [];
+        $mailEnabledTypes = [];
+*/
+        foreach ($allParameterTypes as $type) {
+            $displayEnabledTypes[$type['name']] = isset($newDisplay[$type['name']]) ? $newDisplay[$type['name']] : false;
+            $rssEnabledTypes[$type['name']] = isset($newRss[$type['name']]) ? $newRss[$type['name']] : false;
+            $phoneEnabledTypes[$type['name']] = isset($newPhone[$type['name']]) ? $newPhone[$type['name']] : false;
+            $mailEnabledTypes[$type['name']] = isset($newMail[$type['name']]) ? $newMail[$type['name']] : false;
+        }
+
+        $this->configHandler->setParameter('notification_display_enabled_types', $displayEnabledTypes);
+        $this->configHandler->setParameter('notification_phone_enabled_types', $phoneEnabledTypes);
+        $this->configHandler->setParameter('notification_mail_enabled_types', $mailEnabledTypes);
+        $this->configHandler->setParameter('notification_rss_enabled_types', $rssEnabledTypes);
+
+        return $adminParameters;
     }
 
     private function createEmptyParameters()

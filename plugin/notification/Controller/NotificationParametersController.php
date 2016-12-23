@@ -32,9 +32,11 @@ class NotificationParametersController extends Controller
         $parameters = $parametersManager->getParametersByUserId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-
-
-        return ['types' => $types, 'parameters' => $parameters, 'user'=>$user];
+        return [
+            'types' => $types,
+            'parameters' => $parameters,
+            'allowPhoneAndMail' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_allow_phone_and_mail'),
+         ];
     }
 
     /**
@@ -43,13 +45,17 @@ class NotificationParametersController extends Controller
      * @Template("IcapNotificationBundle:AdminParameters:admin.config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
-    public function getAdminParametersAction(User $user)
+    public function getAdminParametersAction()
     {
         $parametersManager = $this->getParametersManager();
-        $parameters = $parametersManager->getParametersByUserId($user->getId());
+        $parameters = $parametersManager->getAdminParameters();
         $types = $parametersManager->allTypesList($parameters);
 
-        return ['types' => $types, 'parameters' => $parameters, 'user'=>$user];
+        return [
+            'types' => $types,
+            'parameters' => $parameters,
+            'allowPhoneAndMail' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_allow_phone_and_mail'),
+        ];
     }
 
     /**
