@@ -169,6 +169,13 @@ class NotificationParametersManager
         $this->configHandler->setParameter('notification_locked_phone_enabled_types', $newPhone);
         $this->configHandler->setParameter('notification_locked_mail_enabled_types', $newMail);
         $this->configHandler->setParameter('notification_locked_rss_enabled_types', $newRss);
+
+        return [
+            'notification_locked_display_enabled_types' => $newDisplay,
+            'notification_locked_phone_enabled_types' => $newPhone,
+            'notification_locked_mail_enabled_types' => $newMail,
+            'notification_locked_rss_enabled_types' => $newRss,
+        ];
     }
 
     private function createEmptyParameters()

@@ -122,6 +122,10 @@ class NotificationController extends FOSRestController
         return $parameters;
     }
 
+    /**
+     * @Put("/notifications/parameters/admin/lock", name="icap_notifications_admin_put_parameters/lock", defaults={"_format":"json"})
+     * @View(serializerGroups={"api_notification"})
+     */
     public function putAdminLockAction()
     {
         $newDisplay = $this->request->request->get('display');
