@@ -55,6 +55,11 @@ class NotificationParametersController extends Controller
             'types' => $types,
             'parameters' => $parameters,
             'allowPhoneAndMail' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_allow_phone_and_mail'),
+            'lockedDisplay' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_locked_display_enabled_types'),
+            'lockedPhone'=> $this->get('claroline.config.platform_config_handler')->getParameter('notification_locked_phone_enabled_types'),
+            'lockedMail' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_locked_mail_enabled_types'),
+            'lockedRss' => $this->get('claroline.config.platform_config_handler')->getParameter('notification_locked_rss_enabled_types'),
+
         ];
     }
 

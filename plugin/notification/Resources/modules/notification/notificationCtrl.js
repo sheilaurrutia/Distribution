@@ -5,12 +5,21 @@ export default class NotificationCtrl {
   constructor(service, modal){
     this.types = service.getTypes()
     this.service = service
+
     this.editedParameters = {}
     this.editedParameters.original = service.getParameters()
     this.editedParameters.newDisplayEnabledTypes = service.getDisplayEnabledTypes()
     this.editedParameters.newPhoneEnabledTypes = service.getPhoneEnabledTypes()
     this.editedParameters.newMailEnabledTypes = service.getMailEnabledTypes()
     this.editedParameters.newRssEnabledTypes = service.getRssEnabledTypes()
+
+    this.lockedParameters={}
+    this.lockedParameters.display = service.getLockedDisplay()
+    this.lockedParameters.phone = service.getLockedPhone()
+    this.lockedParameters.mail = service.getLockedMail()
+    this.lockedParameters.rss = service.getLockedRss()
+
+
     this.nbDisplayChecked = this.getNbDisplayChecked()
     this.nbPhoneChecked = this.getNbPhoneChecked()
     this.nbMailChecked = this.getNbMailChecked()
@@ -28,7 +37,13 @@ export default class NotificationCtrl {
         ) {
           this.collapse[type.name] = true
         }
+
+
       })
+      this.lockedParameters.display[type.name] = !(typeof this.lockedParameters.display[type.name] === 'undefined')
+      this.lockedParameters.display[type.name] = !(typeof this.lockedParameters.phone[type.name] === 'undefined')
+      this.lockedParameters.display[type.name] = !(typeof this.lockedParameters.mail[type.name] === 'undefined')
+      this.lockedParameters.display[type.name] = !(typeof this.lockedParameters.rss[type.name] === 'undefined')
     })
 
     this._modalFactory = modal
@@ -38,6 +53,10 @@ export default class NotificationCtrl {
     this.isAdmin = this.mode === 'admin'
 
   }
+
+
+
+
 
   changeAllowPhoneAndMail() {
     this.allowPhoneAndMail = !this.allowPhoneAndMail
@@ -119,6 +138,64 @@ export default class NotificationCtrl {
       table[c] = toggleStatus
     })
   }
+
+  lockAll(type, column){
+    let lockStatus = null
+    let table = null
+    switch(column){
+      case 'visible' :
+        lockStatus = this.lockedParameters.display[type.name]
+        table =  this.lockedParameters.display
+        break
+      case 'phone' :
+        lockStatus = this.lockedParameters.phone[type.name]
+        table = this.lockedParameters.phone
+      break
+      case 'mail ':
+        lockStatus = this.lockedParameters.mail[type.name]
+        table = this.lockedParameters.mail
+        break
+      case 'rss':
+        lockStatus = this.lockedParameters.rss[type.name]
+        table = this.lockedParameters.rss
+        break
+      default:
+        break;
+
+    }
+    type.children.forEach(c=>{
+      table[c] = lockStatus
+    })
+  }
+
+  optionLock(type,column){
+    let table = null
+      switch(column){
+        case 'visible' :
+          table =  this.lockedParameters.display
+          break
+        case 'phone' :
+          table = this.lockedParameters.phone
+        break
+        case 'mail ':
+          table = this.lockedParameters.mail
+          break
+        case 'rss':
+          table = this.lockedParameters.rss
+          break
+        default:
+          return;
+
+    }
+
+    table[type.name] = type.children.every(c=>{
+      return table[c]
+    })
+
+
+  }
+
+
 
 
   optionToggled(type, column){

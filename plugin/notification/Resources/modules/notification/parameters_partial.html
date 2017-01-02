@@ -27,27 +27,15 @@
                                         <tr>
                                             <th style="color: white; background-color: #337ab7">{{'object'|trans:'platform'}}</th>
                                             <th class="text-center" style="color: white; background-color: #337ab7">
-                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
-                                                    <i class="fa fa-unlock-alt ng-scope"></i>
-                                                </span> 
                                                 {{'notification_platform'|trans:{}:'notification'}}
                                             </th>
                                             <th ng-show="notif.allowPhoneAndMail" class="text-center" style="color: white; background-color: #337ab7">
-                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
-                                                    <i class="fa fa-unlock-alt ng-scope"></i> 
-                                                </span>
                                                 {{'notification_smartphone'|trans:{}:'notification'}}
                                             </th>
                                             <th ng-show="notif.allowPhoneAndMail"  class="text-center" style="color: white; background-color: #337ab7">
-                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
-                                                    <i class="fa fa-unlock-alt ng-scope"></i>
-                                                </span>
                                                  {{'email'|trans:{}:'notification'}}
                                             </th>
                                             <th class="text-center" style="color: white; background-color: #337ab7">
-                                                <span ng-show="notif.isAdmin" class="pull-left pointer-hand ng-scope">
-                                                    <i class="fa fa-unlock-alt ng-scope"></i> 
-                                                </span>
                                                 {{'rss_add'|trans:{}:'notification'}} <i class="fa fa-rss"></i></th>
                                         </tr>
                                     </thead>
@@ -61,16 +49,31 @@
                                                     <i ng-show="type.children.length>0" class="fa" ng-class="{'fa-chevron-right' : notif.collapse[type.name], 'fa-chevron-down' : !notif.collapse[type.name] }" ></i>
                                                 </td>
                                                 <td class="text-center">
-                                                         <input type="checkbox"  class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
+                                                    <span  ng-click='notif.lockedParameters.display[type.name] =! notif.lockedParameters.display[type.name]; notif.lockAll(type,"visible")' ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.display[type.name]">
+                                                        <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.display[type.name], 'fa-lock'  :!notif.lockedParameters.display[type.name]}"></i>
+                                                    </span> 
+                                                    <input type="checkbox"  class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"visible")' />
                                                 </td>
                                                 <td ng-show="notif.allowPhoneAndMail"  class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"phone")' />
+                                                    <span  ng-click='notif.lockedParameters.phone[type.name] =! notif.lockedParameters.phone[type.name]; notif.lockAll(type,"phone")' ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.phone[type.name]">
+                                                        <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.phone[type.name], 'fa-lock'  :!notif.lockedParameters.phone[type.name]}"></i>
+                                                    </span> 
+
+                                                    <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"phone")' />
                                                 </td>
                                                 <td ng-show="notif.allowPhoneAndMail"  class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"mail")' />
+                                                    <span  ng-click='notif.lockedParameters.mail[type.name] =! notif.lockedParameters.mail[type.name]; notif.lockAll(type,"mail") ' ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.mail[type.name]">
+                                                        <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.mail[type.name], 'fa-lock'  :!notif.lockedParameters.mail[type.name]}"></i>
+                                                    </span> 
+
+                                                    <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"mail")' />
                                                  </td>
                                                  <td class="text-center">
-                                                        <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"rss")' />
+                                                    <span  ng-click='notif.lockedParameters.rss[type.name] =! notif.lockedParameters.rss[type.name]; notif.lockAll(type,"rss")' ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.rss[type.name]">
+                                                        <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.rss[type.name], 'fa-lock'  :!notif.lockedParameters.rss[type.name]}"></i>
+                                                    </span> 
+
+                                                    <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[type.name]" ng-click='notif.toggleAll(type,"rss")' />
                                                  </td>
 
                                             </tr>
@@ -89,6 +92,9 @@
                                              <td class="text-center">
                                                 <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
+                                                        <span  ng-click="notif.lockedParameters.display[child] =! notif.lockedParameters.display[child]" ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.display[child]" ng-change='notif.optionLock(type,"visible")'>
+                                                            <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.display[child], 'fa-lock'  :!notif.lockedParameters.display[child]}"></i>
+                                                        </span> 
                                                         <input type="checkbox" class="chk-type-visible" value="visible" name="role-change_right[]"  ng-model="notif.editedParameters.newDisplayEnabledTypes[child]" ng-change='notif.optionToggled(type,"visible")' />
                                                     </div>
                                                 </div>
@@ -96,6 +102,9 @@
                                             <td ng-show="notif.allowPhoneAndMail"  class="text-center">
                                                 <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
+                                                        <span  ng-click="notif.lockedParameters.phone[child] =! notif.lockedParameters.phone[child]" ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.phone[child]" ng-change='notif.optionLock(type,"phone")'>
+                                                            <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.phone[child], 'fa-lock'  :!notif.lockedParameters.phone[child]}"></i>
+                                                        </span> 
                                                         <input type="checkbox" class="chk-type-visible" value="phone" name="role-change_right[]"   ng-model="notif.editedParameters.newPhoneEnabledTypes[child]" ng-change='notif.optionToggled(type,"phone")' />
                                                     </div>
 
@@ -104,6 +113,9 @@
                                             <td ng-show="notif.allowPhoneAndMail"  class="text-center">
                                                 <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
+                                                       <span  ng-click="notif.lockedParameters.mail[child] =! notif.lockedParameters.mail[child]" ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.mail[child]" ng-change='notif.optionLock(type,"mail")'>
+                                                            <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.mail[child], 'fa-lock'  :!notif.lockedParameters.mail[child]}"></i>
+                                                        </span> 
                                                         <input type="checkbox" class="chk-type-visible" value="mail" name="role-change_right[]" ng-model="notif.editedParameters.newMailEnabledTypes[child]" ng-change='notif.optionToggled(type,"mail")' />
                                                     </div>
 
@@ -112,6 +124,9 @@
                                              <td class="text-center">
                                                <div uib-collapse="!notif.collapse[type.name]">
                                                     <div class="collapse-cell">
+                                                        <span  ng-click="notif.lockedParameters.rss[child] =! notif.lockedParameters.rss[child]" ng-show="notif.isAdmin" class="pull-right pointer-hand ng-scope" ng-model="notif.lockedParameters.rss[child]" ng-change='notif.optionLock(type,"rss")'>
+                                                            <i   class="fa" ng-class="{'fa-unlock-alt' : notif.lockedParameters.rss[child], 'fa-lock'  :!notif.lockedParameters.rss[child]}"></i>
+                                                        </span> 
                                                         <input type="checkbox" class="chk-type-visible" value="rss" name="role-change_right[]" ng-model="notif.editedParameters.newRssEnabledTypes[child]" ng-change='notif.optionToggled(type,"rss")' />
                                                     </div>
 

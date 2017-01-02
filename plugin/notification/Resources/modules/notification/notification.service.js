@@ -6,6 +6,14 @@ export default class NotificationService{
     this._types = NotificationService._getGlobal('types')
     this._parameters = NotificationService._getGlobal('parameters')
     this._mode = NotificationService._getGlobal('mode')
+
+    if (this._mode === 'admin'){
+      this._lockedDisplay = NotificationService._getGlobal('lockedDisplay')
+      this._lockedPhone = NotificationService._getGlobal('lockedPhone')
+      this._lockedMail = NotificationService._getGlobal('lockedMail')
+      this._lockedRss = NotificationService._getGlobal('lockedRss')
+    }
+    
     this._types.forEach(t => {
       t['translated_group'] = window.Translator.trans(t['group'],{},'resource')
       t['translated_group'] = window.Translator.trans(t['translated_group'],{},'notification')
@@ -22,6 +30,22 @@ export default class NotificationService{
 
   getHttp(){
     return this.$http
+  }
+
+  getLockedDisplay(){
+    return this._lockedDisplay
+  }
+
+  getLockedPhone(){
+    return this._lockedPhone
+  }
+
+  getLockedMail(){
+    return this._lockedMail
+  }
+
+  getLockedRss(){
+    return this._lockedRss
   }
 
   getDisplayEnabledTypes(){
