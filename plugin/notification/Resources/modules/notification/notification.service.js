@@ -13,7 +13,7 @@ export default class NotificationService{
       this._lockedMail = NotificationService._getGlobal('lockedMail')
       this._lockedRss = NotificationService._getGlobal('lockedRss')
     }
-    
+
     this._types.forEach(t => {
       t['translated_group'] = window.Translator.trans(t['group'],{},'resource')
       t['translated_group'] = window.Translator.trans(t['translated_group'],{},'notification')
@@ -65,7 +65,7 @@ export default class NotificationService{
   }
 
   getAllowPhoneAndMail() {
-      return NotificationService._getGlobal('allowPhoneAndMail')
+    return NotificationService._getGlobal('allowPhoneAndMail')
   }
 
   getParameters(){
@@ -85,12 +85,22 @@ export default class NotificationService{
 
     let url = ''
     switch (this.getMode()) {
-        case 'admin': url =  window.Routing.generate('icap_notifications_admin_put_parameters'); break;
-        case 'user': url = window.Routing.generate('icap_notifications_user_put_parameters'); break;
+      case 'admin': url =  window.Routing.generate('icap_notifications_admin_put_parameters'); break
+      case 'user': url = window.Routing.generate('icap_notifications_user_put_parameters'); break
     }
 
     this.$http
-    .put(url,{display : newDisplay, phone : newPhone, mail : newMail, rss : newRss })
+    .put(url, {
+      display : newDisplay,
+      phone : newPhone,
+      mail : newMail,
+      rss : newRss,
+      lock_display: this.getLockedDisplay(),
+      lock_phone: this.getLockedPhone(),
+      lock_mail: this.getLockedMail(),
+      lock_rss: this.getLockedRss()
+    }
+    )
     .then(()=>{
       originalParameters.displayEnabledTypes = originalDisplay
       originalParameters.phoneEnabledTypes = originalPhone
@@ -100,14 +110,14 @@ export default class NotificationService{
   }
 
   setAllowPhoneAndMail(boolean) {
-      const url = window.Routing.generate('api_post_parameters')
-      this.FormBuilderService.submit(url, {
-          'notification_allow_phone_and_mail': boolean
-      })
+    const url = window.Routing.generate('api_post_parameters')
+    this.FormBuilderService.submit(url, {
+      'notification_allow_phone_and_mail': boolean
+    })
   }
 
   getMode() {
-      return NotificationService._getGlobal('mode')
+    return NotificationService._getGlobal('mode')
   }
 
   //incomplete method

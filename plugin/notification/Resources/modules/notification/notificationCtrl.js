@@ -54,10 +54,6 @@ export default class NotificationCtrl {
 
   }
 
-
-
-
-
   changeAllowPhoneAndMail() {
     this.allowPhoneAndMail = !this.allowPhoneAndMail
     this.service.setAllowPhoneAndMail(this.allowPhoneAndMail)
@@ -79,7 +75,7 @@ export default class NotificationCtrl {
 
   getNbRssChecked(){
     return Object.keys(this.editedParameters.newRssEnabledTypes).filter((index) => {
-        return this.editedParameters.newRssEnabledTypes[index]
+      return this.editedParameters.newRssEnabledTypes[index]
     }).length
   }
 
@@ -150,7 +146,7 @@ export default class NotificationCtrl {
       case 'phone' :
         lockStatus = this.lockedParameters.phone[type.name]
         table = this.lockedParameters.phone
-      break
+        break
       case 'mail ':
         lockStatus = this.lockedParameters.mail[type.name]
         table = this.lockedParameters.mail
@@ -160,7 +156,7 @@ export default class NotificationCtrl {
         table = this.lockedParameters.rss
         break
       default:
-        break;
+        break
 
     }
     type.children.forEach(c=>{
@@ -170,21 +166,21 @@ export default class NotificationCtrl {
 
   optionLock(type,column){
     let table = null
-      switch(column){
-        case 'visible' :
-          table =  this.lockedParameters.display
-          break
-        case 'phone' :
-          table = this.lockedParameters.phone
+    switch(column){
+      case 'visible' :
+        table =  this.lockedParameters.display
         break
-        case 'mail ':
-          table = this.lockedParameters.mail
-          break
-        case 'rss':
-          table = this.lockedParameters.rss
-          break
-        default:
-          return;
+      case 'phone' :
+        table = this.lockedParameters.phone
+        break
+      case 'mail ':
+        table = this.lockedParameters.mail
+        break
+      case 'rss':
+        table = this.lockedParameters.rss
+        break
+      default:
+        return
 
     }
 
