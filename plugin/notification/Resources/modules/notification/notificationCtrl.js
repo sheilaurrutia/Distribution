@@ -187,12 +187,7 @@ export default class NotificationCtrl {
     table[type.name] = type.children.every(c=>{
       return table[c]
     })
-
-
   }
-
-
-
 
   optionToggled(type, column){
 
