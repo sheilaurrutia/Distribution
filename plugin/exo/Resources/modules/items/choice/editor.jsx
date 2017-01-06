@@ -7,6 +7,7 @@ import {Textarea} from './../../components/form/textarea.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {FormGroup} from './../../components/form/form-group.jsx'
+import {LinkWithTooltip} from './../../components/form/tooltip-buttons.jsx'
 import {actions} from './editor'
 
 class ChoiceItem extends Component {
@@ -74,6 +75,15 @@ class ChoiceItem extends Component {
               aria-disabled={!this.props.deletable}
               title={t('delete')}
               className={classes('fa', 'fa-trash-o', {disabled: !this.props.deletable})}
+              onClick={() => this.props.deletable && this.props.onChange(
+                actions.removeChoice(this.props.id)
+              )}
+            />
+            <LinkWithTooltip
+              id={`choice-${this.props.id}-delete`}
+              aria-disabled={!this.props.deletable}
+              className={classes('fa', 'fa-trash-o', {disabled: !this.props.deletable})}
+              title={t('delete')}
               onClick={() => this.props.deletable && this.props.onChange(
                 actions.removeChoice(this.props.id)
               )}
