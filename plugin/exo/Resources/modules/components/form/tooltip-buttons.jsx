@@ -1,17 +1,19 @@
 import React, {PropTypes as T} from 'react'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
+import classes from 'classnames'
 
 
 export const LinkWithTooltip = props =>
 <OverlayTrigger
   placement="bottom"
   overlay={
-    <Tooltip id={props.id}>props.title</Tooltip>
+    <Tooltip id={props.id}>{props.title}</Tooltip>
   }
 >
   <a
-    className="btn btn-link"
+    role="button"
+    className={classes('btn', 'btn-link', props.classes)}
     onClick={props.onClick}
   >
   {props.label}
@@ -21,6 +23,7 @@ export const LinkWithTooltip = props =>
 LinkWithTooltip.propTypes = {
   id: T.string.isRequired,
   title: T.string.isRequired,
+  onClick: T.func.isRequired,
   label: T.string,
-  onClick: T.func.isRequired
+  classes: T.string
 }
