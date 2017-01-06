@@ -1,15 +1,18 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
+
 import {tex} from './../../../utils/translate'
 import {getDefinition} from './../../../items/item-types'
 import selectQuiz from './../../selectors'
 import {select} from './../selectors'
+
 import {actions as playerActions} from './../actions'
+
 import {ItemPlayer} from './item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
 
-export const Player = props =>
+const Player = props =>
   <div className="quiz-player">
     <h2 className="h4 step-title">
       {props.step.title ?
@@ -20,18 +23,20 @@ export const Player = props =>
     </h2>
 
     {props.step.description &&
-      <div className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}>
-
-      </div>
+      <content className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}></content>
     }
 
     {props.items.map((item) => (
       <Panel
         key={item.id}
+        header={item.title}
         collapsible={true}
         expanded={true}
       >
-        <ItemPlayer item={item}>
+        <ItemPlayer
+          item={item}
+          showHint={props.showHint}
+        >
           {React.createElement(getDefinition(item.type).player, {
             item: item,
             answer: props.answers[item.id] ? props.answers[item.id].data : undefined,
@@ -48,7 +53,8 @@ export const Player = props =>
       submit={() => props.submit(props.quizId, props.paper.id, props.answers)}
       finish={() => props.finish(props.quizId, props.paper, props.answers)}
     />
-    </div>
+  </div>
+
 
 Player.propTypes = {
   quizId: T.string.isRequired,
@@ -74,7 +80,8 @@ Player.propTypes = {
   updateAnswer: T.func.isRequired,
   navigateTo: T.func.isRequired,
   submit: T.func.isRequired,
-  finish: T.func.isRequired
+  finish: T.func.isRequired,
+  showHint: T.func.isRequired
 }
 
 Player.defaultProps = {
@@ -95,4 +102,6 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, playerActions)(Player)
+const ConnectedPlayer = connect(mapStateToProps, playerActions)(Player)
+
+export {ConnectedPlayer as Player}
