@@ -6,24 +6,29 @@ import classes from 'classnames'
 
 export const LinkWithTooltip = props =>
 <OverlayTrigger
-  placement="bottom"
+  placement={props.position}
   overlay={
     <Tooltip id={props.id}>{props.title}</Tooltip>
   }
 >
   <a
     role="button"
-    className={classes('btn', 'btn-link', props.classes)}
+    className={classes('btn', 'btn-link', props.className)}
     onClick={props.onClick}
   >
   {props.label}
   </a>
 </OverlayTrigger>
 
+LinkWithTooltip.defaultProps = {
+  position:'top'
+}
+
 LinkWithTooltip.propTypes = {
   id: T.string.isRequired,
   title: T.string.isRequired,
+  position: T.string.isRequired,
   onClick: T.func.isRequired,
   label: T.string,
-  classes: T.string
+  className: T.string
 }
