@@ -51,7 +51,7 @@ function initJsPlumb(id, jsPlumbInstance) {
     }
   })
 
-  jsPlumbInstance.setContainer(document.getElementById('match-question-container-id-' + id))
+  jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + id))
 }
 
 function drawSolutions(solutions, jsPlumbInstance){
@@ -367,7 +367,7 @@ class Match extends Component {
 
   render() {
     return (
-      <div id={`match-question-container-id-${this.props.item.id}`} className="match-question-container">
+      <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor">
         { get(this.props.item, '_touched') &&
           get(this.props.item, '_errors.items') &&
           <div className="error-text">
