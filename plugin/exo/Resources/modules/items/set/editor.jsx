@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {BtnWithTooltip} from './../../components/form/tooltip-buttons.jsx'
+import {BtnWithTooltip} from './../../components/form/tooltiped-button.jsx'
 import {actions} from './editor'
 
 let DropBox = props => {

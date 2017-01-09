@@ -96,6 +96,7 @@
 
 .quiz-editor .words-items .right-controls {
   display: flex;
+  align-items: flex-start;
 }
 
 /* SET */
