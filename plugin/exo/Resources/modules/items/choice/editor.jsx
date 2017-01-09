@@ -7,7 +7,7 @@ import {Textarea} from './../../components/form/textarea.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {FormGroup} from './../../components/form/form-group.jsx'
-import {LinkWithTooltip} from './../../components/form/tooltip-buttons.jsx'
+import {BtnWithTooltip} from './../../components/form/tooltip-buttons.jsx'
 import {actions} from './editor'
 
 class ChoiceItem extends Component {
@@ -70,8 +70,13 @@ class ChoiceItem extends Component {
                 )}
               />
             }
-
-            <LinkWithTooltip
+            <BtnWithTooltip
+              id={`choice-${this.props.id}-feedback-toggle`}
+              className="fa fa-comments-o"
+              title={tex('choice_feedback_info')}
+              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+            />
+            <BtnWithTooltip
               id={`choice-${this.props.id}-delete`}
               className="fa fa-trash-o"
               enabled={this.props.deletable}
@@ -79,12 +84,6 @@ class ChoiceItem extends Component {
               onClick={() => this.props.deletable && this.props.onChange(
                 actions.removeChoice(this.props.id)
               )}
-            />
-            <LinkWithTooltip
-              id={`choice-${this.props.id}-feedback-toggle`}
-              className="fa fa-comments-o"
-              title={tex('choice_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
         </div>
       </div>

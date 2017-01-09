@@ -5,6 +5,7 @@ import find from 'lodash/find'
 import {t, tex} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
+import {BtnWithTooltip} from './../../components/form/tooltip-buttons.jsx'
 import {actions} from './editor.js'
 
 
@@ -64,20 +65,21 @@ class WordItem extends Component {
               actions.updateSolution(this.props.index, 'score', e.target.value)
             )}
           />
-          <a
-            role="button"
-            aria-disabled={!this.props.deletable}
+
+          <BtnWithTooltip
+            id={`words-${this.props.index}-feedback-toggle`}
+            className="fa fa-comments-o"
+            title={tex('words_feedback_info')}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
+          <BtnWithTooltip
+            id={`words-${this.props.index}-delete`}
+            className="fa fa-trash-o"
+            enabled={this.props.deletable}
             title={t('delete')}
-            className={classes('btn', 'btn-link', 'fa', 'fa-trash-o', {disabled: !this.props.deletable})}
             onClick={() => this.props.deletable && this.props.onChange(
               actions.removeSolution(this.props.index)
             )}
-          />
-          <a
-            role="button"
-            title={tex('words_feedback_info')}
-            className="btn btn-link fa fa-comments-o"
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
         </div>
       </div>

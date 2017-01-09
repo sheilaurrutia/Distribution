@@ -4,7 +4,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import classes from 'classnames'
 
 
-export const LinkWithTooltip = props =>
+export const BtnWithTooltip = props =>
 <OverlayTrigger
   placement={props.position}
   overlay={
@@ -17,16 +17,16 @@ export const LinkWithTooltip = props =>
     className={classes('btn', 'btn-link', props.className, {disabled: !props.enabled})}
     onClick={props.onClick}
   >
-  {props.label}
-</button>
+    {props.label}
+  </button>
 </OverlayTrigger>
 
-LinkWithTooltip.defaultProps = {
+BtnWithTooltip.defaultProps = {
   position:'top',
   enabled: true
 }
 
-LinkWithTooltip.propTypes = {
+BtnWithTooltip.propTypes = {
   id: T.string.isRequired,
   title: T.string.isRequired,
   position: T.string.isRequired,
