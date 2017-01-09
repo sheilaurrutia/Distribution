@@ -11,24 +11,27 @@ export const LinkWithTooltip = props =>
     <Tooltip id={props.id}>{props.title}</Tooltip>
   }
 >
-  <a
+  <button
     role="button"
-    className={classes('btn', 'btn-link', props.className)}
+    aria-disabled={!props.enabled}
+    className={classes('btn', 'btn-link', props.className, {disabled: !props.enabled})}
     onClick={props.onClick}
   >
   {props.label}
-  </a>
+</button>
 </OverlayTrigger>
 
 LinkWithTooltip.defaultProps = {
-  position:'top'
+  position:'top',
+  enabled: true
 }
 
 LinkWithTooltip.propTypes = {
   id: T.string.isRequired,
   title: T.string.isRequired,
   position: T.string.isRequired,
-  onClick: T.func.isRequired,
+  enabled: T.bool.isRequired,
+  onClick: T.func,
   label: T.string,
   className: T.string
 }

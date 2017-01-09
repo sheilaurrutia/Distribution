@@ -73,8 +73,8 @@ class ChoiceItem extends Component {
 
             <LinkWithTooltip
               id={`choice-${this.props.id}-delete`}
-              aria-disabled={!this.props.deletable}
-              className={classes('fa', 'fa-trash-o', {disabled: !this.props.deletable})}
+              className="fa fa-trash-o"
+              enabled={this.props.deletable}
               title={t('delete')}
               onClick={() => this.props.deletable && this.props.onChange(
                 actions.removeChoice(this.props.id)
