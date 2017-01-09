@@ -5,7 +5,7 @@ import find from 'lodash/find'
 import {t, tex} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
-import {BtnWithTooltip} from './../../components/form/tooltiped-button.jsx'
+import {TooltipButton} from './../../components/form/tooltiped-button.jsx'
 import {actions} from './editor.js'
 
 
@@ -66,13 +66,13 @@ class WordItem extends Component {
             )}
           />
 
-          <BtnWithTooltip
+          <TooltipButton
             id={`words-${this.props.index}-feedback-toggle`}
             className="fa fa-comments-o"
             title={tex('words_feedback_info')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
-          <BtnWithTooltip
+          <TooltipButton
             id={`words-${this.props.index}-delete`}
             className="fa fa-trash-o"
             enabled={this.props.deletable}

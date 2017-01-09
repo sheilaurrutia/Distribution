@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {BtnWithTooltip} from './../../components/form/tooltiped-button.jsx'
+import {TooltipButton} from './../../components/form/tooltiped-button.jsx'
 import {actions} from './editor'
 
 let DropBox = props => {
@@ -67,13 +67,13 @@ class Association extends Component {
               actions.updateAssociation(this.props.association.setId, this.props.association.itemId, 'score', e.target.value)
             )}
           />
-          <BtnWithTooltip
+          <TooltipButton
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
             className="fa fa-comments-o"
             title={tex('feedback')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
-          <BtnWithTooltip
+          <TooltipButton
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
             className="fa fa-trash-o"
             title={t('delete')}
@@ -113,7 +113,7 @@ class Set extends Component {
               />
             </div>
             <div className="right-controls">
-              <BtnWithTooltip
+              <TooltipButton
                 id={`set-${this.props.set.id}-delete`}
                 className="fa fa-trash-o"
                 title={t('delete')}
@@ -220,7 +220,7 @@ let Item = props => {
         />
       </div>
       <div className="right-controls">
-        <BtnWithTooltip
+        <TooltipButton
           id={`set-item-${props.item.id}-delete`}
           className="fa fa-trash-o"
           title={t('delete')}
@@ -342,13 +342,13 @@ class Odd extends Component {
               actions.updateItem(this.props.odd.id, 'score', e.target.value, true)
             )}
           />
-          <BtnWithTooltip
+          <TooltipButton
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="fa fa-comments-o"
             title={tex('feedback')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
-          <BtnWithTooltip
+          <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
             className="fa fa-trash-o"
             title={t('delete')}
