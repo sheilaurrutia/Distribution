@@ -4,6 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import {tex, t} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
+import {TooltipButton} from './../../components/form/tooltiped-button.jsx'
 import {actions} from './editor'
 
 /* global jsPlumb */
@@ -138,12 +139,14 @@ class MatchItem extends Component{
       <div className={classes('item', this.props.type)} id={this.props.type + '_' + this.props.item.id}>
         { this.props.type === 'source' &&
           <div className="left-controls">
-            <a  role="button"
-                title={t('delete')}
-                className={classes('btn', 'btn-sm', 'btn-link', 'fa', 'fa-trash-o', {disabled: !this.props.item._deletable})}
-                onClick={() => this.props.item._deletable && this.props.onUnmount(
-                  true, this.props.item.id, this.props.type + '_' + this.props.item.id
-                )}
+            <TooltipButton
+              id={`match-source-${this.props.item.id}-delete`}
+              title={t('delete')}
+              enabled={this.props.item._deletable}
+              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              onClick={() => this.props.item._deletable && this.props.onUnmount(
+                true, this.props.item.id, this.props.type + '_' + this.props.item.id
+              )}
             />
           </div>
         }
@@ -157,12 +160,14 @@ class MatchItem extends Component{
         </div>
         { this.props.type === 'target' &&
           <div className="right-controls">
-            <a  role="button"
-                title={t('delete')}
-                className={classes('btn', 'btn-sm', 'btn-link', 'fa', 'fa-trash-o', {disabled: !this.props.item._deletable})}
-                onClick={() => this.props.item._deletable && this.props.onUnmount(
-                  false, this.props.item.id, this.props.type + '_' + this.props.item.id
-                )}
+            <TooltipButton
+              id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
+              title={t('delete')}
+              enabled={this.props.item._deletable}
+              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              onClick={() => this.props.item._deletable && this.props.onUnmount(
+                false, this.props.item.id, this.props.type + '_' + this.props.item.id
+              )}
             />
           </div>
         }
@@ -200,8 +205,7 @@ class Match extends Component {
 
   componentDidMount() {
     this.jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + this.props.item.id))
-    //this.jsPlumbInstance.setContainer(document.getElementById('popover-place-holder-' + this.props.item.id))
-
+    
     window.setTimeout(function () {
       drawSolutions(this.props.item.solutions, this.jsPlumbInstance)
     }.bind(this), 500)
