@@ -12,14 +12,12 @@ function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-place-holder-' + id).getBoundingClientRect()
   const connectionRect =  document.querySelectorAll('.' + connectionClass)[0].getBoundingClientRect()
   return {
-    left: 0 - connectionRect.width / 2 + 20, // 20 is the endPoint width
+    left: 0 - connectionRect.width / 2 + 40, // 20 is the endPoint width
     top:  connectionRect.top + connectionRect.height / 2 - containerRect.top
   }
 }
 
-function initJsPlumb(id, jsPlumbInstance) {
-  jsPlumbInstance.setSuspendDrawing(false)
-
+function initJsPlumb(jsPlumbInstance) {
   // defaults parameters for all connections
   jsPlumbInstance.importDefaults({
     Anchors: ['RightMiddle', 'LeftMiddle'],
@@ -28,8 +26,7 @@ function initJsPlumb(id, jsPlumbInstance) {
     DropOptions: {tolerance: 'touch'},
     HoverPaintStyle: {strokeStyle: '#FC0000'},
     LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4},
-    Scope: id
+    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
   })
 
   jsPlumbInstance.registerConnectionTypes({
@@ -50,8 +47,6 @@ function initJsPlumb(id, jsPlumbInstance) {
       hoverPaintStyle: { strokeStyle: 'orange', lineWidth: 6 }
     }
   })
-
-  jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + id))
 }
 
 function drawSolutions(solutions, jsPlumbInstance){
@@ -189,6 +184,9 @@ class Match extends Component {
   constructor(props) {
     super(props)
     this.jsPlumbInstance = jsPlumb.getInstance()
+    initJsPlumb(this.jsPlumbInstance)
+
+    //initJsPlumb2()
     this.state = {
       popover: {
         visible: false,
@@ -201,12 +199,12 @@ class Match extends Component {
   }
 
   componentDidMount() {
+    this.jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + this.props.item.id))
+    //this.jsPlumbInstance.setContainer(document.getElementById('popover-place-holder-' + this.props.item.id))
 
-    initJsPlumb(this.props.item.id, this.jsPlumbInstance)
     window.setTimeout(function () {
       drawSolutions(this.props.item.solutions, this.jsPlumbInstance)
     }.bind(this), 500)
-
 
     // new connection created event
     this.jsPlumbInstance.bind('connection', function (data) {
@@ -252,7 +250,7 @@ class Match extends Component {
       const secondId = connection.targetId.replace('target_', '')
       const connectionClass = 'connection-' + firstId + '-' + secondId
       const positions = getPopoverPosition(connectionClass, this.props.item.id)
-      const solutionIndex = this.props.item.solutions.findIndex(el => el.firstId === firstId && el.secondSetId === secondId)
+      const solutionIndex = this.props.item.solutions.findIndex(el => el.firstId === firstId && el.secondId === secondId)
 
       this.setState({
         popover: {
@@ -285,6 +283,8 @@ class Match extends Component {
     const isLeftItem = type === 'source'
     const selector = '#' +  id
     const anchor = isLeftItem ? 'RightMiddle' : 'LeftMiddle'
+
+    // HERE timeout make the draw of endpoints not reliable
     window.setTimeout(function () {
       if (isLeftItem) {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
@@ -303,6 +303,9 @@ class Match extends Component {
       }
     }.bind(this), 100)
 
+    window.setTimeout(function (){
+      this.jsPlumbInstance.repaintEverything()
+    }.bind(this), 3000)
   }
 
   removeConnection(firstId, secondId){

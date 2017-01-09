@@ -1,8 +1,15 @@
-/* MATCH */
+/* MATCH EDITOR */
 
+/* jsPlumb Endpoints z-index */
+.endPoints{
+  z-index: 1;
+}
+
+/* MATCH EDITOR */
 .quiz-editor .match-question-editor {
   padding: 0;
-
+  /* required by jsPlumb for proper drawing */
+  position: relative;
   .match-items {
     display: flex;
     justify-content: space-around;
@@ -63,6 +70,7 @@
 
     }
     .popover-container{
+      /* required for position computing */
       position: relative;
       flex-grow: 6;
       .popover {
