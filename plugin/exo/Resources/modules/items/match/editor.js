@@ -26,7 +26,7 @@ export const actions = {
 }
 
 function decorate(item) {
-
+  console.log(item)
   const leftItemDeletable = getLeftItemDeletable(item)
   const firstSetWithDeletable = item.firstSet.map(
     set => Object.assign({}, set, {
@@ -57,6 +57,7 @@ function decorate(item) {
 }
 
 function reduce(item = {}, action) {
+  console.log('item')
   switch (action.type) {
     case ITEM_CREATE: {
       return decorate(Object.assign({}, item, {

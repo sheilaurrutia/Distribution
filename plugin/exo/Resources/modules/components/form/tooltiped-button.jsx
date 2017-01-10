@@ -12,7 +12,7 @@ export const TooltipButton = props =>
 >
   <button
     aria-disabled={!props.enabled}
-    className={classes('btn', 'btn-link', props.className, {disabled: !props.enabled})}
+    className={classes('btn', props.className, {disabled: !props.enabled})}
     onClick={props.onClick}
   >
     {props.label}

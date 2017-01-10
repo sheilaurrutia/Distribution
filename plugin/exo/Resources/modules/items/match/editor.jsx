@@ -51,6 +51,7 @@ function initJsPlumb(jsPlumbInstance) {
 }
 
 function drawSolutions(solutions, jsPlumbInstance){
+  solutions = solutions ? solutions : []
   for (const solution of solutions) {
     jsPlumbInstance.connect({
       source: 'source_' + solution.firstId,
@@ -63,6 +64,9 @@ function drawSolutions(solutions, jsPlumbInstance){
 class MatchLinkPopover extends Component {
   constructor(props){
     super(props)
+    this.state = {
+      showFeedback : false
+    }
   }
 
   render() {
@@ -76,21 +80,25 @@ class MatchLinkPopover extends Component {
           <div>
             {tex('match_edit_connection')}
             <div className="pull-right">
-              <a
-                role="button"
+              <TooltipButton
+                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
                 title={'delete'}
-                className={classes('btn', 'btn-sm', 'btn-link-danger', 'fa fa-trash', {disabled: !this.props.solution._deletable})}
+                enabled={this.props.solution._deletable}
+                className="btn-sm btn-link-danger fa fa-trash"
                 onClick={() => this.props.solution._deletable &&
                   this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
                 }
               />
-              &nbsp;
-              <a role="button" className="btn btn-sm btn-link fa fa-close" onClick={() => this.props.handlePopoverClose()} title={'close'}></a>
+              <TooltipButton
+                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
+                title={'close'}
+                className="btn-sm fa fa-close"
+                onClick={() => this.props.handlePopoverClose()}
+              />
             </div>
           </div>
         }>
-          <div className="form-group">
-            <label>{tex('score')}</label>
+          <div className="connection-parameters">
             <input
               className="form-control"
               onChange={
@@ -101,17 +109,25 @@ class MatchLinkPopover extends Component {
               type="number"
               value={this.props.solution.score}
              />
-          </div>
-          <div className="form-group">
-            <label>{tex('feedback')}</label>
-            <Textarea
-              id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
-              content={this.props.solution.feedback}
-              onChange={feedback => this.props.onChange(
-                actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'feedback', feedback)
-              )}
-            />
-          </div>
+             <TooltipButton
+               id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
+               className="fa fa-comments-o"
+               title={tex('feedback')}
+               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+             />
+          </div>          
+          {this.state.showFeedback &&
+            <div className="feedback-container">
+              <Textarea
+                id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
+                title={tex('feedback')}
+                content={this.props.solution.feedback}
+                onChange={feedback => this.props.onChange(
+                  actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'feedback', feedback)
+                )}
+              />
+            </div>
+          }
       </Popover>
     )
   }
@@ -205,9 +221,9 @@ class Match extends Component {
 
   componentDidMount() {
     this.jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + this.props.item.id))
-    
+
     window.setTimeout(function () {
-      drawSolutions(this.props.item.solutions, this.jsPlumbInstance)
+      drawSolutions(this.props.item.solutions , this.jsPlumbInstance)
     }.bind(this), 500)
 
     // new connection created event
