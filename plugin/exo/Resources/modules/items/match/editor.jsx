@@ -85,7 +85,7 @@ class MatchLinkPopover extends Component {
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
                 title={'delete'}
                 enabled={this.props.solution._deletable}
-                className="btn-sm btn-link-danger fa fa-trash"
+                className="btn-sm fa fa-trash"
                 onClick={() => this.props.solution._deletable &&
                   this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
                 }
@@ -142,9 +142,13 @@ MatchLinkPopover.propTypes = {
   onChange: T.func.isRequired
 }
 
+
+
 class MatchItem extends Component{
   constructor(props) {
     super(props)
+
+
   }
 
   componentDidMount(){
@@ -201,6 +205,21 @@ MatchItem.propTypes = {
   onChange: T.func.isRequired
 }
 
+
+const handleRTEClick = function (event) {
+  // @TODO find a better way to ensure that we are clicking on the text-editor button
+  if (event.target.className === 'toolbar-toggle fa fa-minus-circle' || event.target.className ===  'toolbar-toggle fa fa-plus-circle') {
+    window.setTimeout(function () {
+      this.jsPlumbInstance.repaintEverything()
+    }.bind(this), 300)
+  }
+}
+
+const handleWindowResize = function () {
+  this.jsPlumbInstance.repaintEverything()
+}
+
+
 class Match extends Component {
 
   constructor(props) {
@@ -218,24 +237,19 @@ class Match extends Component {
       jsPlumbConnection: null,
       current: null
     }
+
+    this.handleRTEClick = handleRTEClick.bind(this)
+    this.handleWindowResize = handleWindowResize.bind(this)
   }
 
   componentDidMount() {
-    const container = document.getElementById('match-question-editor-id-' + this.props.item.id)
-    this.jsPlumbInstance.setContainer(container)
+    this.container = document.getElementById('match-question-editor-id-' + this.props.item.id)
+    this.jsPlumbInstance.setContainer(this.container)
+    // events that need to call jsPlumb repaint method...
+    this.container.addEventListener('click', this.handleRTEClick)
+    window.addEventListener('resize', this.handleWindowResize)
 
-
-    container.addEventListener('click', function (event){
-      console.log('CLICKED')
-      console.log(event.target.className)
-      if (event.target.className === 'toolbar-toggle fa fa-minus-circle' || event.target.className ===  'toolbar-toggle fa fa-plus-circle') {
-        console.log('this is the rich text editor click')
-        window.setTimeout(function () {
-          this.jsPlumbInstance.repaintEverything()
-        }.bind(this), 300)
-      }
-    }.bind(this))
-
+    // we have to wait for elements to be at there right place before drawing... so... timeout
     window.setTimeout(function () {
       drawSolutions(this.props.item.solutions , this.jsPlumbInstance)
     }.bind(this), 500)
@@ -381,11 +395,10 @@ class Match extends Component {
   }
 
   /**
-   * We need to tell jsPlumb to repaint each time something make the form changins it's size
+   * We need to tell jsPlumb to repaint each time something make the form changing it's size
    * For now this handle :
    * - Error message show / hide
    * - Item deletion -> if any other item is below the one that is currently deleted it's follower will go up but the endpoint stay at the previous place
-   * - TODO handle RTE size change to repaint connections && endpoints
    */
   componentDidUpdate(prevProps){
     const repaint = (prevProps.item.firstSet.length > this.props.item.firstSet.length || prevProps.item.secondSet.length > this.props.item.secondSet.length) || get(this.props.item, '_touched')
@@ -395,6 +408,8 @@ class Match extends Component {
   }
 
   componentWillUnmount(){
+    this.container.removeEventListener('click', this.handleRTEClick)
+    window.removeEventListener('resize', this.handleWindowResize)
     jsPlumb.detachEveryConnection()
     // use reset instead of deleteEveryEndpoint because reset also remove event listeners
     jsPlumb.reset()

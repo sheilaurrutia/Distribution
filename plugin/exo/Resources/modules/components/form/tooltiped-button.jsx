@@ -11,6 +11,8 @@ export const TooltipButton = props =>
   }
 >
   <button
+    type="button"
+    role="button"
     aria-disabled={!props.enabled}
     className={classes('tooltiped-button', 'btn', props.className, {disabled: !props.enabled})}
     onClick={props.onClick}
