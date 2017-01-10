@@ -12,8 +12,9 @@ import {actions} from './editor'
 function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-place-holder-' + id).getBoundingClientRect()
   const connectionRect =  document.querySelectorAll('.' + connectionClass)[0].getBoundingClientRect()
+  // note that left popover position is not the arrow position but the left border of the popover
   return {
-    left: 0 - connectionRect.width / 2 + 40, // 20 is the endPoint width
+    left: 0 - connectionRect.width / 2 - 10, // 10 is the margin / padding bewteen item-col(s) and popover-container
     top:  connectionRect.top + connectionRect.height / 2 - containerRect.top
   }
 }
@@ -115,7 +116,7 @@ class MatchLinkPopover extends Component {
                title={tex('feedback')}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
              />
-          </div>          
+          </div>
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
@@ -220,7 +221,20 @@ class Match extends Component {
   }
 
   componentDidMount() {
-    this.jsPlumbInstance.setContainer(document.getElementById('match-question-editor-id-' + this.props.item.id))
+    const container = document.getElementById('match-question-editor-id-' + this.props.item.id)
+    this.jsPlumbInstance.setContainer(container)
+
+
+    container.addEventListener('click', function (event){
+      console.log('CLICKED')
+      console.log(event.target.className)
+      if (event.target.className === 'toolbar-toggle fa fa-minus-circle' || event.target.className ===  'toolbar-toggle fa fa-plus-circle') {
+        console.log('this is the rich text editor click')
+        window.setTimeout(function () {
+          this.jsPlumbInstance.repaintEverything()
+        }.bind(this), 300)
+      }
+    }.bind(this))
 
     window.setTimeout(function () {
       drawSolutions(this.props.item.solutions , this.jsPlumbInstance)
