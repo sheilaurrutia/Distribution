@@ -12,7 +12,7 @@ use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
  * @ORM\Table(name="ujm_exercise")
  */
 class Exercise extends AbstractResource
