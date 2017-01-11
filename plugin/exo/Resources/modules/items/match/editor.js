@@ -26,6 +26,7 @@ export const actions = {
 }
 
 function decorate(item) {
+  console.log('decorate match?')
   const leftItemDeletable = getLeftItemDeletable(item)
   const firstSetWithDeletable = item.firstSet.map(
     set => Object.assign({}, set, {
@@ -229,6 +230,7 @@ function validate(item) {
 
 export default {
   component,
+  decorate,
   reduce,
   validate
 }

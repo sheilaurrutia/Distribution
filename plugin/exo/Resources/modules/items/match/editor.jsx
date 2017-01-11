@@ -52,13 +52,21 @@ function initJsPlumb(jsPlumbInstance) {
 }
 
 function drawSolutions(solutions, jsPlumbInstance){
-  solutions = solutions ? solutions : []
+
   for (const solution of solutions) {
-    jsPlumbInstance.connect({
+    let connection = jsPlumbInstance.connect({
       source: 'source_' + solution.firstId,
       target: 'target_' + solution.secondId,
       type: solution.score > 0 ? 'valid':'invalid'
     })
+
+   //  console.log(connection)
+    const connectionClass = 'connection-' + solution.firstId + '-' + solution.secondId
+    connection.addClass(connectionClass)
+    /*const firstId = data.sourceId.replace('source_', '')
+    const secondId = data.targetId.replace('target_', '')
+    const connectionClass = 'connection-' + firstId + '-' + secondId
+    connection.addClass(connectionClass)*/
   }
 }
 
@@ -142,13 +150,9 @@ MatchLinkPopover.propTypes = {
   onChange: T.func.isRequired
 }
 
-
-
 class MatchItem extends Component{
   constructor(props) {
     super(props)
-
-
   }
 
   componentDidMount(){
@@ -227,7 +231,6 @@ class Match extends Component {
     this.jsPlumbInstance = jsPlumb.getInstance()
     initJsPlumb(this.jsPlumbInstance)
 
-    //initJsPlumb2()
     this.state = {
       popover: {
         visible: false,
@@ -255,7 +258,7 @@ class Match extends Component {
     }.bind(this), 500)
 
     // new connection created event
-    this.jsPlumbInstance.bind('connection', function (data) {
+    /*this.jsPlumbInstance.bind('connection', function (data) {
       data.connection.setType('selected')
 
       const firstId = data.sourceId.replace('source_', '')
@@ -282,12 +285,44 @@ class Match extends Component {
         jsPlumbConnection: data.connection,
         current: solutionIndex
       })
-    }.bind(this))
+    }.bind(this))*/
 
     this.jsPlumbInstance.bind('beforeDrop', function (connection) {
       // check that the connection is not already in jsPlumbConnections before creating it
       const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId )
-      return list.length === 0
+
+      if (list.length > 0) {
+        return false
+      }
+
+      connection.connection.setType('selected')
+      const firstId = connection.sourceId.replace('source_', '')
+      const secondId = connection.targetId.replace('target_', '')
+      const connectionClass = 'connection-' + firstId + '-' + secondId
+      connection.connection.addClass(connectionClass)
+      const positions = getPopoverPosition(connectionClass, this.props.item.id)
+      const solution = {
+        firstId: firstId,
+        secondId: secondId,
+        feedback: '',
+        score: 1
+      }
+      // add solution to store
+      this.props.onChange(actions.addSolution(solution))
+      const solutionIndex = this.props.item.solutions.findIndex(solution => solution.firstId === firstId && solution.secondId === secondId)
+
+      this.setState({
+        popover: {
+          visible: true,
+          left: positions.left,
+          top: positions.top
+        },
+        jsPlumbConnection: connection,
+        current: solutionIndex
+      })
+
+      return true
+
     }.bind(this))
 
     // configure connection

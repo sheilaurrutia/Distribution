@@ -9,6 +9,7 @@ use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Label.
@@ -26,6 +27,13 @@ class Label implements AnswerPartInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column("uuid", type="string", length=36, unique=true)
+     */
+    private $uuid;
 
     use OrderTrait;
 
@@ -49,6 +57,26 @@ class Label implements AnswerPartInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Gets UUID.
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Sets UUID.
+     *
+     * @param $uuid
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
     }
 
     /**
