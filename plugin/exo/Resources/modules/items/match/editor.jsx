@@ -242,7 +242,6 @@ class Match extends Component {
   }
 
   componentDidMount() {
-    //this.container = document.getElementById('match-question-editor-id-' + this.props.item.id)
     this.jsPlumbInstance.setContainer(this.container)
     // events that need to call jsPlumb repaint method...
     this.container.addEventListener('click', this.handleTextEditorSwitch)

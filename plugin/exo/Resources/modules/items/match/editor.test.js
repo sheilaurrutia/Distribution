@@ -327,7 +327,6 @@ describe('<Match />', () => {
   })
 
   it('renders appropriate fields and handle changes', () => {
-    let updatedValue = null
 
     document.getElementById = () => {}
     window.jsPlumb = {
@@ -349,7 +348,7 @@ describe('<Match />', () => {
       }
     }
 
-    const form = mount(
+    mount(
       <Match
         item={{
           id: '1',
