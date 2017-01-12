@@ -303,7 +303,7 @@ describe('<Match />', () => {
 
   it('has required props', () => {
     shallow(<Match item={{foo:'baz', firstSet:[], secondSet:[], solutions:[]}}/>)
-    ensure.missingProps('Match', ['onChange', 'item.id'])
+    ensure.missingProps('Match', ['validating', 'onChange', 'item.id'])
   })
 
   it('has typed props', () => {
@@ -324,53 +324,7 @@ describe('<Match />', () => {
       />
     )
     ensure.invalidProps('Match', ['item.id', 'onChange'])
-  })
-
-  it('renders appropriate fields and handle changes', () => {
-    let updatedValue = null
-    const item = makeFixture()
-    window.jsPlumb = {
-      getInstance: () => {
-        return {
-          getSelector: () => {},
-          addEndpoint: () => {},
-          setSuspendDrawing: () => {},
-          importDefaults: () => {},
-          registerConnectionTypes: () => {},
-          connect:() => {},
-          setContainer: () => {},
-          bind: () => {},
-          getConnections: () => {},
-          removeAllEndpoints: () => {},
-          detach: () => {},
-          repaintEverything: () => {}
-        }
-      }
-    }
-
-    const form = mount(
-      <Match
-        item={item}
-        onChange={value => updatedValue = value}
-      />
-    )
-    ensure.propTypesOk()
-
-    const penalty = form.find('input#match-penalty')
-    ensure.equal(penalty.length, 1, 'has penalty input')
-    penalty.simulate('change', {target: {value: 5}})
-    ensure.equal(updatedValue.value, 5)
-    ensure.equal(updatedValue.property, 'penalty')
-
-    const random = form.find('input[type="checkbox"]')
-    ensure.equal(random.length, 1, 'has random checkbox')
-    random.simulate('change', {target: {value: true}})
-    ensure.equal(updatedValue.value, true)
-    ensure.equal(updatedValue.property, 'random')
-
-    const text = form.find('div[role="textbox"]')
-    ensure.equal(text.length, 4, 'has item data fields')
-  })
+  })  
 })
 
 
