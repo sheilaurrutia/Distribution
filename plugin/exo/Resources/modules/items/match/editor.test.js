@@ -324,7 +324,90 @@ describe('<Match />', () => {
       />
     )
     ensure.invalidProps('Match', ['item.id', 'onChange'])
-  })  
+  })
+
+  it('renders appropriate fields and handle changes', () => {
+    let updatedValue = null
+
+    document.getElementById = () => {}
+    window.jsPlumb = {
+      getInstance: () => {
+        return {
+          getSelector: () => {},
+          addEndpoint: () => {},
+          setSuspendDrawing: () => {},
+          importDefaults: () => {},
+          registerConnectionTypes: () => {},
+          connect:() => {},
+          setContainer: () => {},
+          bind: () => {},
+          getConnections: () => {},
+          removeAllEndpoints: () => {},
+          detach: () => {},
+          repaintEverything: () => {}
+        }
+      }
+    }
+
+    const form = mount(
+      <Match
+        item={{
+          id: '1',
+          type: 'application/x.match+json',
+          content: 'Question?',
+          random: false,
+          penalty: 0,
+          firstSet: [
+            {
+              id: '1',
+              type: 'text/html',
+              data: 'A',
+              _deletable: true
+            },
+            {
+              id: '2',
+              type: 'text/html',
+              data: 'B',
+              _deletable: true
+            }
+          ],
+          secondSet: [
+            {
+              id: '1',
+              type: 'text/html',
+              data: 'C',
+              _deletable: true
+            },
+            {
+              id:'2',
+              type: 'text/html',
+              data: 'D',
+              _deletable: true
+            }
+          ],
+          solutions: [
+            {
+              firstId: '1',
+              secondId: '1',
+              score: 2,
+              feedback: 'Well done',
+              _deletable: true
+            },
+            {
+              firstId: '1',
+              secondId: '2',
+              score: 1,
+              feedback: 'Congrats',
+              _deletable: true
+            }
+          ]
+        }}
+        validating={false}
+        onChange={() => {}}
+      />
+    )
+    ensure.propTypesOk()
+  })
 })
 
 

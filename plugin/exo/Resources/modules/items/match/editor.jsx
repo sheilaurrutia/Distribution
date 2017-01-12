@@ -212,6 +212,8 @@ class Match extends Component {
     this.jsPlumbInstance = jsPlumb.getInstance()
     initJsPlumb(this.jsPlumbInstance)
 
+    this.container = null
+
     this.state = {
       popover: {
         visible: false,
@@ -240,7 +242,7 @@ class Match extends Component {
   }
 
   componentDidMount() {
-    this.container = document.getElementById('match-question-editor-id-' + this.props.item.id)
+    //this.container = document.getElementById('match-question-editor-id-' + this.props.item.id)
     this.jsPlumbInstance.setContainer(this.container)
     // events that need to call jsPlumb repaint method...
     this.container.addEventListener('click', this.handleTextEditorSwitch)
@@ -310,6 +312,10 @@ class Match extends Component {
         current: solutionIndex
       })
     })
+  }
+
+  focus() {
+
   }
 
   itemWillUnmount(isLeftSet, id, elemId){
@@ -419,7 +425,7 @@ class Match extends Component {
 
   render() {
     return (
-      <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor">
+      <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor" ref={(el) => { this.container = el }}>
         {get(this.props.item, '_errors.items') &&
           <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
