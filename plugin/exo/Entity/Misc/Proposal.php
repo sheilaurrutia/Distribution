@@ -4,10 +4,10 @@ namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\QuestionType\MatchQuestion;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Proposal.

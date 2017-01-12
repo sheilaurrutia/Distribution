@@ -84,7 +84,6 @@ class MatchQuestionSerializer implements SerializerInterface
 
         foreach ($matchQuestion->getProposals() as $proposal) {
             /** @var Label $label */
-
             foreach ($proposal->getExpectedLabels() as $label) {
                 $solutionData = new \stdClass();
                 $solutionData->firstId = (string) $proposal->getUuid();
@@ -122,7 +121,7 @@ class MatchQuestionSerializer implements SerializerInterface
         }
 
         if (isset($data->random)) {
-            $shuffle = $data->random === 1 ? true:false;
+            $shuffle = $data->random === 1 ? true : false;
             $matchQuestion->setShuffle($shuffle);
         }
 
@@ -135,7 +134,7 @@ class MatchQuestionSerializer implements SerializerInterface
     }
 
     /**
-     * Deserializes Question labels
+     * Deserializes Question labels.
      *
      * @param MatchQuestion $matchQuestion
      * @param array         $secondSets    ie labels
@@ -236,7 +235,7 @@ class MatchQuestionSerializer implements SerializerInterface
                     /* @var Label $expectedEntity */
                     foreach ($expectedLabelsEntities as $index => $expectedEntity) {
                         // only check for secondId since firstId is checked before
-                        if ((string)$expectedEntity->getUuId() === $solution->secondId) {
+                        if ((string) $expectedEntity->getUuId() === $solution->secondId) {
                             $expected = $expectedEntity;
                             unset($expectedLabelsEntities[$index]);
 

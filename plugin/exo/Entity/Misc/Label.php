@@ -3,13 +3,13 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\QuestionType\MatchQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Label.
