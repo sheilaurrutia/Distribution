@@ -89,10 +89,7 @@ class ExerciseController extends AbstractController
         $errors = [];
 
         $data = $this->decodeRequestData($request);
-        /*print_r($data);
-        $json = json_encode($data);
-        echo $json;
-        die;*/
+
         if (null === $data) {
             $errors[] = [
                 'path' => '',
