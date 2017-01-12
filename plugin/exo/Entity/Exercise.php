@@ -14,7 +14,6 @@ use UJM\ExoBundle\Library\Options\ExerciseType;
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
  * @ORM\Table(name="ujm_exercise")
- *
  */
 class Exercise extends AbstractResource
 {
