@@ -4,7 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import {tex, t} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
-import {TooltipButton} from './../../components/form/tooltiped-button.jsx'
+import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor'
 
 /* global jsPlumb */
@@ -54,7 +54,7 @@ function initJsPlumb(jsPlumbInstance) {
 function drawSolutions(solutions, jsPlumbInstance){
 
   for (const solution of solutions) {
-    let connection = jsPlumbInstance.connect({
+    const connection = jsPlumbInstance.connect({
       source: 'source_' + solution.firstId,
       target: 'target_' + solution.secondId,
       type: solution.score > 0 ? 'valid':'invalid'
@@ -205,18 +205,7 @@ MatchItem.propTypes = {
 }
 
 
-const handleRTEClick = function (event) {
-  // @TODO find a better way to ensure that we are clicking on the text-editor button
-  if (event.target.className === 'toolbar-toggle fa fa-minus-circle' || event.target.className ===  'toolbar-toggle fa fa-plus-circle') {
-    window.setTimeout(function () {
-      this.jsPlumbInstance.repaintEverything()
-    }.bind(this), 300)
-  }
-}
 
-const handleWindowResize = function () {
-  this.jsPlumbInstance.repaintEverything()
-}
 
 
 class Match extends Component {
@@ -236,53 +225,37 @@ class Match extends Component {
       current: null
     }
 
-    this.handleRTEClick = handleRTEClick.bind(this)
-    this.handleWindowResize = handleWindowResize.bind(this)
+    this.handleTextEditorSwitch = this.handleTextEditorSwitch.bind(this)
+    this.handleWindowResize = this.handleWindowResize.bind(this)
+  }
+
+  handleTextEditorSwitch(event) {
+    // @TODO find a better way to ensure that we are clicking on the text-editor button
+    if (event.target.className === 'toolbar-toggle fa fa-minus-circle' || event.target.className ===  'toolbar-toggle fa fa-plus-circle') {
+      window.setTimeout(() => {
+        this.jsPlumbInstance.repaintEverything()
+      }, 300)
+    }
+  }
+
+  handleWindowResize() {
+    this.jsPlumbInstance.repaintEverything()
   }
 
   componentDidMount() {
     this.container = document.getElementById('match-question-editor-id-' + this.props.item.id)
     this.jsPlumbInstance.setContainer(this.container)
     // events that need to call jsPlumb repaint method...
-    this.container.addEventListener('click', this.handleRTEClick)
+    this.container.addEventListener('click', this.handleTextEditorSwitch)
     window.addEventListener('resize', this.handleWindowResize)
 
     // we have to wait for elements to be at there right place before drawing... so... timeout
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       drawSolutions(this.props.item.solutions , this.jsPlumbInstance)
-    }.bind(this), 500)
+    }, 500)
 
-    // new connection created event
-    /*this.jsPlumbInstance.bind('connection', function (data) {
-      data.connection.setType('selected')
-
-      const firstId = data.sourceId.replace('source_', '')
-      const secondId = data.targetId.replace('target_', '')
-      const connectionClass = 'connection-' + firstId + '-' + secondId
-      data.connection.addClass(connectionClass)
-      const positions = getPopoverPosition(connectionClass, this.props.item.id)
-      const solution = {
-        firstId: firstId,
-        secondId: secondId,
-        feedback: '',
-        score: 1
-      }
-      // add solution to store
-      this.props.onChange(actions.addSolution(solution))
-      const solutionIndex = this.props.item.solutions.findIndex(solution => solution.firstId === firstId && solution.secondId === secondId)
-
-      this.setState({
-        popover: {
-          visible: true,
-          left: positions.left,
-          top: positions.top
-        },
-        jsPlumbConnection: data.connection,
-        current: solutionIndex
-      })
-    }.bind(this))*/
-
-    this.jsPlumbInstance.bind('beforeDrop', function (connection) {
+    // use this event to create solutions instead of 'connection' event
+    this.jsPlumbInstance.bind('beforeDrop', (connection) => {
       // check that the connection is not already in jsPlumbConnections before creating it
       const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId )
 
@@ -318,10 +291,10 @@ class Match extends Component {
 
       return true
 
-    }.bind(this))
+    })
 
     // configure connection
-    this.jsPlumbInstance.bind('click', function (connection) {
+    this.jsPlumbInstance.bind('click', (connection) => {
       connection.setType('selected')
 
       const firstId = connection.sourceId.replace('source_', '')
@@ -339,7 +312,7 @@ class Match extends Component {
         jsPlumbConnection: connection,
         current: solutionIndex
       })
-    }.bind(this))
+    })
   }
 
   itemWillUnmount(isLeftSet, id, elemId){
@@ -363,7 +336,7 @@ class Match extends Component {
     const anchor = isLeftItem ? 'RightMiddle' : 'LeftMiddle'
 
     // HERE timeout make the draw of endpoints not reliable
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       if (isLeftItem) {
         this.jsPlumbInstance.addEndpoint(this.jsPlumbInstance.getSelector(selector), {
           anchor: anchor,
@@ -379,11 +352,11 @@ class Match extends Component {
           maxConnections: -1
         })
       }
-    }.bind(this), 100)
+    }, 100)
 
-    window.setTimeout(function (){
+    window.setTimeout(() => {
       this.jsPlumbInstance.repaintEverything()
-    }.bind(this), 3000)
+    }, 3000)
   }
 
   removeConnection(firstId, secondId){
@@ -438,7 +411,7 @@ class Match extends Component {
   }
 
   componentWillUnmount(){
-    this.container.removeEventListener('click', this.handleRTEClick)
+    this.container.removeEventListener('click', this.handleTextEditorSwitch)
     window.removeEventListener('resize', this.handleWindowResize)
     jsPlumb.detachEveryConnection()
     // use reset instead of deleteEveryEndpoint because reset also remove event listeners
@@ -450,22 +423,19 @@ class Match extends Component {
   render() {
     return (
       <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor">
-        { get(this.props.item, '_touched') &&
-          get(this.props.item, '_errors.items') &&
+        {get(this.props.item, '_errors.items') &&
           <div className="error-text">
             <span className="fa fa-warning"></span>
             {this.props.item._errors.items}
           </div>
         }
-        { get(this.props.item, '_touched') &&
-          get(this.props.item, '_errors.solutions') &&
+        {get(this.props.item, '_errors.solutions') &&
           <div className="error-text">
             <span className="fa fa-warning"></span>
             {this.props.item._errors.solutions}
           </div>
         }
-        { get(this.props.item, '_touched') &&
-          get(this.props.item, '_errors.warning') &&
+        {get(this.props.item, '_errors.warning') &&
           <div className="error-text">
             <span className="fa fa-info"></span>
             {this.props.item._errors.warning}
@@ -497,15 +467,15 @@ class Match extends Component {
           </label>
         </div>
         <hr/>
-        <div className="match-items" onClick={this.handlePopoverFocusOut.bind(this)}>
+        <div className="match-items" onClick={(event) => this.handlePopoverFocusOut(event)}>
           <div className="item-col">
             <ul>
             {this.props.item.firstSet.map((item) =>
               <li key={'source_' + item.id}>
                 <MatchItem
                   onChange={this.props.onChange}
-                  onMount={this.itemDidMount.bind(this)}
-                  onUnmount={this.itemWillUnmount.bind(this)}
+                  onMount={(type, id) => this.itemDidMount(type, id)}
+                  onUnmount={(isLeftSet, id, elemId) => this.itemWillUnmount(isLeftSet, id, elemId)}
                   item={item}
                   type="source"
                 />
@@ -526,8 +496,8 @@ class Match extends Component {
           <div id={`popover-place-holder-${this.props.item.id}`} className="popover-container">
             { this.state.popover.visible &&
                 <MatchLinkPopover
-                  handleConnectionDelete={this.removeConnection.bind(this)}
-                  handlePopoverClose={this.closePopover.bind(this)}
+                  handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}
+                  handlePopoverClose={() => this.closePopover()}
                   popover={this.state.popover}
                   solution={this.props.item.solutions[this.state.current]}
                   onChange={this.props.onChange}
@@ -540,8 +510,8 @@ class Match extends Component {
                 <li key={'target_' + item.id}>
                   <MatchItem
                     onChange={this.props.onChange}
-                    onMount={this.itemDidMount.bind(this)}
-                    onUnmount={this.itemWillUnmount.bind(this)}
+                    onMount={(type, id) => this.itemDidMount(type, id)}
+                    onUnmount={(isLeftSet, id, elemId) => this.itemWillUnmount(isLeftSet, id, elemId)}
                     item={item}
                     type="target"
                   />
