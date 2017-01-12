@@ -121,8 +121,9 @@ class MatchQuestionSerializer implements SerializerInterface
             $matchQuestion->setPenalty($data->penalty);
         }
 
-        if (isset($data->shuffle)) {
-            $matchQuestion->setShuffle(true);
+        if (isset($data->random)) {
+            $shuffle = $data->random === 1 ? true:false;
+            $matchQuestion->setShuffle($shuffle);
         }
 
         // deserialize firstSets, secondSets and solutions
@@ -257,7 +258,6 @@ class MatchQuestionSerializer implements SerializerInterface
             foreach ($expectedLabelsEntities as $expectedToRemove) {
                 $proposal->removeExpectedLabel($expectedToRemove);
             }
-
             $matchQuestion->addProposal($proposal);
         }
 

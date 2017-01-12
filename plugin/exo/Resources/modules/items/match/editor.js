@@ -26,7 +26,7 @@ export const actions = {
 }
 
 function decorate(item) {
-  console.log('decorate match?')
+
   const leftItemDeletable = getLeftItemDeletable(item)
   const firstSetWithDeletable = item.firstSet.map(
     set => Object.assign({}, set, {
@@ -116,7 +116,10 @@ function reduce(item = {}, action) {
 
     case UPDATE_PROP: {
       const newItem = cloneDeep(item)
+      console.log(action.value)
       const value = action.property === 'penalty' ? parseFloat(action.value) : Boolean(action.value)
+
+      console.log(value)
       // mark as touched
       newItem._touched = merge(
         newItem._touched || {},

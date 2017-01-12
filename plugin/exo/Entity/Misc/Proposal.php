@@ -120,7 +120,7 @@ class Proposal
      */
     public function removeExpectedLabel(Label $label)
     {
-        if (!$this->expectedLabels->contains($label)) {
+        if ($this->expectedLabels->contains($label)) {
             $this->expectedLabels->removeElement($label);
         }
     }

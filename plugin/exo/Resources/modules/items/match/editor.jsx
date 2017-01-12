@@ -495,7 +495,7 @@ class Match extends Component {
               type="checkbox"
               checked={this.props.item.random}
               onChange={e => this.props.onChange(
-                actions.updateProperty('random', e.target.value)
+                actions.updateProperty('random', e.target.checked)
               )}
             />
             {tex('match_shuffle_labels_and_proposals')}
