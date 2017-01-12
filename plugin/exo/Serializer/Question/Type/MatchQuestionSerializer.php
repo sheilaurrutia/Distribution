@@ -51,14 +51,14 @@ class MatchQuestionSerializer implements SerializerInterface
 
         $firstSet = array_map(function (Proposal $proposal) use ($options) {
             $itemData = $this->contentSerializer->serialize($proposal, $options);
-            $itemData->id = (string) $proposal->getId();
+            $itemData->id = (string) $proposal->getUuid();
 
             return $itemData;
         }, $matchQuestion->getProposals()->toArray());
 
         $secondSet = array_map(function (Label $label) use ($options) {
             $itemData = $this->contentSerializer->serialize($label, $options);
-            $itemData->id = (string) $label->getId();
+            $itemData->id = (string) $label->getUuid();
 
             return $itemData;
         }, $matchQuestion->getLabels()->toArray());
@@ -87,8 +87,8 @@ class MatchQuestionSerializer implements SerializerInterface
 
             foreach ($proposal->getExpectedLabels() as $label) {
                 $solutionData = new \stdClass();
-                $solutionData->firstId = (string) $proposal->getId();
-                $solutionData->secondId = (string) $label->getId();
+                $solutionData->firstId = (string) $proposal->getUuid();
+                $solutionData->secondId = (string) $label->getUuid();
                 $solutionData->score = $label->getScore();
 
                 if ($label->getFeedback()) {
@@ -150,7 +150,7 @@ class MatchQuestionSerializer implements SerializerInterface
             // Searches for an existing Label entity.
             foreach ($secondSetEntities as $entityIndex => $entityLabel) {
                 /** @var Label $entityLabel */
-                if ((string) $entityLabel->getId() === $secondSetData->id) {
+                if ((string) $entityLabel->getUuid() === $secondSetData->id) {
                     $label = $entityLabel;
                     unset($secondSetEntities[$entityIndex]);
                     break;
@@ -207,8 +207,9 @@ class MatchQuestionSerializer implements SerializerInterface
             // Search for an existing Proposal entity.
             foreach ($firstSetEntities as $entityIndex => $entityProposal) {
                 /* @var Label $entityProposal */
-                if ((string) $entityProposal->getId() === $firstSetData->id) {
+                if ((string) $entityProposal->getUuid() === $firstSetData->id) {
                     $proposal = $entityProposal;
+
                     unset($firstSetEntities[$entityIndex]);
                     break;
                 }
@@ -235,10 +236,11 @@ class MatchQuestionSerializer implements SerializerInterface
                     /* @var Label $expectedEntity */
                     foreach ($expectedLabelsEntities as $index => $expectedEntity) {
                         // only check for secondId since firstId is checked before
-                        if ((string)$expectedEntity->getId() === $solution->secondId) {
-                            unset($expectedLabelsEntities[$index]);
+                        if ((string)$expectedEntity->getUuId() === $solution->secondId) {
                             $expected = $expectedEntity;
-                            $proposal->addExpectedLabel($expectedEntity);
+                            unset($expectedLabelsEntities[$index]);
+
+                            break;
                         }
                     }
 
@@ -246,8 +248,10 @@ class MatchQuestionSerializer implements SerializerInterface
                         // find label
                         foreach ($matchQuestion->getLabels() as $label) {
                             // compare with uuid
-                            if ($label->getUuid() == $solution->secondId) {
-                                $proposal->addExpectedLabel($label);
+                            if ($label->getUuid() === $solution->secondId) {
+                                $expected = $label;
+                                $proposal->addExpectedLabel($expected);
+                                break;
                             }
                         }
                     }
@@ -259,6 +263,9 @@ class MatchQuestionSerializer implements SerializerInterface
                 $proposal->removeExpectedLabel($expectedToRemove);
             }
             $matchQuestion->addProposal($proposal);
+            /*if (null === $proposal->getId()) {
+                $matchQuestion->addProposal($proposal);
+            }*/
         }
 
         // Remaining proposals are no longer in the Question

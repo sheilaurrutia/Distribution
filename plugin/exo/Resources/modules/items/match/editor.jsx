@@ -60,13 +60,8 @@ function drawSolutions(solutions, jsPlumbInstance){
       type: solution.score > 0 ? 'valid':'invalid'
     })
 
-   //  console.log(connection)
     const connectionClass = 'connection-' + solution.firstId + '-' + solution.secondId
     connection.addClass(connectionClass)
-    /*const firstId = data.sourceId.replace('source_', '')
-    const secondId = data.targetId.replace('target_', '')
-    const connectionClass = 'connection-' + firstId + '-' + secondId
-    connection.addClass(connectionClass)*/
   }
 }
 
@@ -130,7 +125,7 @@ class MatchLinkPopover extends Component {
               <Textarea
                 id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
                 title={tex('feedback')}
-                content={this.props.solution.feedback}
+                content={this.props.solution.feedback ? this.props.solution.feedback : ''}
                 onChange={feedback => this.props.onChange(
                   actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'feedback', feedback)
                 )}

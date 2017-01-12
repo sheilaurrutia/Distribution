@@ -116,10 +116,7 @@ function reduce(item = {}, action) {
 
     case UPDATE_PROP: {
       const newItem = cloneDeep(item)
-      console.log(action.value)
       const value = action.property === 'penalty' ? parseFloat(action.value) : Boolean(action.value)
-
-      console.log(value)
       // mark as touched
       newItem._touched = merge(
         newItem._touched || {},
