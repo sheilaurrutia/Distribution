@@ -263,9 +263,6 @@ class MatchQuestionSerializer implements SerializerInterface
                 $proposal->removeExpectedLabel($expectedToRemove);
             }
             $matchQuestion->addProposal($proposal);
-            /*if (null === $proposal->getId()) {
-                $matchQuestion->addProposal($proposal);
-            }*/
         }
 
         // Remaining proposals are no longer in the Question
