@@ -55,7 +55,7 @@ class Version20170111135100 extends AbstractMigration
         $this->addSql('
             DROP INDEX UNIQ_2672B44BD17F50A6 ON ujm_proposal
         ');
-        
+
         $this->addSql('
             ALTER TABLE ujm_proposal
             DROP uuid
