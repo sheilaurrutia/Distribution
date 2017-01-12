@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import {tex, t} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {actions} from './editor'
 
 /* global jsPlumb */
@@ -203,10 +204,6 @@ MatchItem.propTypes = {
   onUnmount: T.func.isRequired,
   onChange: T.func.isRequired
 }
-
-
-
-
 
 class Match extends Component {
 
@@ -424,22 +421,13 @@ class Match extends Component {
     return (
       <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor">
         {get(this.props.item, '_errors.items') &&
-          <div className="error-text">
-            <span className="fa fa-warning"></span>
-            {this.props.item._errors.items}
-          </div>
+          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.solutions') &&
-          <div className="error-text">
-            <span className="fa fa-warning"></span>
-            {this.props.item._errors.solutions}
-          </div>
+          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
         }
         {get(this.props.item, '_errors.warning') &&
-          <div className="error-text">
-            <span className="fa fa-info"></span>
-            {this.props.item._errors.warning}
-          </div>
+          <ErrorBlock text={this.props.item._errors.warning} warnOnly={true}/>
         }
         <div className="form-group">
           <label htmlFor="match-penalty">{tex('match_penalty_label')}</label>
@@ -558,6 +546,7 @@ Match.propTypes = {
     })).isRequired,
     _errors: T.object
   }).isRequired,
+  validating: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
