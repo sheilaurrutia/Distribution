@@ -90,7 +90,6 @@ class Proposal
         $this->uuid = $uuid;
     }
 
-
     /**
      * Get InteractionMatching.
      *
