@@ -107,18 +107,14 @@ Parameters.propTypes = {
 const Layout = props =>
   <div className="quiz-overview">
     {props.empty &&
-      <div className="row">
-        <div className="col-md-12">
-          <div className="alert alert-info text-center">
-            <span className="fa fa-fw fa-warning"></span>
-            <span>
-              {tex(props.editable ?
-                'exo_empty_user_can_edit' :
-                'exo_empty_user_read_only'
-              )}
-            </span>
-          </div>
-        </div>
+      <div className="alert alert-info text-center">
+        <span className="fa fa-fw fa-warning"></span>
+        <span>
+          {tex(props.editable ?
+            'exo_empty_user_can_edit' :
+            'exo_empty_user_read_only'
+          )}
+        </span>
       </div>
     }
 
