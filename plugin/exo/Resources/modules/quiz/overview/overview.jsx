@@ -108,7 +108,7 @@ const Layout = props =>
   <div className="quiz-overview">
     {props.empty &&
       <div className="row">
-        <div className="col-md-8 col-md-offset-2">
+        <div className="col-md-12">
           <div className="alert alert-info text-center">
             <span className="fa fa-fw fa-warning"></span>
             <span>
@@ -122,7 +122,7 @@ const Layout = props =>
       </div>
     }
     <div className="row">
-      <div className="col-md-8 col-md-offset-2">
+      <div className="col-md-12">
         {props.description &&
           <div className="exercise-description panel panel-default">
             <div
@@ -137,7 +137,7 @@ const Layout = props =>
       </div>
     </div>
     <div className="row">
-      <div className="col-md-8 col-md-offset-2 text-center">
+      <div className="col-md-12 text-center">
         {props.empty && props.editable &&
           <a href="#/steps" role="button" className="btn btn-block btn-primary btn-lg">
             <span className="fa fa-pencil"></span>
