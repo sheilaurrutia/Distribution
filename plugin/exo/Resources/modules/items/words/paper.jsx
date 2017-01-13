@@ -56,14 +56,12 @@ export const WordsPaper = (props) => {
         />
       }
       expected={
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <AnswerTable answers={leftSide}/>
-            </div>
-            <div className="col-md-6">
-              <AnswerTable answers={rightSide}/>
-            </div>
+        <div>
+          <div className="col-md-6">
+            <AnswerTable answers={leftSide}/>
+          </div>
+          <div className="col-md-6">
+            <AnswerTable answers={rightSide}/>
           </div>
         </div>
       }

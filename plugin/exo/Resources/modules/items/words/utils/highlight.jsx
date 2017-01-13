@@ -2,6 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {utils} from './utils'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'
+import classes from 'classnames'
 
 export const Highlight = props => {
   return(
@@ -9,7 +10,10 @@ export const Highlight = props => {
       {utils.split(props.text, props.solutions).map(el =>
         <span key={el.text}>
           <span dangerouslySetInnerHTML={{__html: el.text}}></span>{'\u00a0'}
-          <span className={ el.score >= 0 ? 'word-success': 'word-danger'}>
+          <span className={classes({
+            'word-success': el.score > 0,
+            'word-danger': el.score < 1
+          })}>
             <Feedback feedback={el.feedback} id={el.text}/>{'\u00a0'}
             {el.score && props.showScore &&
               <SolutionScore score={el.score}/>
