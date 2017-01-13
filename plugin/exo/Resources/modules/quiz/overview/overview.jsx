@@ -121,37 +121,32 @@ const Layout = props =>
         </div>
       </div>
     }
-    <div className="row">
-      <div className="col-md-12">
-        {props.description &&
-          <div className="exercise-description panel panel-default">
-            <div
-              className="panel-body"
-              dangerouslySetInnerHTML={{ __html: props.description }}
-            ></div>
-          </div>
-        }
-        {props.parameters.showMetadata &&
-          <Parameters {...props}/>
-        }
+
+    {props.description &&
+      <div className="exercise-description panel panel-default">
+        <div
+          className="panel-body"
+          dangerouslySetInnerHTML={{ __html: props.description }}
+        ></div>
       </div>
-    </div>
-    <div className="row">
-      <div className="col-md-12 text-center">
-        {props.empty && props.editable &&
-          <a href="#/steps" role="button" className="btn btn-block btn-primary btn-lg">
-            <span className="fa fa-pencil"></span>
-            {tex('edit')}
-          </a>
-        }
-        {!props.empty &&
-          <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
-            <span className="fa fa-fw fa-play"></span>
-            {tex('exercise_start')}
-          </a>
-        }
-      </div>
-    </div>
+    }
+    {props.parameters.showMetadata &&
+      <Parameters {...props}/>
+    }
+
+    {props.empty && props.editable &&
+      <a href="#/steps" role="button" className="btn btn-block btn-primary btn-lg">
+        <span className="fa fa-pencil"></span>
+        {tex('edit')}
+      </a>
+    }
+    {!props.empty &&
+      <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
+        <span className="fa fa-fw fa-play"></span>
+        {tex('exercise_start')}
+      </a>
+    }
+
   </div>
 
 Layout.propTypes = {
