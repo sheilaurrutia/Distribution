@@ -31,13 +31,15 @@
             <tr>
                 <th>{{ 'url' | trans({}, 'lti') }}</th>
                 <th>{{ 'description' | trans({}, 'lti') }}</th>
-                <th></th>
+                <th>{{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
             {% for app in apps %}
                 <tr>
                     <td>{{ app.url }}</td>
                     <td>{{ app.description  }}</td>
-                    <td></td>
+                    <td>
+                        <a href="{{ path('ujm_lti_delete_app', {'appId': app.id}) }}"><i class="fa fa-remove" title="{{ 'delete'|trans({}, 'platform') }}"></i></a>
+                    </td>
                 </tr>
             {% endfor %}
         </table>

@@ -18,7 +18,7 @@ use UJM\LtiBundle\Form\AppType;
 class LtiController extends Controller
 {
     /**
-     * @Route("/", name="ujm_admin_lti")
+     * @Route("/apps", name="ujm_admin_lti")
      * @Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -42,5 +42,23 @@ class LtiController extends Controller
         $vars['apps'] = $apps;
 
         return $this->render('UJMLtiBundle:Lti:app.html.twig', $vars);
+    }
+
+    /**
+     * @Route("/delete/app/{appId}", name="ujm_lti_delete_app")
+     *
+     * @param int appId
+     * @Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($appId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $app = $em->getRepository('UJMLtiBundle:LtiApp')->find($appId);
+        $em->remove($app);
+        $em->flush();
+
+        return $this->forward('UJMLtiBundle:Lti:app');
     }
 }
