@@ -1,0 +1,4 @@
+ujm_lti:
+    resource: "@UJMLtiBundle/Controller/LtiController.php"
+    type: annotation
+    prefix: /

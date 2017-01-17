@@ -1,0 +1,6 @@
+plugin:
+    has_options: false
+
+    admin_tools:
+        - name: 'LTI'
+          class: 'fa fa-cog'
