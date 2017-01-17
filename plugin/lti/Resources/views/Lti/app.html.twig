@@ -23,5 +23,43 @@
 {% endblock %}
 
 {% block section_content %}
+    <div class="panel-heading">
+        <p><h3 class="panel-title">{{ 'appLtiList' | trans({}, 'lti') }}</h3></p>
+    </div>
+    <div class="panel-body">
+        <table class="table table-bordered">
+            <tr>
+                <th>{{ 'url' | trans({}, 'lti') }}</th>
+                <th>{{ 'description' | trans({}, 'lti') }}</th>
+                <th></th>
+            </tr>
+            {% for app in apps %}
+                <tr>
+                    <td>{{ app.url }}</td>
+                    <td>{{ app.description  }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'Add LTI app' | trans({}, 'lti') }}</a>
+        <div id="add_app" style="display: none">
+            <form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" {{ form_enctype(form) }} id="form_add_app">
+                {{ form_widget(form) }}
+                {{ form_rest(form) }}
+                <button type="submit" class="btn btn-primary" id="sub_add_app">{{ 'ok'|trans({}, 'platform') }}</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $("#bt_add_app").click(function() {
+            $("#add_app").show();
+        });
+        $("#sub_add_app").click(function() {
+            $("#add_app").hide();
+        });
+    </script>
 {% endblock %}
