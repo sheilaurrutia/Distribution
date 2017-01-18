@@ -3,6 +3,7 @@
 namespace UJM\LtiBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
@@ -40,6 +41,23 @@ class LtiListener
         $params = array();
         $params['_controller'] = 'UJMLtiBundle:Lti:app';
         $this->redirect($params, $event);
+    }
+
+    /**
+     * @Observe("open_tool_workspace_ujm_lti_tool_apps")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onWorkspaceToolOpen(DisplayToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'UJMLtiBundle:Lti:tool_apps';
+        $params['workspace'] = $event->getWorkspace()->getId();
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
+        $event->stopPropagation();
     }
 
     private function redirect($params, $event)

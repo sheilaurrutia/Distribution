@@ -1,0 +1,21 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "ujm_lti_tool_apps" | trans({}, "lti") | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+        'name': 'ujm_lti_tool_apps'|trans({}, 'lti'),
+        'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+{% endblock %}

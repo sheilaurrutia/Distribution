@@ -2,6 +2,7 @@
 
 namespace UJM\LtiBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -60,5 +61,24 @@ class LtiController extends Controller
         $em->flush();
 
         return $this->forward('UJMLtiBundle:Lti:app');
+    }
+
+    /**
+     * @Route("/tool_apps/{workspace}", name="ujm_lti_tool_apps")
+     *
+     * @Template
+     *
+     * @param Workspace $workspace
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tool_appsAction(Workspace $workspace)
+    {
+        $params['workspace'] = $workspace->getId();
+
+        $subRequest = $this->request->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        return $response;
     }
 }
