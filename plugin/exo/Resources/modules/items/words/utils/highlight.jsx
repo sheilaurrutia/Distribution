@@ -15,7 +15,7 @@ export const Highlight = props => {
             'word-danger': el.score < 1
           })}>
             <Feedback feedback={el.feedback} id={el.text}/>{'\u00a0'}
-            {el.score && props.showScore &&
+            {el.score !== null && props.showScore &&
               <SolutionScore score={el.score}/>
             }
           </span>
