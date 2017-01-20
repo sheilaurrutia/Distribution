@@ -78,3 +78,7 @@ WordsPaper.propTypes = {
   }).isRequired,
   answer: T.string.isRequired
 }
+
+WordsPaper.defaultProps = {
+  answer: ''
+}
