@@ -18,4 +18,27 @@
 {% endblock %}
 
 {% block section_content %}
+
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'description' | trans({}, 'lti') }}</th>
+            <th>{{ 'goapp'|trans({}, 'lti') }}</th>
+        </tr>
+        {% for app in apps %}
+            <tr>
+                <td>{{ app.description  }}</td>
+                <td>
+                    <form id="form_app_{{ app.id }}" method="POST" target="lti" action="{{ printfTwig(app.url) }}">
+                        {% for key,value in ltiDatas["app_"~app.id] %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <input type="hidden" name="oauth_signature" value="{{ signature["app_"~app.id] }}">
+                        <button type="submit"><i class="fa fa-arrow-circle-up " title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <iframe name="lti"  style="height: 700px; width: 100%"></iframe>
+
 {% endblock %}

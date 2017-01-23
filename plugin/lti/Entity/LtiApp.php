@@ -25,6 +25,11 @@ class LtiApp
     /**
      * @ORM\Column(type="text")
      */
+    private $key;
+
+    /**
+     * @ORM\Column(type="text")
+     */
     private $secret;
 
     /**
@@ -54,6 +59,22 @@ class LtiApp
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**

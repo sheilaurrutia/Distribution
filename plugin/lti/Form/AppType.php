@@ -21,6 +21,15 @@ class AppType extends AbstractType
                 )
             )
             ->add(
+                'key', 'text', array(
+                    'label' => ' ',
+                    'attr' => array('style' => 'height:34px; ',
+                        'class' => 'form-control',
+                        'placeholder' => 'key',
+                    ),
+                )
+            )
+            ->add(
                 'secret', 'text', array(
                     'label' => ' ',
                     'attr' => array('style' => 'height:34px; ',
