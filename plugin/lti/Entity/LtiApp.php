@@ -2,7 +2,9 @@
 
 namespace UJM\LtiBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\LtiBundle\Repository\LtiAppRepository")
@@ -23,19 +25,41 @@ class LtiApp
     private $url;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
-    private $key;
+    private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $appkey;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
      */
     private $secret;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     inversedBy="LtiApp"
+     * )
+     * @ORM\JoinTable(name="ujm_ltiapp_workspace")
+     */
+    private $workspaces;
+
+    /**
+     * Constructs a new instance of choices.
+     */
+    public function __construct()
+    {
+        $this->workspaces = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -43,6 +67,22 @@ class LtiApp
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
@@ -62,19 +102,19 @@ class LtiApp
     }
 
     /**
-     * @param string $key
+     * @param string $appkey
      */
-    public function setKey($key)
+    public function setAppkey($appkey)
     {
-        $this->key = $key;
+        $this->appkey = $appkey;
     }
 
     /**
      * @return string
      */
-    public function getKey()
+    public function getAppkey()
     {
-        return $this->key;
+        return $this->appkey;
     }
 
     /**
@@ -107,5 +147,21 @@ class LtiApp
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getWorkspaces()
+    {
+        return $this->workspaces;
+    }
+
+    /**
+     * @param Workspace $workspace
+     */
+    public function addChoice(Workspace $workspace)
+    {
+        $this->workspace->add($workspace);
     }
 }

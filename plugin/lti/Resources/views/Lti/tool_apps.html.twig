@@ -21,12 +21,14 @@
 
     <table class="table table-bordered">
         <tr>
+            <th>{{ 'title' | trans({}, 'lti') }}</th>
             <th>{{ 'description' | trans({}, 'lti') }}</th>
             <th>{{ 'goapp'|trans({}, 'lti') }}</th>
         </tr>
         {% for app in apps %}
             <tr>
-                <td>{{ app.description  }}</td>
+                <td>{{ app.title }}</td>
+                <td>{{ app.description }}</td>
                 <td>
                     <form id="form_app_{{ app.id }}" method="POST" target="lti" action="{{ printfTwig(app.url) }}">
                         {% for key,value in ltiDatas["app_"~app.id] %}

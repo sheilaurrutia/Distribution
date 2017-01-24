@@ -2,13 +2,12 @@
 
 namespace UJM\LtiBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use UJM\LtiBundle\Entity\LtiApp;
@@ -20,21 +19,6 @@ use UJM\LtiBundle\Form\AppType;
  */
 class LtiController extends Controller
 {
-    /*private $httpKernel;
-    private $request;
-
-    /**
-     * @DI\InjectParams({
-     *     "httpKernel"      = @DI\Inject("http_kernel"),
-     *     "requestStack"    = @DI\Inject("request_stack")
-     * })
-     */
-    /*public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack)
-    {
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
-    }*/
-
     /**
      * @Route("/apps", name="ujm_admin_lti")
      * @Template
@@ -93,7 +77,7 @@ class LtiController extends Controller
         $vars['workspace'] = $workspace;
         $vars['apps'] = $this->getAllApps();
         foreach ($vars['apps'] as $app) {
-            $ltiParams = $this->getLtiData($workspace->getId(), $app);
+            $ltiParams = $this->getLtiData($workspace, $app);
             $vars['ltiDatas']['app_'.$app->getId()] = $ltiParams['ltiData'];
             $vars['signature']['app_'.$app->getId()] = $ltiParams['signature'];
         }
@@ -109,26 +93,24 @@ class LtiController extends Controller
         return $apps;
     }
 
-    private function getLtiData($wsid, $app)
+    private function getLtiData($ws, $app)
     {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $isWorkspaceManager = $this->isWorkspaceManager($ws, $user);
+        if ($isWorkspaceManager === true) {
+            $role = 'Instructor';
+        } else {
+            $role = 'Learner';
+        }
         $now = new \DateTime();
 
         $ltiData = array(
-            'user_id' => 'David',
-            'roles' => 'Instructor',
-            'resource_link_id' => "$wsid",
-            'resource_link_title' => 'Test LTI APP',
-            'resource_link_description' => 'A weekly blog.',
-            'lis_person_name_full' => 'David UJM',
-            'lis_person_name_family' => 'Public',
-            'lis_person_name_given' => 'Given',
-            'lis_person_contact_email_primary' => 'user@school.edu',
-            'lis_person_sourcedid' => 'school.edu:user',
-            'context_id' => '456434513',
-            'context_title' => 'Design of Personal Environments',
-            'context_label' => 'SI182',
-            'tool_consumer_instance_guid' => 'lmsng.school.edu',
-            'tool_consumer_instance_description' => 'University of School (LMSng)',
+            'user_id' => $user->getUsername(),
+            'roles' => $role,
+            'resource_link_id' => $ws->getId(),
+            'resource_link_title' => 'LTI APP',
+            'resource_link_description' => $app->getDescription(),
+            'lis_person_name_full' => $user->getFirstname().' '.$user->getLastname(),
             'launch_presentation_locale' => 'fr-FR',
         );
         $ltiData['lti_version'] = 'LTI-2p0';
@@ -138,7 +120,7 @@ class LtiController extends Controller
         //OAuth Core 1.0 spec: http://oauth.net/core/1.0/
 
         $ltiData['oauth_callback'] = 'about:blank';
-        $ltiData['oauth_consumer_key'] = $app->getKey();
+        $ltiData['oauth_consumer_key'] = $app->getAppkey();
         $ltiData['oauth_version'] = '1.0';
         $ltiData['oauth_nonce'] = uniqid('', true);
         $ltiData['oauth_timestamp'] = $now->getTimestamp();
@@ -161,5 +143,18 @@ class LtiController extends Controller
         $ltiParams['signature'] = $signature;
 
         return $ltiParams;
+    }
+
+    private function isWorkspaceManager(Workspace $workspace, User $user)
+    {
+        $isWorkspaceManager = false;
+        $managerRole = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
+        $roleNames = $user->getRoles();
+
+        if (in_array('ROLE_ADMIN', $roleNames) || in_array($managerRole, $roleNames)) {
+            $isWorkspaceManager = true;
+        }
+
+        return $isWorkspaceManager;
     }
 }

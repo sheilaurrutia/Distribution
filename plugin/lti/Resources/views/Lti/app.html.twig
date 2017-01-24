@@ -29,12 +29,14 @@
     <div class="panel-body">
         <table class="table table-bordered">
             <tr>
+                <th>{{ 'title' | trans({}, 'lti') }}</th>
                 <th>{{ 'url' | trans({}, 'lti') }}</th>
                 <th>{{ 'description' | trans({}, 'lti') }}</th>
                 <th>{{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
             {% for app in apps %}
                 <tr>
+                    <td>{{ app.title }}</td>
                     <td>{{ app.url }}</td>
                     <td>{{ app.description  }}</td>
                     <td>
