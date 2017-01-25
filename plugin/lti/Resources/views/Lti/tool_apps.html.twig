@@ -24,6 +24,7 @@
             <th>{{ 'title' | trans({}, 'lti') }}</th>
             <th>{{ 'description' | trans({}, 'lti') }}</th>
             <th>{{ 'goapp'|trans({}, 'lti') }}</th>
+            <th>{{ 'publish'|trans }}</th>
         </tr>
         {% for app in apps %}
             <tr>
@@ -35,8 +36,11 @@
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
                         <input type="hidden" name="oauth_signature" value="{{ signature["app_"~app.id] }}">
-                        <button type="submit"><i class="fa fa-arrow-circle-up " title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
+                        <button type="submit"><i class="fa fa-arrow-circle-up" title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
                     </form>
+                </td>
+                <td>
+                    <a href="{{ path('ujm_lti_publish_app', { 'wsId': workspace.id, 'appId': app.id}) }}"><i class="fa fa-fw fa-share-square-o" title="{{ 'publish'|trans }}"></i></a>
                 </td>
             </tr>
         {% endfor %}

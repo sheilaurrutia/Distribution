@@ -51,8 +51,8 @@ class LtiListener
     public function onWorkspaceToolOpen(DisplayToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'UJMLtiBundle:Lti:tool_apps';
-        $params['workspace'] = $event->getWorkspace()->getId();
+        $params['_controller'] = 'UJMLtiBundle:LtiWs:tool_apps';
+        $params['workspace'] = $event->getWorkspace();
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

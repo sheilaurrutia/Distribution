@@ -54,7 +54,7 @@ class LtiApp
     private $workspaces;
 
     /**
-     * Constructs a new instance of choices.
+     * Constructs a new instance of workspaces.
      */
     public function __construct()
     {
@@ -160,8 +160,8 @@ class LtiApp
     /**
      * @param Workspace $workspace
      */
-    public function addChoice(Workspace $workspace)
+    public function addWorkspace(Workspace $workspace)
     {
-        $this->workspace->add($workspace);
+        $this->workspaces->add($workspace);
     }
 }
