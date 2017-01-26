@@ -24,7 +24,9 @@
             <th>{{ 'title' | trans({}, 'lti') }}</th>
             <th>{{ 'description' | trans({}, 'lti') }}</th>
             <th>{{ 'goapp'|trans({}, 'lti') }}</th>
-            <th>{{ 'publish'|trans }}</th>
+            {% if workspaceManager == true %}
+                <th>{{ 'publish'|trans }}</th>
+            {% endif %}
         </tr>
         {% for app in apps %}
             <tr>
@@ -36,15 +38,32 @@
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
                         <input type="hidden" name="oauth_signature" value="{{ signature["app_"~app.id] }}">
-                        <button type="submit"><i class="fa fa-arrow-circle-up" title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
+                        <button onclick="displayFrameLti()" type="submit"><i class="fa fa-arrow-circle-up" title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
                     </form>
                 </td>
-                <td>
-                    <a href="{{ path('ujm_lti_publish_app', { 'wsId': workspace.id, 'appId': app.id}) }}"><i class="fa fa-fw fa-share-square-o" title="{{ 'publish'|trans }}"></i></a>
-                </td>
+                {% if workspaceManager == true %}
+                    <td>
+                        {%  if published["app_"~app.id] == 0 %}
+                            <a href="{{ path('ujm_lti_publish_app', { 'wsId': workspace.id, 'appId': app.id}) }}"><i class="fa fa-fw fa-share-square-o" title="{{ 'publish'|trans }}"></i></a>
+                        {%  else %}
+                            <a href="{{ path('ujm_lti_unpublish_app', { 'wsId': workspace.id, 'appId': app.id}) }}" style="color: red"><i class="fa fa-fw fa-share-square-o" title="{{ 'unpublish'|trans }}"></i></a>
+                        {%  endif %}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
-    <iframe name="lti"  style="height: 700px; width: 100%"></iframe>
+    <div id="frameLti" style="display: none">
+        <iframe name="lti"  style="height: 700px; width: 100%"></iframe>
+    </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function displayFrameLti() {
+            $("#frameLti").show();
+        }
+    </script>
 {% endblock %}

@@ -164,4 +164,12 @@ class LtiApp
     {
         $this->workspaces->add($workspace);
     }
+
+    /**
+     * @param Workspace $workspace
+     */
+    public function removeWorkspace(Workspace $workspace)
+    {
+        $this->workspaces->removeElement($workspace);
+    }
 }

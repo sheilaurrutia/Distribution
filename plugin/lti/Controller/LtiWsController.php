@@ -28,21 +28,25 @@ class LtiWsController extends Controller
      */
     public function tool_appsAction(\Claroline\CoreBundle\Entity\Workspace\Workspace $workspace)
     {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
         $em = $this->getDoctrine()->getManager();
         $apps = $em->getRepository('UJMLtiBundle:LtiApp')->findAll();
         $vars['workspace'] = $workspace;
+        $vars['workspaceManager'] = $isWorkspaceManager;
         $vars['apps'] = $apps;
         foreach ($vars['apps'] as $app) {
             $ltiParams = $this->getLtiData($workspace, $app);
             $vars['ltiDatas']['app_'.$app->getId()] = $ltiParams['ltiData'];
             $vars['signature']['app_'.$app->getId()] = $ltiParams['signature'];
+            $vars['published']['app_'.$app->getId()] = $this->appAlreadyPublish($app->getId(), $workspace->getId());
         }
 
         return $this->render('UJMLtiBundle:Lti:tool_apps.html.twig', $vars);
     }
 
     /**
-     * @Route("/tool_apps/{wsId}/{appId}", name="ujm_lti_publish_app")
+     * @Route("/tool_apps/publish/{wsId}/{appId}", name="ujm_lti_publish_app")
      *
      * @Template
      *
@@ -54,16 +58,45 @@ class LtiWsController extends Controller
     public function tool_publish_appAction($wsId, $appId)
     {
         $em = $this->getDoctrine()->getManager();
-        $app = $em->getRepository('UJMLtiBundle:LtiApp')->find($wsId);
-        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($appId);
+        $app = $em->getRepository('UJMLtiBundle:LtiApp')->find($appId);
+        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($wsId);
         $app->addWorkspace($ws);
         $em->persist($app);
         $em->flush();
 
-        return $this->forward('UJMLtiBundle:Lti:tool_apps', array('workspace' => $ws));
+        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', array('workspace' => $ws));
     }
 
-    private function getLtiData($ws, $app)
+    /**
+     * @Route("/tool_apps/unpublish/{wsId}/{appId}", name="ujm_lti_unpublish_app")
+     *
+     * @Template
+     *
+     * @param int wsId
+     * @param int appId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function tool_unpublish_appAction($wsId, $appId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $app = $em->getRepository('UJMLtiBundle:LtiApp')->find($appId);
+        $ws = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($wsId);
+
+        $app->removeWorkspace($ws);
+        $em->persist($app);
+        $em->flush();
+
+        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', array('workspace' => $ws));
+    }
+
+    /**
+     * @param Workspace $ws
+     * @param LtiApp    $app
+     *
+     * @return mixed
+     */
+    private function getLtiData(\Claroline\CoreBundle\Entity\Workspace\Workspace $ws, LtiApp $app)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $isWorkspaceManager = $this->isWorkspaceManager($ws, $user);
@@ -115,6 +148,12 @@ class LtiWsController extends Controller
         return $ltiParams;
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param User                                             $user
+     *
+     * @return bool
+     */
     private function isWorkspaceManager(\Claroline\CoreBundle\Entity\Workspace\Workspace $workspace, User $user)
     {
         $isWorkspaceManager = false;
@@ -126,5 +165,19 @@ class LtiWsController extends Controller
         }
 
         return $isWorkspaceManager;
+    }
+
+    /**
+     * @param int $appId
+     * @param int $wsId
+     *
+     * @return int
+     */
+    private function appAlreadyPublish($appId, $wsId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $app = $em->getRepository('UJMLtiBundle:LtiApp')->appAlreadyPublish($appId, $wsId);
+
+        return count($app);
     }
 }
