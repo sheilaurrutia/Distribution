@@ -31,7 +31,11 @@ class LtiWsController extends Controller
         $user = $this->container->get('security.context')->getToken()->getUser();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
         $em = $this->getDoctrine()->getManager();
-        $apps = $em->getRepository('UJMLtiBundle:LtiApp')->findAll();
+        if ($isWorkspaceManager === true) {
+            $apps = $em->getRepository('UJMLtiBundle:LtiApp')->findAll();
+        } else {
+            $apps = $em->getRepository('UJMLtiBundle:LtiApp')->getAppsWs($workspace);
+        }
         $vars['workspace'] = $workspace;
         $vars['workspaceManager'] = $isWorkspaceManager;
         $vars['apps'] = $apps;

@@ -23,4 +23,20 @@ class LtiAppRepository extends EntityRepository
 
         return $result;
     }
+
+    /**
+     * @param int $wsId
+     *
+     * Return queryBuilder
+     */
+    public function getAppsWs($wsId)
+    {
+        $result = $this->createQueryBuilder('lti')
+            ->join('lti.workspaces', 'w')
+            ->where('w.id = :wid')
+            ->setParameter('wid', $wsId)
+            ->getQuery()->getResult();
+
+        return $result;
+    }
 }
