@@ -29,9 +29,9 @@
     <div class="panel-body">
         <table class="table table-bordered">
             <tr>
-                <th>{{ 'title' | trans({}, 'lti') }}</th>
+                <th>{{ 'title' | trans({}, 'platform') }}</th>
                 <th>{{ 'url' | trans({}, 'lti') }}</th>
-                <th>{{ 'description' | trans({}, 'lti') }}</th>
+                <th>{{ 'description' | trans({}, 'platform') }}</th>
                 <th>{{ 'delete'|trans({}, 'platform') }}</th>
             </tr>
             {% for app in apps %}
@@ -45,7 +45,7 @@
                 </tr>
             {% endfor %}
         </table>
-        <a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'Add LTI app' | trans({}, 'lti') }}</a>
+        <a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'add_lti_app' | trans({}, 'lti') }}</a>
         <div id="add_app" style="display: none">
             <form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" {{ form_enctype(form) }} id="form_add_app">
                 {{ form_widget(form) }}
