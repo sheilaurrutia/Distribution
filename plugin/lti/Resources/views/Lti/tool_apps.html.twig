@@ -39,7 +39,7 @@
                         {% endfor %}
                         <input type="hidden" name="oauth_signature" value="{{ signature["app_"~app.id] }}">
                         <button onclick="displayFrameLti()" type="submit" title="{{ 'open_application_in_the_same_window'|trans({}, 'lti') }}"><i class="fa fa-arrow-circle-up"></i></button>
-                        <button onclick="targetApp('form_app_{{ app.id }}')" type="submit"  title="{{ 'open_application_in_a_new_window'|trans({}, 'lti') }}"><i class="fa fa-arrow-circle-up"></i></button>
+                        <button onclick="targetApp('form_app_{{ app.id }}')" type="submit"  title="{{ 'open_application_in_a_new_window'|trans({}, 'lti') }}"><i class="fa fa-external-link-square"></i></button>
                     </form>
                 </td>
                 {% if workspaceManager == true %}
