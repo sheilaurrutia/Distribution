@@ -38,7 +38,8 @@
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
                         <input type="hidden" name="oauth_signature" value="{{ signature["app_"~app.id] }}">
-                        <button onclick="displayFrameLti()" type="submit"><i class="fa fa-arrow-circle-up" title="{{ 'goapp'|trans({}, 'lti') }}"></i></button>
+                        <button onclick="displayFrameLti()" type="submit" title="{{ 'goapp'|trans({}, 'lti') }}"><i class="fa fa-arrow-circle-up"></i></button>
+                        <button onclick="targetApp('form_app_{{ app.id }}')" type="submit"  title="{{ 'goappInNexWindow'|trans({}, 'lti') }}"><i class="fa fa-arrow-circle-up"></i></button>
                     </form>
                 </td>
                 {% if workspaceManager == true %}
@@ -64,6 +65,9 @@
     <script type="text/javascript">
         function displayFrameLti() {
             $("#frameLti").show();
+        }
+        function targetApp(form) {
+            $("#"+form).attr('target', '_blank');
         }
     </script>
 {% endblock %}
