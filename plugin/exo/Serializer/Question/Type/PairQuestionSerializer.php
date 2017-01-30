@@ -292,7 +292,7 @@ class PairQuestionSerializer implements SerializerInterface
             array_map(function (GridOdd $odd) {
                 $solution = new \stdClass();
 
-                $solution->itemIds = [$odd->getItem()];
+                $solution->itemIds = [$odd->getItem()->getUuid()];
                 $solution->score = $odd->getScore();
                 if ($odd->getFeedback()) {
                     $solution->feedback = $odd->getFeedback();
