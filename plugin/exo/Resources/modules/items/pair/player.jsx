@@ -62,6 +62,13 @@ const PairRow = props =>
     }
   </div>
 
+PairRow.propTypes = {
+  row: T.array.isRequired,
+  rowId: T.number.isRequired,
+  onDrop: T.func.isRequired,
+  onRemove: T.func.isRequired
+}
+
 const PairRowList = props =>
   <ul>
     {_.times(props.rows, i =>
@@ -124,8 +131,7 @@ const ItemList = props =>
         <li key={item.id}>
           <Item item={item}/>
         </li>
-      }
-    )}
+    })}
   </ul>
 
 
