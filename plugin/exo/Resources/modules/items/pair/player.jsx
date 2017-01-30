@@ -3,9 +3,11 @@ import classes from 'classnames'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from './../../utils/translate'
+import {utils} from './utils/utils'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import shuffle from 'lodash/shuffle'
-import _ from 'lodash';
+import _ from 'lodash'
+import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 
 let DropBox = props => {
   return props.connectDropTarget (
@@ -28,32 +30,53 @@ DropBox.propTypes = {
 
 DropBox = makeDroppable(DropBox, 'ITEM')
 
+const Pair = props =>
+  <div className="pair-element">
+    <div className="pair-element-data" dangerouslySetInnerHTML={{__html: props.item.data}} />
+    {props.item.removable &&
+      <div className="right-controls">
+        <TooltipButton
+          id={`pair-${props.item.id}-delete`}
+          className="fa fa-trash-o"
+          title={t('delete')}
+          onClick={() => props.handleItemRemove(props.item.id)}
+        />
+      </div>
+    }
+  </div>
+
+Pair.propTypes = {
+  item: T.object.isRequired,
+  handleItemRemove: T.func.isRequired
+}
+
 const PairRow = props =>
   <div className="pair-row">
-    <span className="pair-drop-box-left">
-      <DropBox object={{x: props.rowId, y: 0}} onDrop={props.onDrop} />
-    </span>
-    <span className="pair-drop-box-right">
-      <DropBox object={{x: props.rowId, y: 1}} onDrop={props.onDrop} />
-    </span>
+    {props.row[0] === -1 ?
+      <DropBox object={{x: props.rowId, y: 0}} onDrop={props.onDrop}/> :
+      <Pair item={props.row[0]} handleItemRemove={props.onRemove}/>
+    }
+    {props.row[1] === -1 ?
+      <DropBox object={{x: props.rowId, y: 1}} onDrop={props.onDrop} /> :
+      <Pair item={props.row[1]} handleItemRemove={props.onRemove}/>
+    }
   </div>
 
 const PairRowList = props =>
   <ul>
     {_.times(props.rows, i =>
       <li key={i}>
-        <PairRow key={i} rowId={i} onDrop={props.onItemDrop}/>
+        <PairRow key={i} rowId={i} row={props.answerItems[i]} onDrop={props.onItemDrop} onRemove={props.onItemRemove}/>
       </li>
     )}
   </ul>
 
 
 PairRowList.propTypes = {
+  answerItems: T.arrayOf(T.array).isRequired,
   rows: T.number.isRequired,
-  //sets: T.arrayOf(T.object).isRequired,
-  //answers: T.arrayOf(T.object).isRequired,
-  //onAssociationItemRemove: T.func.isRequired,
-  onItemDrop: T.func.isRequired
+  onItemDrop: T.func.isRequired,
+  onItemRemove: T.func.isRequired
 }
 
 let Item = props => {
@@ -96,10 +119,12 @@ Item = makeDraggable(Item, 'ITEM')
 
 const ItemList = props =>
   <ul>
-    { props.items.map((item) =>
-      <li key={item.id}>
-        <Item item={item}/>
-      </li>
+    {props.items.map((item) => {
+      return item.display &&
+        <li key={item.id}>
+          <Item item={item}/>
+        </li>
+      }
     )}
   </ul>
 
@@ -113,28 +138,40 @@ class PairPlayer extends Component {
     super(props)
 
     this.state = {
-      items: this.randomize(props.item.items, props.item.random)
+      items: this.randomize(utils.pairItemsWithDisplayOption(props.item.items), props.item.random),
+      answerItems: utils.generateAnswerPairItems(props.item.items, props.item.rows)
     }
+    this.updateAnswer()
   }
 
   randomize(items, random) {
     return random ? shuffle(items) : items
   }
 
-  /**
-   * handle item drop
-   * @var {source} dropped item (item)
-   * @var {target} target item (set)
-   */
+  updateAnswer() {
+    this.props.onChange(
+      utils.generateAnswer(this.state.answerItems)
+    )
+  }
+
+  handleItemRemove(itemId) {
+    this.setState(
+      {
+        answerItems: utils.removeAnswerItem(this.state.answerItems, itemId),
+        items: utils.switchItemDisplay(this.state.items, itemId, true)
+      },
+      () => {this.updateAnswer()}
+    )
+  }
+
   handleItemDrop(source, target) {
-    console.log(source)
-    console.log(target)
-    //if(undefined === this.props.answer.find(el => el.setId === target.object.id && el.itemId === source.item.id)){
-    //  // do something to add to solution
-    //  this.props.onChange(
-    //      [{itemId: source.item.id, setId: target.object.id, _itemData: source.item.data}].concat(this.props.answer)
-    //   )
-    //}
+    this.setState(
+      {
+        answerItems: utils.addAnswerItem(this.state.answerItems, source.item, target.object.x, target.object.y),
+        items: utils.switchItemDisplay(this.state.items, source.item.id, false)
+      },
+      () => {this.updateAnswer()}
+    )
   }
 
   render() {
@@ -145,7 +182,9 @@ class PairPlayer extends Component {
         </div>
         <div className="pair-rows-col">
             <PairRowList rows={this.props.item.rows}
+                         answerItems={this.state.answerItems}
                          onItemDrop={(source, target) => this.handleItemDrop(source, target)}
+                         onItemRemove={(itemId) => this.handleItemRemove(itemId)}
             />
         </div>
       </div>
@@ -160,12 +199,8 @@ PairPlayer.propTypes = {
     random: T.bool.isRequired,
     rows: T.number.isRequired
   }).isRequired,
-  answer: T.arrayOf(T.string),
+  answer: T.arrayOf(T.array),
   onChange: T.func.isRequired
-}
-
-PairPlayer.defaultProps = {
-  answer: []
 }
 
 export {PairPlayer}
