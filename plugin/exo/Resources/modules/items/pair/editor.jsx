@@ -167,9 +167,6 @@ class PairList extends Component {
 
   constructor(props) {
     super(props)
-
-    console.log(props.items)
-    console.log(props.items.filter(item => item.hasOwnProperty('coordinates')).length)
     this.state = {
       pinIsAllowed: props.items.filter(item => item.hasOwnProperty('coordinates')).length > 0
     }
