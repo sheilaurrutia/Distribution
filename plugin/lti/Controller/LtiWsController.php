@@ -118,7 +118,7 @@ class LtiWsController extends Controller
             'resource_link_title' => 'LTI APP',
             'resource_link_description' => $app->getDescription(),
             'lis_person_name_full' => $user->getFirstname().' '.$user->getLastname(),
-            'launch_presentation_locale' => 'fr-FR',
+            'launch_presentation_locale' => $this->get('request')->getLocale(),
         );
         $ltiData['lti_version'] = 'LTI-2p0';
         $ltiData['lti_message_type'] = 'basic-lti-launch-request';
