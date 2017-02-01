@@ -28,7 +28,6 @@ class PairAnswerValidator extends JsonSchemaValidator
     public function validateAfterSchema($answerData, array $options = [])
     {
         $errors = [];
-
         /** @var PairQuestion $question */
         $question = !empty($options[Validation::QUESTION]) ? $options[Validation::QUESTION] : null;
         if (empty($question)) {

@@ -4,6 +4,8 @@ import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {makeId, makeActionCreator} from './../../utils/utils'
 import {notBlank, number, chain} from './../../utils/validate'
 import {tex} from './../../utils/translate'
+import {Greeter} from './utils/test'
+
 
 const UPDATE_PROP = 'UPDATE_PROP'
 
@@ -36,6 +38,10 @@ export const actions = {
 }
 
 function decorate(question) {
+
+
+  let greeter = new Greeter(' ... the world is yours!')
+  console.log(greeter.greet())
 
   const itemDeletable = question.items.filter(item => undefined === question.solutions.odd.find(el => el.itemId === item.id)).length > 1
   const itemsWithDeletable = question.items.map(

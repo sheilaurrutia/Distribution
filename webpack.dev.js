@@ -13,8 +13,9 @@ module.exports = {
   },
   resolve: {
     root: paths.bower(),
-    alias: shared.aliases()
-},
+    alias: shared.aliases(),
+    extensions: ['', '.js', '.ts', '.tsx']
+  },
   plugins: [
     plugins.assetsInfoFile(),
     plugins.bowerFileLookup(),
@@ -32,7 +33,8 @@ module.exports = {
       loaders.css(),
       loaders.imageUris(),
       loaders.modernizr(),
-      loaders.json()
+      loaders.json(),
+      loaders.ts()
     ]
   },
   externals: shared.externals(),

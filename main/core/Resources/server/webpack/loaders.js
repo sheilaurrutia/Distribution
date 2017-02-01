@@ -17,6 +17,16 @@ const babel = instrument => {
 }
 
 /**
+ * Transpiles ts files with ts-loader.
+ */
+const ts = () => {
+  return {
+    test: /\.ts(x?)$/,
+    loader: 'ts-loader'
+  }
+}
+
+/**
  * Returns the contents of HTML files as plain strings.
  */
 const rawHtml = () => {
@@ -90,5 +100,6 @@ module.exports = {
   css,
   imageUris,
   modernizr,
-  json
+  json,
+  ts
 }

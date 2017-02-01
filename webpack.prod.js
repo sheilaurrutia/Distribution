@@ -39,7 +39,8 @@ module.exports = {
       loaders.css(),
       loaders.imageUris(),
       loaders.modernizr(),
-      loaders.json()
+      loaders.json(),
+      loaders.ts()
     ]
   },
   externals: shared.externals(),
