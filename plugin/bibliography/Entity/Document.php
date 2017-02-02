@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\AudioRecorderBundle\Entity;
+namespace Icap\BibliographyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
