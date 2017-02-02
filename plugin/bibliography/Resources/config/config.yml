@@ -7,6 +7,3 @@ plugin:
           name: icap_bibliography
           is_exportable: false
           icon: icap_wiki_icon.png
-          activity_rules:
-            - action: resource-read
-            - action: resource-icap_bibliography-document_create
