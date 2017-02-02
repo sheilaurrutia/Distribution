@@ -1,0 +1,7 @@
+icap_bibliography_api:
+    resource: "@IcapBibliographyBundle/Controller/API/ApiController.php"
+    type: rest
+    prefix: api
+    defaults: {_format: json}
+    options:
+        expose: true
