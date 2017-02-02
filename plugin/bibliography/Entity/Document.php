@@ -2,6 +2,7 @@
 
 namespace Icap\BibliographyBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="icap_bibliography_document")
  * @ORM\Entity
  */
-class Document
+class Document extends AbstractResource
 {
     /**
      * @var int
