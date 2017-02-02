@@ -14,10 +14,17 @@ use Doctrine\ORM\Mapping as ORM;
 class Document extends AbstractResource
 {
     /**
-     * @var int
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="string", nullable=true)
      */
-    protected $id;
+    protected $isbn;
+
+    public function getIsbn()
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn($isbn)
+    {
+        $this->isbn = $isbn;
+    }
 }

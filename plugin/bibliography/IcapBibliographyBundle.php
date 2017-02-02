@@ -19,4 +19,9 @@ class IcapBibliographyBundle extends PluginBundle implements AutoConfigurableInt
 
         return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'bibliography');
     }
+
+    public function hasMigrations()
+    {
+        return true;
+    }
 }
