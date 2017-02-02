@@ -181,7 +181,7 @@
             "Claroline\\DashboardBundle\\": "plugin/dashboard",
             "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
             "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
-            "Icap\\BibliographyBundle": "plugin/bibliography"
+            "Icap\\BibliographyBundle\\": "plugin/bibliography"
         }
     },
     "extra": {
