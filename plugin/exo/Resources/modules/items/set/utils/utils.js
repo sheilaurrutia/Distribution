@@ -1,4 +1,4 @@
-export const utils:any = {}
+export const utils = {}
 
 utils.getSolutionItemData = (searched, list) => {
   const item = list.find(el => el.id === searched )
@@ -45,5 +45,3 @@ utils.getAnswerOddScore = (answer, odd) => {
   const solution = odd.find(odd => odd.itemId === answer.itemId)
   return undefined !== solution ? solution.score : ''
 }
-
-utils.your = 'totolitoto'

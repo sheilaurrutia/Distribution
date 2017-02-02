@@ -16,7 +16,8 @@ module.exports = {
   },
   resolve: {
     root: paths.bower(),
-    alias: shared.aliases()
+    alias: shared.aliases(),
+    extensions: ['', '.js', '.ts']
   },
   plugins: [
     plugins.assetsInfoFile(),

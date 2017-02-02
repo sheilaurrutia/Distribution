@@ -9,6 +9,7 @@ import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor'
+import {utils} from './utils/myUtils'
 
 let DropBox = props => {
   return props.connectDropTarget (
@@ -104,6 +105,7 @@ class Set extends Component {
         <div className="set">
           <div className="set-heading">
             <div className="text-fields">
+              <h1>{utils.sum(1, 7)}</h1>
               <Textarea
                 onChange={(value) => this.props.onChange(
                   actions.updateSet(this.props.set.id, 'data', value)

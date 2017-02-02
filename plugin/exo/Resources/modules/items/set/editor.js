@@ -4,7 +4,12 @@ import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {makeId, makeActionCreator} from './../../utils/utils'
 import {notBlank, number, chain} from './../../utils/validate'
 import {tex} from './../../utils/translate'
-import {Greeter} from './utils/test'
+import Greeter from './utils/greeter'
+import User from './utils/user'
+import {utils} from './utils/myUtils'
+import MySupaTemplate from './utils/template.jsx'
+
+
 
 
 const UPDATE_PROP = 'UPDATE_PROP'
@@ -39,9 +44,13 @@ export const actions = {
 
 function decorate(question) {
 
+  let greetObject = new Greeter('Youplaboum')
+  console.log('greetObject TS class say greet to Youplaboum', greetObject.greet())
 
-  let greeter = new Greeter(' ... the world is yours!')
-  console.log(greeter.greet())
+  let user = new User('toto')
+  console.log('es2015 written object get a user name using greetObject TS class', user.getName())
+
+  console.log(utils.sum(1, 1))
 
   const itemDeletable = question.items.filter(item => undefined === question.solutions.odd.find(el => el.itemId === item.id)).length > 1
   const itemsWithDeletable = question.items.map(

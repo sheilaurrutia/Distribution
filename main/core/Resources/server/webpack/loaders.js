@@ -17,7 +17,7 @@ const babel = instrument => {
 }
 
 /**
- * Transpiles ts files with ts-loader.
+ * Associate ts(x) files to typescript compiler.
  */
 const ts = () => {
   return {
