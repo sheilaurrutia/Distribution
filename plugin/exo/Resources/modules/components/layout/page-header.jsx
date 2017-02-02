@@ -1,26 +1,28 @@
-import React, { Component } from 'react'
+import React, { PropTypes as T } from 'react'
 
-const T = React.PropTypes
+const PageHeader = props =>
+  <div className="page-header">
+    <h1>
+      {props.title}
+      &nbsp;
+      {null !== props.subtitle && <small>{props.subtitle}</small>}
+    </h1>
 
-export default class PageHeader extends Component {
-  render() {
-    return (
-      <div className="page-header">
-        <h1>
-          {this.props.title}
-          &nbsp;
-          {null !== this.props.subtitle && <small>{this.props.subtitle}</small>}
-        </h1>
-
-        {this.props.children}
-      </div>
-    )
-  }
-}
+    {props.children}
+  </div>
 
 PageHeader.propTypes = {
+  /**
+   * The page title
+   */
   title: T.node.isRequired,
+  /**
+   * An optional subtitle
+   */
   subtitle: T.string,
+  /**
+   * Other
+   */
   children: T.node
 }
 
@@ -28,3 +30,5 @@ PageHeader.defaultProps = {
   subtitle: null,
   children: []
 }
+
+export default PageHeader

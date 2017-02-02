@@ -72,6 +72,9 @@ export default class PageActions extends Component {
 }
 
 PageActions.propTypes = {
+  /**
+   * The list of page actions
+   */
   actions: T.arrayOf(
     T.shape({
       icon: T.string,
