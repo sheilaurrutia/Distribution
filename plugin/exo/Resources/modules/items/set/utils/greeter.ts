@@ -1,8 +1,8 @@
 import {utils} from './myUtils'
 
 class Greeter {
-    public greeting: string
-    constructor(message: string) {
+    public greeting:string
+    constructor(message:string) {
         this.greeting = message
     }
     greet() {

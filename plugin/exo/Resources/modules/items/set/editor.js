@@ -44,7 +44,7 @@ export const actions = {
 
 function decorate(question) {
 
-  let greetObject = new Greeter('Youplaboum')
+  let greetObject = new Greeter([1])
   console.log('greetObject TS class say greet to Youplaboum', greetObject.greet())
 
   let user = new User('toto')
