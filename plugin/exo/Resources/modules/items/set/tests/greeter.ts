@@ -6,6 +6,7 @@ class Greeter {
         this.greeting = message
     }
     greet() {
+        // if
         return 'Hello,' + this.greeting + ' do sum ' + utils.sum(1, 4)
     }
 }
