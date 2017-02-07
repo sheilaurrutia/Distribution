@@ -1,0 +1,13 @@
+name: Title
+author: Author
+description: Description
+abstract: Abstract
+isbn: ISBN
+publisher: Publisher
+printer: Printer
+publication_year: Publication year
+language: Language
+page_count: Page count
+url: URL
+cover_url: Cover URL
+icap_book_reference_config: Book reference editor configuration

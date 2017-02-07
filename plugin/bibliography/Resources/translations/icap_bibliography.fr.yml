@@ -1,0 +1,14 @@
+name: Titre
+author: Auteur
+description: Description
+abstract: Résumé
+isbn: ISBN
+publisher: Éditeur
+printer: Imprimeur
+publication_year: Année de publication
+language: Langue
+page_count: Nombre de pages
+url: URL
+cover_url: URL de la couverture
+api_search: Rechercher
+icap_book_reference_config: Configuration de l'éditeur de références bibliographiques
