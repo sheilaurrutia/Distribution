@@ -17,6 +17,7 @@ export default class BlogService {
     _$q.set(this, $q)
 
     this.posts = []
+    this.info = ''
 
     this.totalItems = null
     this.fixedTitle = null
@@ -33,8 +34,6 @@ export default class BlogService {
   set panels(panels) { return _blogData.get(this).panels = panels }
   get archives() { return _blogData.get(this).archives }
   set archives(archives) { _blogData.get(this).archives = archives }
-  get info() { return _blogData.get(this).info }
-  set info(info) { _blogData.get(this).info = info }
   get isGrantedAdmin() { return _blogData.get(this).isGrantedAdmin }
   get isGrantedEdit() { return _blogData.get(this).isGrantedEdit }
   get isGrantedPost() { return _blogData.get(this).isGrantedPost }
@@ -51,6 +50,19 @@ export default class BlogService {
   get user() { return _blogData.get(this).user }
   get loginUrl() { return _blogData.get(this).loginUrl }
 
+  loadInfo() {
+    const url = _url.get(this)('icap_blog_api_get_blog', {
+      'blog': this.id
+    })
+    
+    let Info = _$resource.get(this)(url)
+    let info = Info.get(
+      success => {
+        this.info = success
+      }
+    )
+  }
+  
   getPosts(page = null) {
     const url = _url.get(this)('icap_blog_api_get_blog_post', {
       'blog': this.id,
