@@ -744,8 +744,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $this->getCreationRightsArray($role['role']['rights']['create']) :
             [];
 
-        //is it in the identity map ?
-        $this->log('get creation rights');
         $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
             $role['role']['name'],
             $resourceEntity->getResourceNode()
@@ -759,7 +757,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         //There is no ResourceRight in the IdentityMap so we must create it
         if ($createdRights === null) {
-            $this->log('create resource rights');
             $this->rightManager->create(
                 $role['role']['rights'],
                 $entityRole,
@@ -769,7 +766,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             );
             //We use the ResourceRight from the IdentityMap
         } else {
-            $this->log('set mask');
             $createdRights->setMask($this->maskManager->encodeMask(
                     $role['role']['rights'],
                     $createdRights->getResourceNode()->getResourceType())
