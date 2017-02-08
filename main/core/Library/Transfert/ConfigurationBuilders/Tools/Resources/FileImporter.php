@@ -11,7 +11,6 @@
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources;
 
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -111,7 +110,7 @@ class FileImporter extends Importer implements ConfigurationInterface, RichTextI
         );
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
         $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);

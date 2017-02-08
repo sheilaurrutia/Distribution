@@ -287,7 +287,7 @@ class TransferManager
     /**
      * Full workspace export.
      */
-    public function export(Workspace $workspace)
+    public function export($workspace)
     {
         $this->log("Exporting {$workspace->getCode()}...");
 

@@ -326,7 +326,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         $_data = [];
         //first we get the root
