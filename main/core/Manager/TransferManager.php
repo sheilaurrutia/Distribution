@@ -164,12 +164,16 @@ class TransferManager
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
         $data = $this->reorderData($data);
 
-        if ($workspace->getCode() === null) {
+        if ($workspace->getCode() === null && isset($data['parameters'])) {
             $workspace->setCode($data['parameters']['code']);
+        } else {
+            $workspace->setCode(uniqid());
         }
 
-        if ($workspace->getName() === null) {
+        if ($workspace->getName() === null && isset($data['parameters'])) {
             $workspace->setName($data['parameters']['name']);
+        } else {
+            $workspace->setName(uniqid());
         }
 
         //just to be sure doctrine is ok before doing all the workspace
@@ -408,7 +412,7 @@ class TransferManager
     private function setImporters(File $template, User $owner, array $data)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($this->templateDirectory.DIRECTORY_SEPARATOR.$template->getBasename());
+            $importer->setRootPath($this->templateDirectory.$template->getBasename('.zip'));
             $importer->setOwner($owner);
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
