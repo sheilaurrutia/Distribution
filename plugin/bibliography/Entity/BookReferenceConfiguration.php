@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BookReferenceConfiguration Entity.
  *
- * @ORM\Table(name="innova_audio_recorder_configuration")
+ * @ORM\Table(name="icap__bibliography_book_reference_configuration")
  * @ORM\Entity
  */
 class BookReferenceConfiguration
@@ -22,9 +22,9 @@ class BookReferenceConfiguration
 
     /**
      * @var bool
-     * @ORM\Column(name="new_window", type="boolean", nullable=false, default=false)
+     * @ORM\Column(name="new_window", type="boolean", nullable=false)
      */
-    protected $newWindow;
+    protected $newWindow = false;
 
     public function getId()
     {

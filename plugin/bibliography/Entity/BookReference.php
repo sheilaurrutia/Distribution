@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Book.
  *
  * @ORM\Entity
- * @ORM\Table(name="icap_bibliography_book_reference")
+ * @ORM\Table(name="icap__bibliography_book_reference")
  */
 class BookReference extends AbstractResource
 {
