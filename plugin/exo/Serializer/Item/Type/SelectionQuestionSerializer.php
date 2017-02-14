@@ -26,6 +26,29 @@ class SelectionQuestionSerializer implements SerializerInterface
         $questionData->text = $selectionQuestion->getText();
         $questionData->mode = $selectionQuestion->getMode();
 
+        if ($selectionQuestion->getPenalty()) {
+            $questionData->penalty = $selectionQuestion->getPenalty();
+        }
+
+        if ($selectionQuestion->getTries()) {
+            $questionData->tries = $selectionQuestion->getTries();
+        }
+
+        $globalScores = $selectionQuestion->getGlobalSuccessScore() || $selectionQuestion->getGlobalFailureScore() ?
+            new \stdClass() : null;
+
+        if ($selectionQuestion->getGlobalSuccessScore()) {
+            $globalScores->success = $selectionQuestion->getGlobalSuccessScore();
+        }
+
+        if ($selectionQuestion->getGlobalFailureScore()) {
+            $globalScores->failure = $selectionQuestion->getGlobalFailureScore();
+        }
+
+        if ($globalScores) {
+            $questionData->globalScores = $globalScores;
+        }
+
         switch ($selectionQuestion->getMode()) {
            case SelectionQuestion::MODE_FIND:
               $questionData->tries = $selectionQuestion->getTries();
@@ -63,6 +86,15 @@ class SelectionQuestionSerializer implements SerializerInterface
 
         $selectionQuestion->setText($data->text);
         $selectionQuestion->setMode($data->mode);
+
+        if ($data->tries) {
+            $selectionQuestion->setTries($data->tries);
+        }
+
+        if ($data->globalScores) {
+            $selectionQuestion->setGlobalSuccessScore($data->globalScores->success);
+            $selectionQuestion->setGlobalFailureScore($data->globalScores->failure);
+        }
 
         //colors must be unserialized first becaus they might be usefull for selections
         if ($data->colors) {

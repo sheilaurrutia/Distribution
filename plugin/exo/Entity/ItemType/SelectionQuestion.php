@@ -47,6 +47,27 @@ class SelectionQuestion extends AbstractItem
     private $tries = 0;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $globalSuccessScore = null;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $globalFailureScore = null;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $penalty = null;
+
+    /**
      * The list of holes present in the text.
      *
      * @ORM\OneToMany(
@@ -248,5 +269,35 @@ class SelectionQuestion extends AbstractItem
         if ($this->colors->contains($color)) {
             $this->colors->removeElement($color);
         }
+    }
+
+    public function setGlobalSuccessScore($score)
+    {
+        $this->globalSuccessScore = $score;
+    }
+
+    public function getGlobalSuccessScore()
+    {
+        return $this->getGlobalSuccessScore;
+    }
+
+    public function setGlobalFailureScore($score)
+    {
+        $this->globalFailureScore = $score;
+    }
+
+    public function getGlobalFailureScore()
+    {
+        return $this->getGlobalFailureScore;
+    }
+
+    public function setPenalty($penalty)
+    {
+        $this->penalty = $penalty;
+    }
+
+    public function getPenalty()
+    {
+        return $this->penalty;
     }
 }

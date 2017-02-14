@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2017/02/14 03:42:26
+ * Generation date: 2017/02/14 05:59:18
  */
-class Version20170214154225 extends AbstractMigration
+class Version20170214175917 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -55,6 +55,9 @@ class Version20170214154225 extends AbstractMigration
                 htmlWithoutValue LONGTEXT NOT NULL, 
                 mode VARCHAR(255) NOT NULL, 
                 tries INT NOT NULL, 
+                globalSuccessScore INT DEFAULT NULL, 
+                globalFailureScore INT DEFAULT NULL, 
+                penalty INT DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_7B1E8B31E27F6BF (question_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
