@@ -181,7 +181,7 @@ class HoleForm extends Component {
   render() {
     return (
       <Popover
-        bsClass="hole-form-content"
+        bsClass="color-form-content"
         id={this.getHole().id}
         placement="right"
         positionLeft={this.offsetLeft}

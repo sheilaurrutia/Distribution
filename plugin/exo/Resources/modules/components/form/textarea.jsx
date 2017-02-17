@@ -1,6 +1,30 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import {tex} from './../../utils/translate'
+import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
+
+export class ProseMirrorEditor extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return React.createElement('div', {ref: 'pm'})
+  }
+
+  componentDidMount() {
+    const editor = new ProseMirror(this.refs.pm)
+    editor.instantiate()
+  }
+}
+
+ProseMirrorEditor.propTypes = {
+  options: T.object.isRequired
+}
+
+ProseMirrorEditor.defaultProps = {
+  options: {docFormat: 'html'}
+}
 
 // see https://github.com/lovasoa/react-contenteditable
 export class ContentEditable extends Component {
