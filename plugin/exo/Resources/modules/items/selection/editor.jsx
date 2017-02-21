@@ -20,8 +20,8 @@ class ChoiceItem extends Component {
     return (
       <div className={classes(
           'choice-item-selection',
-          {'positive-score': this.props.answer.score > 0},
-          {'negative-score': this.props.answer.score <= 0}
+          {'positive-score': this.props.score > 0},
+          {'negative-score': this.props.score <= 0}
         )
       }>
         <div className='row'>
@@ -29,13 +29,9 @@ class ChoiceItem extends Component {
             <input
               className="form-control choice-form"
               type="number"
-              value={this.props.answer.score}
+              value={this.props.score}
               onChange={e => this.props.onChange(
-                actions.updateAnswer(
-                  this.props.selection.id,
-                  'score',
-                  parseInt(e.target.value)
-                )
+                actions.updateSelection(parseInt(e.target.value), this.props.selection.id)
               )}
             />
           </div>
@@ -46,14 +42,13 @@ class ChoiceItem extends Component {
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
-            <TooltipButton
-              id={`answer-${this.props.id}-delete`}
-              className="fa fa-trash-o"
-              title={t('delete')}
-              onClick={() => this.props.onChange(
-                actions.removeAnswer(this.props.answer.text, this.props.answer.caseSensitive)
-              )}
-            />
+          {this.props.item.mode === 'highlight' &&
+              <TooltipButton
+                id={`answer-${this.props.id}-delete`}
+                className="fa fa-trash-o"
+                title={t('delete')}
+              />
+            }
           </div>
         </div>
         {this.state.showFeedback &&
@@ -61,14 +56,6 @@ class ChoiceItem extends Component {
             <Textarea
               id={`choice-${this.props.id}-feedback`}
               title={tex('feedback')}
-              content={this.props.answer.feedback}
-              onChange={text => this.props.onChange(
-                actions.updateAnswer(
-                  this.props.selection.id,
-                  'feedback',
-                  text
-                )
-              )}
             />
           </div>
           }
@@ -84,20 +71,6 @@ ChoiceItem.defaultProps = {
 }
 
 ChoiceItem.propTypes = {
-  answer: T.shape({
-    score: T.number,
-    feedback: T.string,
-    text: T.string,
-    caseSensitive: T.bool
-  }).isRequired,
-  selection: T.shape({
-    id: T.string.isRequired
-  }).isRequired,
-  id: T.number.isRequired,
-  deletable: T.bool.isRequired,
-  onChange: T.func.isRequired,
-  validating: T.bool.isRequired,
-  _errors: T.object
 }
 
 class SelectionForm extends Component {
@@ -111,6 +84,10 @@ class SelectionForm extends Component {
 
   getSelection() {
     return this.props.item.selections.find(selection => selection.id === this.props.item._selectionId)
+  }
+
+  getSolution() {
+    return this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
   }
 
   closePopover() {
@@ -132,41 +109,36 @@ class SelectionForm extends Component {
         positionTop={this.offsetTop}
       >
         <div className="panel-default">
-          <div className="panel-body pull-right close-popover selection-form-row">
+          <div className="panel-body pull-right close-popover hole-form-row">
             <i onClick={this.removeAndClose.bind(this)} className="fa fa-trash-o"></i>
             {'\u00a0'}
             {!this.props._errors.answers &&
               <b onClick={this.closePopover.bind(this)}>x</b>
             }
           </div>
-          <div className="panel-body">
-            {this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id).answers.map((answer, index) => {
-              return (<ChoiceItem
-                key={index}
-                id={index}
-                score={answer.score}
-                feedback={answer.feedback}
-                deletable={index > 0}
-                onChange={this.props.onChange}
-                selection={this.getSelection()}
-                answer={answer}
-                validating={this.props.validating}
-                _errors={this.props._errors}
-              />)
-            })}
-
-            {this.state.showFeedback &&
-              <div className="feedback-container selection-form-row">
-                <Textarea
-                  id={`choice-${this.getSelection().id}-feedback`}
-                  title={tex('feedback')}
-                  onChange={text => this.props.onChange(
-                    actions.updateAnswer(this.getSelection().id, 'feedback', text)
-                  )}
-                />
-              </div>
-            }
-            <div className="selection-form-row">
+        </div>
+        <div className="panel-body">
+          {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
+            <ChoiceItem
+              score={this.getSolution().score}
+              selection={this.getSelection()}
+              item={this.props.item}
+              onChange={this.props.onChange}
+            />
+          }
+          {this.state.showFeedback &&
+            <div className="feedback-container selection-form-row">
+              <Textarea
+                id={`choice-${this.getSelection().id}-feedback`}
+                title={tex('feedback')}
+                onChange={text => this.props.onChange(
+                  actions.updateAnswer(this.getSelection().id, 'feedback', text)
+                )}
+              />
+            </div>
+          }
+          <div className="selection-form-row">
+            {this.props.item.mode === 'highlight' &&
               <button
                 className="btn btn-default"
                 onClick={() => this.props.onChange(
@@ -174,9 +146,9 @@ class SelectionForm extends Component {
                 type="button"
               >
                 <i className="fa fa-plus"/>
-                {tex('key_word')}
+                {tex('color')}
               </button>
-            </div>
+            }
           </div>
         </div>
       </Popover>
@@ -184,11 +156,11 @@ class SelectionForm extends Component {
   }
 }
 
-SelectionForm.propTypes = {
+SelectionForm.propTypes = {/*
   item: T.shape.object,
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
-  _errors: T.object
+  _errors: T.object*/
 }
 
 class ColorElement extends Component {
@@ -204,21 +176,29 @@ class ColorElement extends Component {
   }
 }
 
-ColorElement.propTypes = {
+ColorElement.propTypes = {/*
   index: T.number.isRequired,
   color: T.object.isRequired,
   onChange: T.func.isRequired,
-  _errors: T.object
+  _errors: T.object*/
 }
 
 export class Selection extends Component {
   constructor(props) {
     super(props)
+    this.begin = null
+    this.end = null
+    this.onSelect = this.onSelect.bind(this)
+    this.addSelection = this.addSelection.bind(this)
   }
 
-  onSelect(word, cb) {
-    this.word = word
-    this.fnTextUpdate = cb
+  onSelect(begin, end) {
+    this.begin = begin
+    this.end = end
+  }
+
+  addSelection() {
+    this.props.onChange(actions.addSelection(this.begin, this.end))
   }
 
   onSelectionClick(el) {
@@ -300,7 +280,7 @@ export class Selection extends Component {
               <div>{tex('possible_color_choices')}</div>
               {
                 this.props.item.colors.map((color, index) => {
-                  return (<ColorElement key={'color'+index} index={index} color={color} onChange={this.props.onChange}/>)
+                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
                 })
               }
                 <button
@@ -312,14 +292,18 @@ export class Selection extends Component {
                 </button>
             </div>
           }
-          <ProseMirrorEditor/>
+          <ProseMirrorEditor
+            onSelect={this.onSelect}
+            onChange={text => this.props.onChange(actions.updateQuestion(text, 'text'))}
+            content={this.props.item._text}
+          />
           <button
             type="button"
             className="btn btn-default"
             onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
             {tex('create_answer_zone')}
           </button>
-          {(this.props.item._popover && this.props.item._selectionId) &&
+          {this.props.item._selectionPopover &&
             <div>
               <SelectionForm
                 item={this.props.item}

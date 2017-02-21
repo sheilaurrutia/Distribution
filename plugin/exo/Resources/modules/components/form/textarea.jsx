@@ -6,24 +6,62 @@ import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
 export class ProseMirrorEditor extends Component {
   constructor(props) {
     super(props)
+    this.getSelection = this.getSelection.bind(this)
+    this.emitChange = this.emitChange.bind(this)
+    this.editor = null
+    this.lastContent = null
   }
 
   render() {
-    return React.createElement('div', {ref: 'pm'})
+    return React.createElement(
+      'div',
+      {
+        ref: 'pm',
+        onMouseUp: this.getSelection,
+        onInput:this.emitChange,
+        onBlur:this.emitChange
+      }
+    )
+  }
+
+  emitChange() {
+    if (!this.refs.pm) {
+      return
+    }
+
+    const content = this.editor.content.innerHTML
+
+    if (this.props.onChange && content !== this.lastContent) {
+      this.props.onChange(content)
+    }
+
+    this.lastContent = content
   }
 
   componentDidMount() {
     const editor = new ProseMirror(this.refs.pm)
-    editor.instantiate()
+    this.editor = editor.instantiate(this.props.content).editor
+  }
+
+
+  getSelection() {
+    const selection = this.editor.selectionReader
+    const beginOffset = selection.lastSelection.$from.pos
+    const endOffset = selection.lastSelection.$head.pos
+    this.props.onSelect(beginOffset, endOffset)
   }
 }
 
 ProseMirrorEditor.propTypes = {
-  options: T.object.isRequired
+  options: T.object.isRequired,
+  onSelect: T.func.isRequired,
+  onChange: T.func.isRequired,
+  content: T.string
 }
 
 ProseMirrorEditor.defaultProps = {
-  options: {docFormat: 'html'}
+  options: {docFormat: 'html'},
+  onSelect: () => {}
 }
 
 // see https://github.com/lovasoa/react-contenteditable

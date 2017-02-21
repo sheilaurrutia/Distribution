@@ -25,6 +25,9 @@ class SelectionQuestionValidator extends JsonSchemaValidator
      */
     public function validateAfterSchema($question, array $options = [])
     {
+        $errors = [];
+
+        return $errors;
     }
 
     /**
@@ -36,5 +39,8 @@ class SelectionQuestionValidator extends JsonSchemaValidator
      */
     protected function validateSolutions(\stdClass $question)
     {
+        $errors = [];
+
+        return $errors;
     }
 }

@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
+use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
@@ -32,21 +33,6 @@ class SelectionQuestionSerializer implements SerializerInterface
 
         if ($selectionQuestion->getTries()) {
             $questionData->tries = $selectionQuestion->getTries();
-        }
-
-        $globalScores = $selectionQuestion->getGlobalSuccessScore() || $selectionQuestion->getGlobalFailureScore() ?
-            new \stdClass() : null;
-
-        if ($selectionQuestion->getGlobalSuccessScore()) {
-            $globalScores->success = $selectionQuestion->getGlobalSuccessScore();
-        }
-
-        if ($selectionQuestion->getGlobalFailureScore()) {
-            $globalScores->failure = $selectionQuestion->getGlobalFailureScore();
-        }
-
-        if ($globalScores) {
-            $questionData->globalScores = $globalScores;
         }
 
         switch ($selectionQuestion->getMode()) {
@@ -87,21 +73,16 @@ class SelectionQuestionSerializer implements SerializerInterface
         $selectionQuestion->setText($data->text);
         $selectionQuestion->setMode($data->mode);
 
-        if ($data->tries) {
+        if (isset($data->tries)) {
             $selectionQuestion->setTries($data->tries);
         }
 
-        if ($data->globalScores) {
-            $selectionQuestion->setGlobalSuccessScore($data->globalScores->success);
-            $selectionQuestion->setGlobalFailureScore($data->globalScores->failure);
-        }
-
         //colors must be unserialized first becaus they might be usefull for selections
-        if ($data->colors) {
+        if (isset($data->colors)) {
             $this->deserializeColors($selectionQuestion, $data->colors, $options);
         }
 
-        if ($data->selections) {
+        if (isset($data->selections)) {
             $this->deserializeSelections($selectionQuestion, $data->selections, $data->solutions, $options);
         }
 
@@ -256,7 +237,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                  $solutionData->end = $selection->getEnd();
 
                  return $solutionData;
-             }, $selectionQuestion->getSelections());
+             }, $selectionQuestion->getSelections()->toArray());
          case SelectionQuestion::MODE_HIGHLIGHT:
              return array_map(function (Selection $selection) {
                  $solutionData = new \stdClass();

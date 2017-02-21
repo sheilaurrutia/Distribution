@@ -51,20 +51,6 @@ class SelectionQuestion extends AbstractItem
      *
      * @var int
      */
-    private $globalSuccessScore = null;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
-     */
-    private $globalFailureScore = null;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
-     */
     private $penalty = null;
 
     /**
@@ -269,26 +255,6 @@ class SelectionQuestion extends AbstractItem
         if ($this->colors->contains($color)) {
             $this->colors->removeElement($color);
         }
-    }
-
-    public function setGlobalSuccessScore($score)
-    {
-        $this->globalSuccessScore = $score;
-    }
-
-    public function getGlobalSuccessScore()
-    {
-        return $this->getGlobalSuccessScore;
-    }
-
-    public function setGlobalFailureScore($score)
-    {
-        $this->globalFailureScore = $score;
-    }
-
-    public function getGlobalFailureScore()
-    {
-        return $this->getGlobalFailureScore;
     }
 
     public function setPenalty($penalty)

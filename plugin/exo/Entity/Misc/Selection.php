@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
@@ -40,7 +41,7 @@ class Selection implements AnswerPartInterface
      *
      * @ORM\Column(type="integer")
      */
-    private $start;
+    private $begin;
 
     /**
      * The ending position.
@@ -98,12 +99,12 @@ class Selection implements AnswerPartInterface
         $this->interactionSelection = $interactionSelection;
     }
 
-    public function setStart($start)
+    public function setBegin($begin)
     {
-        $this->start = $start;
+        $this->begin = $begin;
     }
 
-    public function getStart()
+    public function getBegin()
     {
         return $this->start;
     }

@@ -2,50 +2,51 @@ import {tex} from './../../../utils/translate'
 
 export const utils = {}
 
-utils.makeTinyHtml = (solution) => {
-  let input = ''
-  if (solution.answers.length === 1) {
-  //if one solutions
-    input = `
-      <span class="cloze-input" data-hole-id="${solution.holeId}">
-        <input
-          style="width: auto; margin: 10px; display: inline;"
-          class="hole-input form-control"
-          data-hole-id="${solution.holeId}"
-          type="text"
-        >
-        </input>
-        ${getEditButtons(solution)}
-      </span>
-    `
-  } else {
-    input = `
-      <span class="cloze-input" data-hole-id="${solution.holeId}">
-        <select
-          style="width: auto; margin: 10px; display: inline;"
-          class="hole-input form-control"
-          data-hole-id="${solution.holeId}"
-          type="text"
-        >
-          <option> ${tex('please_choose')} </option>
-        </select>
-        ${getEditButtons(solution)}
-      </span>
-    `
-  }
-  return input
+utils.makeTextHtml = (text, solutions) => {
+  //reorder solutions here by first/last position
+
+  let idx = 0
+  console.log(solutions)
+
+  solutions.forEach(solution => {
+    //txt1.slice(0, 3) + "bar" + txt1.slice(3);
+    text = text.slice(0, solution.begin + idx)
+    + getFirstSpan()
+    + text.slice(solution.begin + idx, solution.end + idx)
+    + '</span>'
+    + getEditButtons(solution)
+    + text.slice(solution.end + idx)
+
+    idx += getHtmlLength(solution);
+  })
+
+
+
+  return text
+}
+
+function getFirstSpan() {
+  return '<span class="well">';
+}
+
+function getHtmlLength(solution) {
+  return getFirstSpan().length + getEditButtons(solution).length + '</span>'.length + getEditButtons(solution).length
 }
 
 function getEditButtons(solution) {
   return `
     <i style="cursor: pointer"
-      class="fa fa-pencil edit-hole-btn"
-      data-hole-id="${solution.holeId}"
+      class="fa fa-pencil edit-selection-btn"
+      data-hole-id="${solution.selectionId}"
     > &nbsp; </i>
     <i style="cursor: pointer"
-      class="fa fa-trash delete-hole-btn"
-      data-hole-id="${solution.holeId}"
+      class="fa fa-trash delete-selection-btn"
+      data-hole-id="${solution.selectionId}"
     > &nbsp;
     </i>
   `
+}
+
+function getWrapperSize() {
+
 }
