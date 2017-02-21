@@ -115,12 +115,21 @@ class LtiWsController extends Controller
             'user_id' => $user->getUsername(),
             'roles' => $role,
             'resource_link_id' => $ws->getId(),
-            'resource_link_title' => 'LTI APP',
+            'resource_link_title' => $app->getTitle(),
             'resource_link_description' => $app->getDescription(),
             'lis_person_name_full' => $user->getFirstname().' '.$user->getLastname(),
+            'lis_person_name_family' => $user->getLastname(),
+            'lis_person_name_given' => $user->getFirstname(),
+            'lis_person_contact_email_primary' => $user->getMail(),
+            'lis_person_sourcedid' => $user->getUsername(),
+            'context_id' => $ws->getId(),
+            'context_title' => $ws->getName(),
+            'context_label' => $ws->getCode(),
+            'tool_consumer_instance_guid' => $this->get('request')->getSchemeAndHttpHost(),
+            'tool_consumer_instance_description' => $this->get('request')->getSchemeAndHttpHost(),
             'launch_presentation_locale' => $this->get('request')->getLocale(),
         );
-        $ltiData['lti_version'] = 'LTI-2p0';
+        $ltiData['lti_version'] = 'LTI-1p0';
         $ltiData['lti_message_type'] = 'basic-lti-launch-request';
 
         //Basic LTI uses OAuth to sign requests
