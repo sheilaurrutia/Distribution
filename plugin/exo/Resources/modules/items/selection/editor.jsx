@@ -67,10 +67,12 @@ class ChoiceItem extends Component {
 ChoiceItem.defaultProps = {
   answer: {
     feedback: ''
-  }
+  },
+  score: 0
 }
 
 ChoiceItem.propTypes = {
+  score: T.number.isRequired
 }
 
 class SelectionForm extends Component {
@@ -87,7 +89,10 @@ class SelectionForm extends Component {
   }
 
   getSolution() {
-    return this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
+    const solution = this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
+    console.log(solution)
+
+    return solution
   }
 
   closePopover() {

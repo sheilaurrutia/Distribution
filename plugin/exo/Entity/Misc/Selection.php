@@ -106,7 +106,7 @@ class Selection implements AnswerPartInterface
 
     public function getBegin()
     {
-        return $this->start;
+        return $this->begin;
     }
 
     public function setEnd($end)

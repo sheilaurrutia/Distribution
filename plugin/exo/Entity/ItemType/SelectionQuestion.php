@@ -186,7 +186,7 @@ class SelectionQuestion extends AbstractItem
     {
         if (!$this->selections->contains($selection)) {
             $this->selections->add($selection);
-            $selection->setInteractionHole($this);
+            $selection->setInteractionSelection($this);
         }
     }
 
@@ -241,7 +241,7 @@ class SelectionQuestion extends AbstractItem
     {
         if (!$this->$colors->contains($color)) {
             $this->$colors->add($color);
-            $color->setInteractionHole($this);
+            $color->setInteractionSelection($this);
         }
     }
 

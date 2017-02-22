@@ -145,11 +145,12 @@ function reduce(item = {}, action) {
       return Object.assign({}, item, {_selectionPopover: false})
     }
     case UPDATE_SELECTION: {
-      const selections = cloneDeep(item.selections)
-      const selection = selections.find(selection => selection.id = action.selectionId)
-      selection.score = action.score
+      const solutions = cloneDeep(item.solutions)
+      const selection = item.selections.find(selection => selection.id === action.selectionId)
+      const solution = solutions.find(solution => solution.selectionId === selection.id)
+      solution.score = action.score
 
-      return Object.assign({}, item, {selections})
+      return Object.assign({}, item, {solutions})
     }
   }
 }

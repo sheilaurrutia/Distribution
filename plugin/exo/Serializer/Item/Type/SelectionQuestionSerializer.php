@@ -82,6 +82,8 @@ class SelectionQuestionSerializer implements SerializerInterface
             $this->deserializeColors($selectionQuestion, $data->colors, $options);
         }
 
+        $options['selection_mode'] = $data->mode;
+
         if (isset($data->selections)) {
             $this->deserializeSelections($selectionQuestion, $data->selections, $data->solutions, $options);
         }
@@ -98,16 +100,15 @@ class SelectionQuestionSerializer implements SerializerInterface
      */
     private function serializeSelections(SelectionQuestion $selectionQuestion)
     {
-        return array_map(function (Selection $selection) {
+        return array_map(function (Selection $selection) use ($selectionQuestion) {
             $selectionData = new \stdClass();
             $selectionData->id = $selection->getUuid();
 
             if ($selectionQuestion->getMode() === SelectionQuestion::MODE_SELECT) {
-                $selectionData->score = $selection->getScore();
+                $selectionData->begin = $selection->getBegin();
+                $selectionData->end = $selection->getEnd();
             } else {
                 if ($selectionQuestion->getMode() === SelectionQuestion::MODE_HIGHLIGHT) {
-                    $selectionData->begin = $selection->getBegin();
-                    $selectionData->end = $selection->getEnd();
                 }
             }
 
@@ -175,7 +176,6 @@ class SelectionQuestionSerializer implements SerializerInterface
 
           // Searches for an existing color entity.
           foreach ($selectionEntities as $entityIndex => $selectionEntity) {
-              /* @var Color $entityHole */
               if ($selectionEntity->getUuid() === $selectionData->id) {
                   $selection = $selectionEntity;
                   unset($selectionEntities[$entityIndex]);
@@ -194,21 +194,23 @@ class SelectionQuestionSerializer implements SerializerInterface
 
             $selection->setBegin($selectionData->begin);
             $selection->setEnd($selectionData->end);
-            $score = $selectionData->score ? $selectionData->score : null;
-          //MODE SELECT
-          $selection->setScore($score);
 
             foreach ($solutions as $solutionData) {
                 if ($solutionData->selectionId === $selectionData->id) {
-                    //MODE FIND OBVIOUSLY
-                if ($selectionQuestion->getMode() === SelectionQuestion::MODE_FIND) {
-                    $selection->setScore($solutionData->score);
-                } else {
-                    //$colorSelections = $selection->getColorSelections()->toArray();
-                    //do stuff here but I don't know what yet
-                }
+                    switch ($options['selection_mode']) {
+                    case SelectionQuestion::MODE_SELECT:
+                      $selection->setScore($solutionData->score);
+                      break;
+                    case SelectionQuestion::MODE_FIND:
+                      $selection->setScore($solutionData->score);
+                      break;
+                    case SelectionQuestion::MODE_HIGHLIGHT:
+                      break;
+                    }
                 }
             }
+
+            $selectionQuestion->addSelection($selection);
         }
 
       // Remaining color are no longer in the Question
@@ -234,7 +236,7 @@ class SelectionQuestionSerializer implements SerializerInterface
              return array_map(function (Selection $selection) {
                  $solutionData = new \stdClass();
                  $solutionData->selectionId = $selection->getUuid();
-                 $solutionData->end = $selection->getEnd();
+                 $solutionData->score = $selection->getScore();
 
                  return $solutionData;
              }, $selectionQuestion->getSelections()->toArray());
