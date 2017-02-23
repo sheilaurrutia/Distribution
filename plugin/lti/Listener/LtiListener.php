@@ -53,7 +53,7 @@ class LtiListener
         $params = [];
         $params['_controller'] = 'UJMLtiBundle:LtiWs:tool_apps';
         $params['workspace'] = $event->getWorkspace();
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
