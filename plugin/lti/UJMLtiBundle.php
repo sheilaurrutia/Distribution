@@ -5,8 +5,6 @@ namespace UJM\LtiBundle;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-//use UJM\LtiBundle\Installation\AdditionalInstaller;
-
 /**
  * Bundle class.
  * Uncomment if necessary.
