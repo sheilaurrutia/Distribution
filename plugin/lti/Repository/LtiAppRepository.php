@@ -18,7 +18,7 @@ class LtiAppRepository extends EntityRepository
             ->join('lti.workspaces', 'w')
             ->where('w.id = :wid')
             ->andWhere('lti.id = :appid')
-            ->setParameters(array('wid' => $wsId, 'appid' => $appId))
+            ->setParameters(['wid' => $wsId, 'appid' => $appId])
             ->getQuery()->getResult();
 
         return $result;

@@ -30,9 +30,9 @@ class Params extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             'printfTwig' => new \Twig_Function_Method($this, 'printfTwig'),
-        );
+        ];
     }
 
     /**

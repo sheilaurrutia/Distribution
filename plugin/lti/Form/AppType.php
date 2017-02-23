@@ -12,52 +12,52 @@ class AppType extends AbstractType
     {
         $builder
             ->add(
-                'title', 'text', array(
+                'title', 'text', [
                     'label' => ' ',
-                    'attr' => array('style' => 'height:34px; ',
+                    'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
                         'placeholder' => 'title',
-                    ),
-                )
+                    ],
+                ]
             )
             ->add(
-                'url', 'text', array(
+                'url', 'text', [
                     'label' => ' ',
-                    'attr' => array('style' => 'height:34px; ',
+                    'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
                         'placeholder' => 'url',
-                    ),
-                )
+                    ],
+                ]
             )
             ->add(
-                'appkey', 'text', array(
+                'appkey', 'text', [
                     'label' => ' ',
                     'required' => false,
-                    'attr' => array('style' => 'height:34px; ',
+                    'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
                         'placeholder' => 'key',
-                    ),
-                )
+                    ],
+                ]
             )
             ->add(
-                'secret', 'text', array(
+                'secret', 'text', [
                     'label' => ' ',
                     'required' => false,
-                    'attr' => array('style' => 'height:34px; ',
+                    'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
                         'placeholder' => 'secret',
-                    ),
-                )
+                    ],
+                ]
             )
             ->add(
-                'description', 'textarea', array(
+                'description', 'textarea', [
                     'label' => ' ',
                     'required' => false,
-                    'attr' => array('style' => 'height:34px; ',
+                    'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
                         'placeholder' => 'description',
-                    ),
-                )
+                    ],
+                ]
             );
     }
     public function getName()
@@ -67,6 +67,6 @@ class AppType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'lti'));
+        $resolver->setDefaults(['translation_domain' => 'lti']);
     }
 }

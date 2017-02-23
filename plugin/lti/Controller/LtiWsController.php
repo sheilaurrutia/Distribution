@@ -4,12 +4,12 @@ namespace UJM\LtiBundle\Controller;
 
 use Claroline\CoreBundle\ClarolineCoreBundle;
 use Claroline\CoreBundle\Entity\User;
+use JMS\DiExtraBundle\Annotation as DI;
 use Proxies\__CG__\Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use JMS\DiExtraBundle\Annotation as DI;
 use UJM\LtiBundle\Entity\LtiApp;
 
 /**
@@ -68,7 +68,7 @@ class LtiWsController extends Controller
         $em->persist($app);
         $em->flush();
 
-        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', array('workspace' => $ws));
+        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', ['workspace' => $ws]);
     }
 
     /**
@@ -91,7 +91,7 @@ class LtiWsController extends Controller
         $em->persist($app);
         $em->flush();
 
-        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', array('workspace' => $ws));
+        return $this->forward('UJMLtiBundle:LtiWs:tool_apps', ['workspace' => $ws]);
     }
 
     /**
@@ -111,7 +111,7 @@ class LtiWsController extends Controller
         }
         $now = new \DateTime();
 
-        $ltiData = array(
+        $ltiData = [
             'user_id' => $user->getUsername(),
             'roles' => $role,
             'resource_link_id' => $ws->getId(),
@@ -128,7 +128,7 @@ class LtiWsController extends Controller
             'tool_consumer_instance_guid' => $this->get('request')->getSchemeAndHttpHost(),
             'tool_consumer_instance_description' => $this->get('request')->getSchemeAndHttpHost(),
             'launch_presentation_locale' => $this->get('request')->getLocale(),
-        );
+        ];
         $ltiData['lti_version'] = 'LTI-1p0';
         $ltiData['lti_message_type'] = 'basic-lti-launch-request';
 
@@ -146,7 +146,7 @@ class LtiWsController extends Controller
         $launch_data_keys = array_keys($ltiData);
         sort($launch_data_keys);
 
-        $launch_params = array();
+        $launch_params = [];
         foreach ($launch_data_keys as $key) {
             array_push($launch_params, $key.'='.rawurlencode($ltiData[$key]));
         }

@@ -3,8 +3,8 @@
 namespace UJM\LtiBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\LtiBundle\Repository\LtiAppRepository")
