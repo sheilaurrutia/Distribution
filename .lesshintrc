@@ -1,0 +1,15 @@
+{
+    "fileExtensions": [".less", ".css"],
+    "spaceAfterPropertyColon": {
+        "enabled": true,
+        "style": "one_space"
+    },
+    "zeroUnit": {
+        "style": "no_unit"
+    },
+    "borderZero": {
+        "style": "none"
+    },
+    "propertyOrdering": false,
+    "importantRule": false // it's sometimes mandatory to override bootstrap so we can not disallow it everywhere
+}
