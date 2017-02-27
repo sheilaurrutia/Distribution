@@ -9,6 +9,8 @@ import {ColorPicker} from './../../components/form/color-picker.jsx'
 import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {utils} from './utils/utils'
+import {HighlithPlugin} from '#/main/core/prosemirror/plugins/highlight'
 
 class ChoiceItem extends Component {
   constructor(props) {
@@ -90,7 +92,6 @@ class SelectionForm extends Component {
 
   getSolution() {
     const solution = this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
-    console.log(solution)
 
     return solution
   }
@@ -194,7 +195,14 @@ export class Selection extends Component {
     this.begin = null
     this.end = null
     this.onSelect = this.onSelect.bind(this)
+    this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
+    const highlightPlugin = new HighlithPlugin()
+    this.pmPlugins = [highlightPlugin]
+  }
+
+  updateText() {
+    utils.makeTextHtml(this.props.item._text, this.props.item.solutions)
   }
 
   onSelect(begin, end) {
@@ -297,10 +305,13 @@ export class Selection extends Component {
                 </button>
             </div>
           }
-          <ProseMirrorEditor
+          <Textarea
+            id={this.props.item.id}
             onSelect={this.onSelect}
             onChange={text => this.props.onChange(actions.updateQuestion(text, 'text'))}
             content={this.props.item._text}
+            updateText={this.updateText}
+            plugins={this.pmPlugins}
           />
           <button
             type="button"

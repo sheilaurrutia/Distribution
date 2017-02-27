@@ -40,7 +40,7 @@ export default {
 
 function decorate(item) {
   return Object.assign({}, item, {
-    _text: item.text
+    _text: utils.makeTextHtml(item.text, item.solutions)
   })
 }
 

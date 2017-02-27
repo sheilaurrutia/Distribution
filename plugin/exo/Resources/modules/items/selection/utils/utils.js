@@ -3,10 +3,10 @@ import {tex} from './../../../utils/translate'
 export const utils = {}
 
 utils.makeTextHtml = (text, solutions) => {
+  return text
   //reorder solutions here by first/last position
 
   let idx = 0
-  console.log(solutions)
 
   solutions.forEach(solution => {
     //txt1.slice(0, 3) + "bar" + txt1.slice(3);
@@ -37,11 +37,11 @@ function getEditButtons(solution) {
   return `
     <i style="cursor: pointer"
       class="fa fa-pencil edit-selection-btn"
-      data-hole-id="${solution.selectionId}"
+      data-selection-id="${solution.selectionId}"
     > &nbsp; </i>
     <i style="cursor: pointer"
       class="fa fa-trash delete-selection-btn"
-      data-hole-id="${solution.selectionId}"
+      data-selection-id="${solution.selectionId}"
     > &nbsp;
     </i>
   `

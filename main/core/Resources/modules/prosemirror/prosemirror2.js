@@ -1,11 +1,10 @@
 import {EditorState} from 'prosemirror-state'
-const {MenuBarEditorView, MenuItem} = require("prosemirror-menu")
+import {MenuBarEditorView} from 'prosemirror-menu'
 import {schema} from 'prosemirror-schema-basic'
 import {exampleSetup, buildMenuItems} from 'prosemirror-example-setup/dist/index'
 import {DOMParser, Schema} from 'prosemirror-model'
 import {addListNodes} from 'prosemirror-schema-list'
 import {addTableNodes} from 'prosemirror-schema-table'
-const {InputRule, inputRules} = require("prosemirror-inputrules")
 
 import 'prosemirror-menu/style/menu.css'
 import 'prosemirror-view/style/prosemirror.css'
@@ -19,9 +18,9 @@ export class Editor {
 
   instantiate(content = '', plugins = []) {
 
-    const dinos = ["brontosaurus", "stegosaurus", "triceratops", "tyrannosaurus", "pterodactyl"]
+    let demoSchema = this.getBaseSchema()
 
-    const dino = {
+    const selection = {/*
       attrs: {type: {default: "brontosaurus"}},
       draggable: true,
       toDOM: node => ["img", {"dino-type": node.attrs.type,
@@ -37,38 +36,35 @@ export class Editor {
       }],
 
       inline: true,
-      group: "inline"
+      group: "inline"*/
     }
 
-    const dinoSchema = new Schema({
-      nodes: schema.nodeSpec,
+    demoSchema = new Schema({
+      nodes: schema.nodeSpec.addBefore("image", "selection", selection),
       marks: schema.markSpec
     })
-    const dinoType = dinoSchema.nodes.dino
 
-    const dinoInputRule = new InputRule(new RegExp("\\[(" + dinos.join("|") + ")\\]$"), (state, match, start, end) => {
-      return state.tr.replaceWith(start, end, dinoType.create({type: match[1]}))
-    })
+    const tmp = document.createElement('div')
+    tmp.innerHTML = content
+    content = DOMParser.fromSchema(demoSchema).parse(tmp)
 
-    let menu = buildMenuItems(dinoSchema)
-    menu.insertMenu.content = dinos.map(name => new MenuItem({
-      title: "Insert " + name,
-      label: name.charAt(0).toUpperCase() + name.slice(1),
-      select(state) {
-        return insertPoint(state.doc, state.selection.from, dinoType) != null
-      },
-      run(state, dispatch) { dispatch(state.tr.replaceSelectionWith(dinoType.create({type: name}))) }
-    })).concat(menu.insertMenu.content)
+/*
+    let menu = buildMenuItems(demoSchema)
+    menu.insertMenu.content = plugins.map(plugin => plugin.getMenuItem()).concat(menu.insertMenu.content)
+*/
+    let state = EditorState.create(
+      {
+        doc: content,
+        plugins: exampleSetup({schema: demoSchema}).concat(plugins.map(plugin => plugin.getPlugin({schema: demoSchema}))),
+        schema: demoSchema
+      }
+    )
 
-    let view = new MenuBarEditorView(this.root, {
-      state: EditorState.create({
-        doc: '',
-        plugins: exampleSetup({schema: dinoSchema}).concat(inputRules({rules: [dinoInputRule]}))
-      }),
-      menuContent: menu.fullMenu
-    })
+    let menu = buildMenuItems(demoSchema)
+    menu.insertMenu.content = plugins.map(plugin => plugin.getMenuItem()).concat(menu.insertMenu.content)
+    console.log(menu)
 
-    this.editor = view.editor
+    this.editor = new MenuBarEditorView(this.root, {state, menuContent: menu.fullMenu}).editor
   }
 
   getBaseSchema() {

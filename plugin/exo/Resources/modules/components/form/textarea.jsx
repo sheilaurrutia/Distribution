@@ -2,13 +2,15 @@ import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import {tex} from './../../utils/translate'
 import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
+import rangy from 'rangy'
+import {CursorSelection} from './selection/selection'
 
 export class ProseMirrorEditor extends Component {
   constructor(props) {
     super(props)
     this.getSelection = this.getSelection.bind(this)
     this.emitChange = this.emitChange.bind(this)
-    this.editor = null
+    this.prosemirror = null
     this.lastContent = null
   }
 
@@ -29,7 +31,7 @@ export class ProseMirrorEditor extends Component {
       return
     }
 
-    const content = this.editor.content.innerHTML
+    const content = this.prosemirror.getEditor().content.innerHTML
 
     if (this.props.onChange && content !== this.lastContent) {
       this.props.onChange(content)
@@ -39,13 +41,14 @@ export class ProseMirrorEditor extends Component {
   }
 
   componentDidMount() {
-    const editor = new ProseMirror(this.refs.pm)
-    this.editor = editor.instantiate(this.props.content).editor
+    console.log(this.props.plugins)
+    this.prosemirror = new ProseMirror(this.refs.pm)
+    this.prosemirror.instantiate(this.props.content, this.props.plugins)
   }
 
 
   getSelection() {
-    const selection = this.editor.selectionReader
+    const selection = this.prosemirror.getEditor().selectionReader
     const beginOffset = selection.lastSelection.$from.pos
     const endOffset = selection.lastSelection.$head.pos
     this.props.onSelect(beginOffset, endOffset)
@@ -56,12 +59,15 @@ ProseMirrorEditor.propTypes = {
   options: T.object.isRequired,
   onSelect: T.func.isRequired,
   onChange: T.func.isRequired,
-  content: T.string
+  content: T.string,
+  updateText: T.func,
+  plugins: T.array.isRequired
 }
 
 ProseMirrorEditor.defaultProps = {
   options: {docFormat: 'html'},
-  onSelect: () => {}
+  onSelect: () => {},
+  plugins: []
 }
 
 // see https://github.com/lovasoa/react-contenteditable
@@ -86,7 +92,10 @@ export class ContentEditable extends Component {
       commonAncestorContainer: rng.commonAncestorContainer
 
     })
-    let selected = window.getSelection().toString()
+
+    const sel = new CursorSelection(document.getElementById(this.props.id))
+    const offsets = sel.getOffsets()
+
     this.props.onSelect(selected, this.updateText.bind(this))
   }
 
