@@ -2,31 +2,28 @@
 
 namespace Icap\BibliographyBundle\Manager;
 
-use Innova\AudioRecorderBundle\Entity\AudioRecorderConfiguration;
+use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @DI\Service("icap.bibliography.manager")
+ * @DI\Service("icap.bookReference.manager")
  */
 class BookReferenceManager
 {
-    protected $rm;
-    protected $fileDir;
-    protected $tempUploadDir;
-    protected $tokenStorage;
-    protected $claroUtils;
     protected $container;
-    protected $workspaceManager;
+    protected $repository;
 
     /**
      * @DI\InjectParams({
      *      "container"   = @DI\Inject("service_container"),
+     *      "repository"  = @DI\Inject("icap_bibliography.repository.book_reference_configuration")
      * })
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, BookReferenceConfigurationRepository $repository)
     {
         $this->container = $container;
+        $this->repository = $repository;
     }
 
     public function updateConfiguration(AudioRecorderConfiguration $config, $postData)
@@ -39,7 +36,8 @@ class BookReferenceManager
 
     public function getConfig()
     {
-        $config = $this->container->get('doctrine.orm.entity_manager')->getRepository('IcapBibliographyBundle:BookReferenceConfiguration')->findAll()[0];
+        $config = $this->container->get('doctrine.orm.entity_manager');
+        $config = $this->repository->findAll()[0];
 
         return $config;
     }

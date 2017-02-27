@@ -33,7 +33,7 @@ class BibliographyListener
      *     "container"    = @DI\Inject("service_container"),
      *     "httpKernel"   = @DI\Inject("http_kernel"),
      *     "requestStack" = @DI\Inject("request_stack"),
-     *     "manager"      = @DI\Inject("icap.bibliography.manager")
+     *     "manager"      = @DI\Inject("icap.bookReference.manager")
      * })
      */
     public function __construct(ContainerInterface $container, HttpKernelInterface $httpKernel, RequestStack $requestStack, BookReferenceManager $manager)

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * BookReferenceConfiguration Entity.
  *
  * @ORM\Table(name="icap__bibliography_book_reference_configuration")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="IcapBibliographyBundle\Repository\BookReferenceConfigurationRepository")
  */
 class BookReferenceConfiguration
 {

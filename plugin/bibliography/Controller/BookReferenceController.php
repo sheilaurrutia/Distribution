@@ -23,7 +23,7 @@ class BookReferenceController extends Controller
      * @DI\InjectParams({
      *     "formFactory"  = @DI\Inject("form.factory"),
      *     "requestStack" = @DI\Inject("request_stack"),
-     *     "manager"      = @DI\Inject("icap.bibliography.manager")
+     *     "manager"      = @DI\Inject("icap.bookReference.manager")
      * })
      */
     public function __construct(
