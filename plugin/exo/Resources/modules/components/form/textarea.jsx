@@ -3,7 +3,7 @@ import classes from 'classnames'
 import {tex} from './../../utils/translate'
 import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
 import rangy from 'rangy'
-import {CursorSelection} from './selection/selection'
+import {getOffsets} from './selection/selection'
 
 export class ProseMirrorEditor extends Component {
   constructor(props) {
@@ -93,10 +93,10 @@ export class ContentEditable extends Component {
 
     })
 
-    const sel = new CursorSelection(document.getElementById(this.props.id))
-    const offsets = sel.getOffsets()
-
-    this.props.onSelect(selected, this.updateText.bind(this))
+    const selected = window.getSelection().toString()
+    const offsets = getOffsets(document.getElementById(this.props.id))
+    
+    this.props.onSelect(selected, this.updateText.bind(this), offsets)
   }
 
   updateText(text) {

@@ -89,8 +89,6 @@ function reduce(item = {}, action) {
       return Object.assign({}, item, {colors})
     }
     case ADD_SELECTION: {
-      //compute here where begin/end really are
-
       const selection = {
         id: makeId(),
         begin: action.begin,
@@ -132,13 +130,16 @@ function reduce(item = {}, action) {
       }
 
       solutions.push(solution)
+      console.log(solutions)
+      let _text = utils.makeTextHtml(item._text, solutions)
+      console.log(_text)
 
       return Object.assign({}, item, {
         selections,
         _selectionPopover: true,
         _selectionId: selection.id,
         solutions,
-        _text: utils.makeTextHtml(item._text, solutions)
+        _text
       })
     }
     case CLOSE_POPOVER: {

@@ -7,8 +7,10 @@ utils.makeTextHtml = (text, solutions) => {
   //reorder solutions here by first/last position
 
   let idx = 0
+  console.log(solutions)
 
   solutions.forEach(solution => {
+    console.log('olololol')
     //txt1.slice(0, 3) + "bar" + txt1.slice(3);
     text = text.slice(0, solution.begin + idx)
     + getFirstSpan()
