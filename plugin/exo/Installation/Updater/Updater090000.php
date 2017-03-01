@@ -7,13 +7,13 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
-use UJM\ExoBundle\Serializer\Question\QuestionSerializer;
+use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 use UJM\ExoBundle\Serializer\StepSerializer;
 
 class Updater090000
@@ -41,9 +41,9 @@ class Updater090000
     private $stepSerializer;
 
     /**
-     * @var QuestionSerializer
+     * @var ItemSerializer
      */
-    private $questionSerializer;
+    private $itemSerializer;
 
     /**
      * Updater080000 constructor.
@@ -52,20 +52,20 @@ class Updater090000
      * @param ObjectManager      $om
      * @param ExerciseSerializer $exerciseSerializer
      * @param StepSerializer     $stepSerializer
-     * @param QuestionSerializer $questionSerializer
+     * @param ItemSerializer     $itemSerializer
      */
     public function __construct(
         Connection $connection,
         ObjectManager $om,
         ExerciseSerializer $exerciseSerializer,
         StepSerializer $stepSerializer,
-        QuestionSerializer $questionSerializer)
+        ItemSerializer $itemSerializer)
     {
         $this->connection = $connection;
         $this->om = $om;
         $this->exerciseSerializer = $exerciseSerializer;
         $this->stepSerializer = $stepSerializer;
-        $this->questionSerializer = $questionSerializer;
+        $this->itemSerializer = $itemSerializer;
     }
 
     public function postUpdate()
@@ -73,8 +73,8 @@ class Updater090000
         $this->updateExerciseTypes();
         $this->updateAnswerData();
         $this->cleanOldPairQuestions();
-        $this->updatePapers();
         $this->updateClozeQuestions();
+        $this->updatePapers();
     }
 
     private function updateExerciseTypes()
@@ -130,7 +130,12 @@ class Updater090000
         $proposalSth->execute();
         $proposals = $proposalSth->fetchAll();
 
-        $holeSth = $this->connection->prepare('SELECT id, uuid, selector FROM ujm_hole');
+        $holeSth = $this->connection->prepare('
+            SELECT h.id, h.uuid, h.`position`, h.selector, q.uuid AS question_id
+            FROM ujm_hole AS h
+            JOIN ujm_interaction_hole AS i ON (h.interaction_hole_id = i.id)
+            JOIN ujm_question AS q ON (i.question_id = q.id)
+        ');
         $holeSth->execute();
         $holes = $holeSth->fetchAll();
 
@@ -140,7 +145,7 @@ class Updater090000
 
         // Load answers
         $sth = $this->connection->prepare('
-            SELECT q.mime_type, a.id AS answerId, a.response AS data
+            SELECT q.mime_type, a.id AS answerId, a.response AS data, a.question_id
             FROM ujm_response AS a
             LEFT JOIN ujm_question AS q ON (a.question_id = q.uuid)
             WHERE a.response IS NOT NULL 
@@ -187,11 +192,16 @@ class Updater090000
                     $newData = array_map(function ($association) use ($propNames, $labels, $proposals) {
                         $associationData = explode(',', $association);
 
-                        $data = new \stdClass();
+                        $data = null;
 
-                        // Convert ids into uuids
-                        $data->{$propNames[0]} = $this->getAnswerPartUuid($associationData[0], $proposals);
-                        $data->{$propNames[1]} = $this->getAnswerPartUuid($associationData[1], $labels);
+                        // The new system only allows complete association in answers
+                        if (!empty($associationData) && 2 === count($associationData)) {
+                            $data = new \stdClass();
+
+                            // Convert ids into uuids
+                            $data->{$propNames[0]} = $this->getAnswerPartUuid($associationData[0], $proposals);
+                            $data->{$propNames[1]} = $this->getAnswerPartUuid($associationData[1], $labels);
+                        }
 
                         return $data;
                     }, $answerData);
@@ -211,10 +221,14 @@ class Updater090000
                         $pairData = explode(',', $pair);
 
                         // Convert ids into uuids
-                        return [
-                            $this->getAnswerPartUuid($pairData[0], $proposals),
-                            $this->getAnswerPartUuid($pairData[1], $labels),
-                        ];
+                        if (!empty($pairData) && 2 === count($pairData)) {
+                            return [
+                                $this->getAnswerPartUuid($pairData[0], $proposals),
+                                $this->getAnswerPartUuid($pairData[1], $labels),
+                            ];
+                        } else {
+                            return;
+                        }
                     }, $answerData);
 
                     break;
@@ -224,21 +238,48 @@ class Updater090000
                     $answerData = json_decode($answer['data'], true);
 
                     $newData = [];
-                    foreach ($answerData as $holeId => $answerText) {
+                    foreach ($answerData as $position => $answerText) {
                         if (!empty($answerText)) {
-                            $answeredHole = $this->getAnswerPart($holeId, $holes);
-                            $hole = new \stdClass();
-                            $hole->holeId = $answeredHole['uuid'];
+                            $answeredHole = null;
+                            $oldAnswer = null;
+                            if (is_array($answerText)) {
+                                // Format = [{"holeId":"61","answerText":""},{"holeId":"62","answerText":""}]
 
-                            if (!$answeredHole['selector']) {
-                                $hole->answerText = $answerText;
+                                // Retrieve answered hole
+                                $answeredHole = $this->getAnswerPart($answerText['holeId'], $holes);
+
+                                // Get answer
+                                $oldAnswer = $answerText['answerText'];
                             } else {
-                                // replace keyword id by its value
-                                $keyword = $this->getAnswerPart($answerText, $keywords);
-                                $hole->answerText = $keyword['response'];
+                                // Format = {"1":"travail","2":"salaire"}
+
+                                // Retrieve answered hole
+                                foreach ($holes as $hole) {
+                                    if ((int) $hole['position'] === (int) $position
+                                        && $hole['question_id'] === $answer['question_id']) {
+                                        $answeredHole = $hole;
+                                        break;
+                                    }
+                                }
+
+                                // Get answer
+                                $oldAnswer = $answerText;
                             }
 
-                            $newData[] = $hole;
+                            if (!empty($answeredHole) && !empty($oldAnswer)) {
+                                $hole = new \stdClass();
+                                $hole->holeId = $answeredHole['uuid'];
+
+                                if (!$answeredHole['selector']) {
+                                    $hole->answerText = $oldAnswer;
+                                } else {
+                                    // replace keyword id by its value
+                                    $keyword = $this->getAnswerPart($oldAnswer, $keywords);
+                                    $hole->answerText = $keyword['response'];
+                                }
+
+                                $newData[] = $hole;
+                            }
                         }
                     }
 
@@ -256,10 +297,14 @@ class Updater090000
                     $newData = array_map(function ($coords) {
                         $coordsData = explode(',', $coords);
 
-                        return [
-                            $coordsData[0],
-                            $coordsData[1],
-                        ];
+                        if (!empty($coordsData) && 2 === count($coordsData)) {
+                            return [
+                                $coordsData[0],
+                                $coordsData[1],
+                            ];
+                        } else {
+                            return;
+                        }
                     }, $answerData);
                     break;
 
@@ -268,15 +313,23 @@ class Updater090000
             }
 
             // Update answer data
+            $sth = $this->connection->prepare('
+                UPDATE ujm_response SET `response` = :data WHERE id = :id 
+            ');
+
+            $insertData = null;
             if (!empty($newData)) {
-                $sth = $this->connection->prepare('
-                    UPDATE ujm_response SET `response` = :data WHERE id = :id 
-                ');
-                $sth->execute([
-                    'id' => $answer['answerId'],
-                    'data' => json_encode($newData),
-                ]);
+                $insertData = json_encode(
+                    array_filter($newData, function ($data) {
+                        return !empty($data);
+                    })
+                );
             }
+
+            $sth->execute([
+                'id' => $answer['answerId'],
+                'data' => $insertData,
+            ]);
         }
 
         $this->log('done !');
@@ -287,7 +340,7 @@ class Updater090000
         $found = null;
         foreach ($parts as $part) {
             if ($part['id'] === $id) {
-                $found = $part['uuid'];
+                $found = $part;
                 break;
             }
         }
@@ -302,7 +355,7 @@ class Updater090000
             return $part['uuid'];
         }
 
-        return null;
+        return;
     }
 
     private function cleanOldPairQuestions()
@@ -374,7 +427,7 @@ class Updater090000
 
         $oldHints = $this->fetchHints();
 
-        $questions = $this->om->getRepository('UJMExoBundle:Question\Question')->findAll();
+        $questions = $this->om->getRepository('UJMExoBundle:Item\Item')->findAll();
         $decodedQuestions = [];
 
         $papers = $this->om->getRepository('UJMExoBundle:Attempt\Paper')->findAll();
@@ -447,7 +500,7 @@ class Updater090000
             $stepForOrphans = $this->stepSerializer->serialize(new Step(), [Transfer::INCLUDE_SOLUTIONS]);
 
             foreach ($questionIds as $questionId) {
-                /** @var Question $question */
+                /** @var Item $question */
                 $question = $this->pullQuestion($questionId, $questions, $decodedQuestions);
                 if ($question) {
                     $stepForOrphans->items[] = $question;
@@ -477,16 +530,28 @@ class Updater090000
         $sth->execute();
         $questions = $sth->fetchAll();
         foreach ($questions as $question) {
-            // Replace selects
+            $holeSth = $this->connection->prepare('
+                SELECT * FROM ujm_hole WHERE interaction_hole_id = :id
+            ');
+
+            $holeSth->execute([
+                'id' => $question['id'],
+            ]);
+            $holes = $holeSth->fetchAll();
+
             $text = $this->replaceHoles(
                 $question['htmlWithoutValue'],
-                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/'
+                '/<select\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+.*[^<\/\s*select\s*>]*<\/select>/',
+                $holes
             );
             // Replace inputs
             $text = $this->replaceHoles(
                 $text,
-                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/'
+                '/<input\s*id=\s*[\'|"]+([0-9]+)[\'|"]+\s*class=\s*[\'|"]+blank[\'|"]+\s*[^\/+>]*\/>/',
+                $holes
             );
+
+            // Replace selects
 
             $sth = $this->connection->prepare('
                 UPDATE ujm_interaction_hole 
@@ -501,12 +566,18 @@ class Updater090000
         }
     }
 
-    private function replaceHoles($text, $searchExpr)
+    private function replaceHoles($text, $searchExpr, array $holes)
     {
         $matches = [];
         if (preg_match_all($searchExpr, $text, $matches)) {
             foreach ($matches[0] as $inputIndex => $inputMatch) {
-                $text = str_replace($inputMatch, '[['.$matches[1][$inputIndex].']]', $text);
+                $position = $matches[1][$inputIndex];
+                foreach ($holes as $hole) {
+                    if ((int) $hole['position'] === (int) $position) {
+                        $text = str_replace($inputMatch, '[['.$hole['uuid'].']]', $text);
+                        break;
+                    }
+                }
             }
         }
 
@@ -527,8 +598,8 @@ class Updater090000
     {
         if (empty($decodedQuestions[$questionId])) {
             foreach ($questions as $index => $question) {
-                if ($question->getId() === (int) $questionId) {
-                    $decodedQuestions[$questionId] = $this->questionSerializer->serialize($question, [Transfer::INCLUDE_SOLUTIONS]);
+                if ($question->getId() === (int) $questionId && !empty($question->getMimeType())) {
+                    $decodedQuestions[$questionId] = $this->itemSerializer->serialize($question, [Transfer::INCLUDE_SOLUTIONS]);
                     unset($questions[$index]);
                     break;
                 }

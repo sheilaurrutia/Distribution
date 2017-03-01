@@ -6,8 +6,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Hint;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Hint;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
@@ -26,7 +26,7 @@ class CorrectionManagerTest extends JsonDataTestCase
 
     /** @var Exercise */
     private $exercise;
-    /** @var Question[] */
+    /** @var Item[] */
     private $questions = [];
     /** @var Hint[] */
     private $hints = [];
@@ -113,6 +113,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $toCorrect->questionId = $this->answers[0]->getQuestionId();
         $toCorrect->score = 5;
         $toCorrect->feedback = 'this is a feedback';
+        $toCorrect->type = 'application/x.open+json';
 
         // Paper score have never been calculated for now
         // We just take obtained score in test data (we can do it because their is no penalty)
@@ -149,6 +150,7 @@ class CorrectionManagerTest extends JsonDataTestCase
         $toCorrect->questionId = $this->answers[0]->getQuestionId();
         $toCorrect->score = 5;
         $toCorrect->feedback = 'this is a feedback';
+        $toCorrect->type = 'application/x.open+json';
 
         $this->manager->save([$toCorrect]);
 

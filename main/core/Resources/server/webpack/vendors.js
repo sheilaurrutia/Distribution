@@ -54,6 +54,7 @@ var libs =
     'tinymce/plugins/paste/plugin',
     'tinymce/plugins/link/plugin',
     'core-js/shim',
+    'whatwg-fetch',
     'lodash',
     'ng-table', //requires css
     'backbone',

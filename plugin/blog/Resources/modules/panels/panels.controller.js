@@ -6,15 +6,17 @@ let _transFilter = new WeakMap()
 let _$location = new WeakMap()
 let _Messages = new WeakMap()
 let _$rootScope = new WeakMap()
+let _$scope = new WeakMap()
 
 export default class BlogPanelController {
 
-  constructor(blogService, transFilter, $location, Messages, $rootScope) {
+  constructor(blogService, transFilter, $location, Messages, $rootScope, $scope) {
     // Private variables
     _transFilter.set(this, transFilter)
     _$location.set(this, $location)
     _Messages.set(this, Messages)
     _$rootScope.set(this, $rootScope)
+    _$scope.set(this, $scope)
 
     // Variables exposed in view
     this.blog = blogService
@@ -75,6 +77,18 @@ export default class BlogPanelController {
       today: this._t('today'),
       locale: home.locale
     }
+
+    this.init()
+  }
+
+  init() {
+    _$rootScope.get(this).$on('post_visibility_toggled', this.refetchCalendarEvents)
+    _$rootScope.get(this).$on('post_created', this.refetchCalendarEvents)
+    _$rootScope.get(this).$on('post_deleted', this.refetchCalendarEvents)
+  }
+
+  refetchCalendarEvents() {
+    angular.element('#calendar').fullCalendar('refetchEvents')
   }
 
   getPanelUrl(nameTemplate) {
@@ -130,5 +144,6 @@ BlogPanelController.$inject = [
   'transFilter',
   '$location',
   'Messages',
-  '$rootScope'
+  '$rootScope',
+  '$scope'
 ]
