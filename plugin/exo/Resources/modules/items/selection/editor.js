@@ -123,19 +123,23 @@ function reduce(item = {}, action) {
           break
       }
 
+      let toSort = item.mode === 'find' ? solutions : selections
+      toSort = toSort.filter(sort => {
+         return sort.begin < action.begin}
+       )
+
+      toSort = toSort.sort((a, b) => {a.begin - b.begin})
+      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
+
+      console.log(sum)
+      selection.begin = action.begin - sum
+      selection.end = action.end - sum
+
       if (item.mode !== 'find') {
         selections.push(selection)
       }
 
       solutions.push(solution)
-
-      let toSort = item.mode === 'find' ? solutions : selections
-      toSort = toSort.filter(sort => {sort.begin < action.begin})
-      toSort = toSort.sort((a, b) => {a.begin - b.begin})
-      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
-      console.log(sum)
-      selection.begin = action.begin - sum
-      selection.end = action.end - sum
 
       let newItem = Object.assign({}, item, {
         selections,
@@ -181,7 +185,7 @@ function cleanItem(item)
     ids.push($(this).attr('data-selection-id'))
   })
 
-  if (item.mode !== 'find') {
+  if (item.mode !== 'find' && item.selections) {
     item.selections.forEach(selection => {
       let idx = ids.findIndex(id => id === selection.id)
       if (idx < 0) toRemove.push(selection.id)

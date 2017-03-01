@@ -23,25 +23,31 @@ utils.makeTextHtml = (text, elements) => {
 }
 
 function getFirstSpan() {
-  return '<span class="well">';
+  return '<span style="background-color: gray">';
 }
 
 utils.getHtmlLength = (solution) => {
-  return getFirstSpan().length + getEditButtons(solution).length + '</span>'.length + getEditButtons(solution).length
+  let html = getFirstSpan() + '</span>' + getEditButtons(solution)
+
+  const tmp = document.createElement('div')
+  tmp.innerHTML = html
+
+  return tmp.innerHTML.length
 }
 
 function getEditButtons(solution) {
+
   const id = solution.selectionId ? solution.selectionId: solution.id
+
   return `
     <i style="cursor: pointer"
       class="fa fa-pencil edit-selection-btn selection-button"
       data-selection-id="${id}"
-    > &nbsp; </i>
+    >&nbsp;</i>
     <i style="cursor: pointer"
       class="fa fa-trash delete-selection-btn selection-button"
       data-selection-id="${id}"
-    > &nbsp;
-    </i>
+    >&nbsp;</i>
   `
 }
 
