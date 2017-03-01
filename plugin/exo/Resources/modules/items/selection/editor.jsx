@@ -205,9 +205,9 @@ export class Selection extends Component {
     utils.makeTextHtml(this.props.item._text, this.props.item.solutions)
   }
 
-  onSelect(begin, end) {
-    this.begin = begin
-    this.end = end
+  onSelect(selected, cb, offsets) {
+    this.begin = offsets.trueStart
+    this.end = offsets.trueEnd
   }
 
   addSelection() {

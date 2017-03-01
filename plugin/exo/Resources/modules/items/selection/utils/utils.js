@@ -2,15 +2,12 @@ import {tex} from './../../../utils/translate'
 
 export const utils = {}
 
-utils.makeTextHtml = (text, solutions) => {
-  return text
-  //reorder solutions here by first/last position
-
+utils.makeTextHtml = (text, elements) => {
   let idx = 0
-  console.log(solutions)
 
-  solutions.forEach(solution => {
-    console.log('olololol')
+  elements.sort((a, b) => {return a.begin - b.begin})
+
+  elements.forEach(solution => {
     //txt1.slice(0, 3) + "bar" + txt1.slice(3);
     text = text.slice(0, solution.begin + idx)
     + getFirstSpan()
@@ -19,10 +16,8 @@ utils.makeTextHtml = (text, solutions) => {
     + getEditButtons(solution)
     + text.slice(solution.end + idx)
 
-    idx += getHtmlLength(solution);
+    idx += utils.getHtmlLength(solution);
   })
-
-
 
   return text
 }
@@ -31,19 +26,20 @@ function getFirstSpan() {
   return '<span class="well">';
 }
 
-function getHtmlLength(solution) {
+utils.getHtmlLength = (solution) => {
   return getFirstSpan().length + getEditButtons(solution).length + '</span>'.length + getEditButtons(solution).length
 }
 
 function getEditButtons(solution) {
+  const id = solution.selectionId ? solution.selectionId: solution.id
   return `
     <i style="cursor: pointer"
-      class="fa fa-pencil edit-selection-btn"
-      data-selection-id="${solution.selectionId}"
+      class="fa fa-pencil edit-selection-btn selection-button"
+      data-selection-id="${id}"
     > &nbsp; </i>
     <i style="cursor: pointer"
-      class="fa fa-trash delete-selection-btn"
-      data-selection-id="${solution.selectionId}"
+      class="fa fa-trash delete-selection-btn selection-button"
+      data-selection-id="${id}"
     > &nbsp;
     </i>
   `

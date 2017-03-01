@@ -4,6 +4,7 @@ import {makeActionCreator, makeId} from './../../utils/utils'
 import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils/utils'
+import $ from 'jquery'
 
 const UPDATE_QUESTION = 'UPDATE_QUESTION'
 const ADD_SELECTION = 'ADD_SELECTION'
@@ -89,15 +90,12 @@ function reduce(item = {}, action) {
       return Object.assign({}, item, {colors})
     }
     case ADD_SELECTION: {
-      const selection = {
-        id: makeId(),
-        begin: action.begin,
-        end: action.end
-      }
-
       const selections = item.selections ? cloneDeep(item.selections): []
       const solutions = item.solutions ? cloneDeep(item.solutions): []
       let solution = null
+      const selection = {
+        id: makeId()
+      }
 
       switch (item.mode) {
         case 'highlight':
@@ -130,17 +128,25 @@ function reduce(item = {}, action) {
       }
 
       solutions.push(solution)
-      console.log(solutions)
-      let _text = utils.makeTextHtml(item._text, solutions)
-      console.log(_text)
 
-      return Object.assign({}, item, {
+      let toSort = item.mode === 'find' ? solutions : selections
+      toSort = toSort.filter(sort => {sort.begin < action.begin})
+      toSort = toSort.sort((a, b) => {a.begin - b.begin})
+      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
+      console.log(sum)
+      selection.begin = action.begin - sum
+      selection.end = action.end - sum
+
+      let newItem = Object.assign({}, item, {
         selections,
         _selectionPopover: true,
         _selectionId: selection.id,
         solutions,
-        _text
+        _text: utils.makeTextHtml(item._text, item.mode === 'find' ? solutions : selections)
       })
+
+      return cleanItem(newItem)
+
     }
     case CLOSE_POPOVER: {
       return Object.assign({}, item, {_selectionPopover: false})
@@ -163,5 +169,39 @@ function validate(/*item*/) {
 //depending on the values of some properties, some others must be unset
 function cleanItem(item)
 {
-  return item
+  //here we remove the unused selections
+  const _text = item._text
+
+  const tmp = document.createElement('div')
+  const ids = []
+  let toRemove = []
+  tmp.innerHTML = _text
+
+  $(tmp).find('.selection-button').each(function () {
+    ids.push($(this).attr('data-selection-id'))
+  })
+
+  if (item.mode !== 'find') {
+    item.selections.forEach(selection => {
+      let idx = ids.findIndex(id => id === selection.id)
+      if (idx < 0) toRemove.push(selection.id)
+    })
+  }
+
+  toRemove = toRemove.filter(function(item, pos) {
+      return toRemove.indexOf(item) == pos;
+  })
+
+  const solutions = cloneDeep(item.solutions)
+  const selections = cloneDeep(item.selections)
+
+  toRemove.forEach(selectionId => {
+    const selIdx = selections.findIndex(selection => selection.id === selectionId)
+    const solIdx = solutions.findIndex(solution => solution.selectionId === selectionId)
+
+    selections.splice(selIdx, 1)
+    solutions.splice(solIdx, 1)
+  })
+
+  return Object.assign({}, item, {selections, solutions})
 }

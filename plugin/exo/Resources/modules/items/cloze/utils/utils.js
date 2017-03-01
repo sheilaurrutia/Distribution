@@ -151,7 +151,6 @@ utils.getSolutionForAnswer = (solution, answer) => {
     answerText = answer.text ? answer.text: answer.answerText
   }
 
-
   if (!answerText) return null
 
   let foundSolution = solution.answers.find(solAnswer => solAnswer.text.toLowerCase() === answerText.toLowerCase())
