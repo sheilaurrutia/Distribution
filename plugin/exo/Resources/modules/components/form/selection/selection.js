@@ -16,24 +16,33 @@ export function getOffsets(element) {
 
   let addForTag = false
   let addForSpecialChar = false
+  let i = 0
+  let forward = 0
 
   const html = element.innerHTML
 
-  html.split('').forEach((character, index) => {
-
-    if (index < offsets.end) {
-      if (character === '<') {
-        toAdd += getTillChar(html, index, '>')
-      }
-
-      if (character === '&') {
-        toAdd += getTillChar(html, index, ';')
-      }
+  while (i < html.length) {
+    if (html[i] === '<' ) {
+      forward = getTillChar(html, i, '>')
     }
-  })
+
+    if (html[i] === '&' ) {
+      forward = getTillChar(html, i, ';')
+    }
+
+    toAdd += forward
+
+    i += forward + 1
+    forward = 0
+  }
 
   offsets.trueStart = offsets.start + toAdd
   offsets.trueEnd = offsets.end + toAdd
+
+  console.log('innerHTML', html)
+  console.log('textContent', element.textContent.substr(0, offsets.start))
+  console.log('html', html.substr(0, offsets.trueStart))
+  console.log(offsets)
 
   return offsets
 }
