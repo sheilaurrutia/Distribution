@@ -74,19 +74,24 @@ class TransferManager
         if ($validateProperties) {
             if (isset($data['properties'])) {
                 $properties['properties'] = $data['properties'];
+                //get the validate return one day
                 $importer->validate($properties);
             }
         }
 
         if (isset($data['roles'])) {
             $roles['roles'] = $data['roles'];
+            //get the validate return one day
             $rolesImporter->validate($roles);
         }
 
         if (isset($data['tools'])) {
             $tools['tools'] = $data['tools'];
-            $toolsImporter->validate($tools);
+            $dataTools = $toolsImporter->validate($tools);
+            $data['tools'] = $dataTools['tools'];
         }
+
+        return $data;
     }
 
     /**
@@ -105,22 +110,14 @@ class TransferManager
      */
     public function populateWorkspace(
         Workspace $workspace,
+        array $data,
         File $template,
         Directory $root,
         array $entityRoles,
-        $isValidated = false,
         $importRoles = true
     ) {
-        $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
         $this->om->startFlushSuite();
-        $data = $this->reorderData($data);
-        $this->setImporters($template, $workspace->getCreator());
         $this->setWorkspaceForImporter($workspace);
-
-        if (!$isValidated) {
-            $this->validate($data, false);
-        }
-
         if ($importRoles) {
             $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
             $this->om->forceFlush();
@@ -144,7 +141,6 @@ class TransferManager
         }
 
         $this->importRichText($workspace, $data);
-        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 
     /**
@@ -166,22 +162,24 @@ class TransferManager
         $isValidated = false
     ) {
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
+        $data = $this->reorderData($data);
 
-        if ($workspace->getCode() === null) {
+        if ($workspace->getCode() === null && isset($data['parameters'])) {
             $workspace->setCode($data['parameters']['code']);
         }
 
-        if ($workspace->getName() === null) {
+        if ($workspace->getName() === null && isset($data['parameters'])) {
             $workspace->setName($data['parameters']['name']);
         }
 
         //just to be sure doctrine is ok before doing all the workspace
 
         $this->om->startFlushSuite();
-        $this->setImporters($template, $workspace->getCreator());
+        $data = $this->reorderData($data);
+        $this->setImporters($template, $workspace->getCreator(), $data);
 
         if (!$isValidated) {
-            $this->validate($data, false);
+            $data = $this->validate($data, false);
             $isValidated = true;
         }
 
@@ -241,7 +239,8 @@ class TransferManager
         );
 
         $this->log('Populating the workspace...');
-        $this->populateWorkspace($workspace, $template, $root, $entityRoles, true, false);
+        $this->populateWorkspace($workspace, $data, $template, $root, $entityRoles, false);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
 
@@ -284,7 +283,7 @@ class TransferManager
     /**
      * Full workspace export.
      */
-    public function export(Workspace $workspace)
+    public function export($workspace)
     {
         $this->log("Exporting {$workspace->getCode()}...");
 
@@ -406,12 +405,11 @@ class TransferManager
      * @param File  $template
      * @param array $data
      */
-    private function setImporters(File $template, User $owner)
+    private function setImporters(File $template, User $owner, array $data)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($this->templateDirectory.DIRECTORY_SEPARATOR.$template->getBasename());
+            $importer->setRootPath($this->templateDirectory.$template->getBasename('.zip'));
             $importer->setOwner($owner);
-            $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template);
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
 
@@ -457,7 +455,7 @@ class TransferManager
         $data = $this->reorderData($data);
         $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
-        $this->setImporters($template, $workspace->getCreator());
+        $this->setImporters($template, $workspace->getCreator(), $data);
 
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 
@@ -523,5 +521,10 @@ class TransferManager
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

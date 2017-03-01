@@ -248,6 +248,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater080000($this->container, $this->logger);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
+            case version_compare($currentVersion, '9.1.0', '<'):
+                $updater = new Updater\Updater090100($this->container, $this->logger);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
         }
 
         $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
@@ -260,6 +264,9 @@ class AdditionalInstaller extends BaseInstaller
         $additionalActionUpdater = new Updater\AdditionalActionUpdater($this->container, $this->logger);
         $additionalActionUpdater->setLogger($this->logger);
         $additionalActionUpdater->postUpdate();
+
+        $docUpdater = new Updater\DocUpdater($this->container);
+        $docUpdater->updateDocUrl('http://doc.claroline.com');
     }
 
     private function setLocale()

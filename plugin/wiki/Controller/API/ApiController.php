@@ -46,14 +46,17 @@ class ApiController extends FOSRestController
      *     description="In which mode should the wiki operate? 0 = normal, 1 = moderated, 2 = blocked",
      *     requirements="[0,1,2]"
      * )
+     * @RequestParam(
+     *     name="displaySectionNumbers",
+     *     description="Should the section number be displayed in the wiki body?",
+     * )
      */
     public function patchWikiAction(Wiki $wiki, ParamFetcher $paramFetcher)
     {
         $this->checkAccess('EDIT', $wiki);
 
-        $mode = $paramFetcher->get('mode');
-
-        $wiki->setMode($mode);
+        $wiki->setMode($paramFetcher->get('mode'));
+        $wiki->setDisplaySectionNumbers($paramFetcher->get('displaySectionNumbers'));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($wiki);
@@ -361,12 +364,12 @@ class ApiController extends FOSRestController
      * )
      * @RequestParam(
      *     name="title",
-     *     requirements=".+",
+     *     nullable=true,
      *     description="Title of the new contribution"
      * )
      * @RequestParam(
      *     name="text",
-     *     requirements=".+",
+     *     nullable=true,
      *     description="Content of the new contribution"
      * )
      * @RequestParam(

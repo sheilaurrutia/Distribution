@@ -80,12 +80,18 @@ fetch() {
 
 fetch composer $COMPOSER_SUM "composer update --prefer-dist" vendor
 
+# we don't want the sources present in the cache
 echo "Overriding distribution package with local build/repo..."
 rm -rf vendor/claroline/distribution
 cp -r $DIST vendor/claroline/distribution
+
 # this is normally done in the post-update-cmd script
 echo "Building app/config/bundles.ini..."
 composer bundles
 
-fetch npm $NPM_SUM "npm install" node_modules
+# Gets npm dependencies
+# Removes the shrinkwrap to allow a PR to update dependencies
+# After installation, a new shrinkwrap is generated
+fetch npm $NPM_SUM "rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap" node_modules
+
 fetch bower $BOWER_SUM "npm run bower" web/packages

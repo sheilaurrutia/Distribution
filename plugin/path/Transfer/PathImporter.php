@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Transfer;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -59,6 +58,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                         ->booleanNode('breadcrumbs')->end()
                         ->booleanNode('summaryDisplayed')->end()
                         ->booleanNode('completeBlockingCondition')->end()
+                        ->booleanNode('manualProgressionAllowed')->end()
                         ->booleanNode('modified')->end()
                         ->booleanNode('published')->end()
                     ->end()
@@ -123,14 +123,6 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
 
                     // Decode JSON to be able to replace IDs in structure
 
-                    // TODO update IDs in step structure
-                    /*$json = json_decode($text);
-                    if (!empty($json) && !empty($json->steps)) {
-                        foreach ($json->steps as $step) {
-                            $this->formatStep($step);
-                        }
-                    }*/
-
                     $entity->setStructure($text);
                     $this->container->get('doctrine.orm.entity_manager')->persist($entity);
                 }
@@ -167,7 +159,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
         return $this->container->get('innova_path.manager.path')->import($structure, $data, $created);
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         return $this->container->get('innova_path.manager.path')->export($workspace, $files, $object);
     }
