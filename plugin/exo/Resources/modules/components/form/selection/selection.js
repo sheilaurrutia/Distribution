@@ -21,11 +21,8 @@ export function getOffsets(element) {
   let forward = 0
 
   const html = element.innerHTML
-  console.log('STAAART')
 
   while (i <= offsets.start) {
-
-    console.log(i, html[j])
     if (html[j] === '<' ) {
       forward = getTillChar(html, j, '>')
     }
@@ -49,12 +46,6 @@ export function getOffsets(element) {
 
   offsets.trueStart = toAdd + offsets.start
   offsets.trueEnd = toAdd + offsets.end
-
-  console.log('innerHTML', html)
-  console.log('textContent', element.textContent.substr(0, offsets.start))
-  console.log('html', html.substr(0, offsets.trueStart))
-  console.log(offsets)
-
   return offsets
 }
 
@@ -68,8 +59,6 @@ function getTillChar(html, index, marker) {
     }
     length ++
   }
-
-  console.log('length toussa', length, html.substr(index, length))
 
   return length
 }

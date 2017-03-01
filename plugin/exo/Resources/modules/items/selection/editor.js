@@ -63,6 +63,7 @@ function reduce(item = {}, action) {
       item = Object.assign({}, item, obj)
       //set the dislayed text here
       if (action.parameter === 'text') {
+        //then we need to update the positions here
         item = Object.assign({}, item, {text: action.value, _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors
@@ -129,11 +130,14 @@ function reduce(item = {}, action) {
        )
 
       toSort = toSort.sort((a, b) => {a.begin - b.begin})
+      console.log(toSort)
       const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
 
-      console.log(sum)
+      //console.log(sum)
       selection.begin = action.begin - sum
       selection.end = action.end - sum
+
+      //console.log(selection)
 
       if (item.mode !== 'find') {
         selections.push(selection)
@@ -141,12 +145,19 @@ function reduce(item = {}, action) {
 
       solutions.push(solution)
 
+      const text = utils.getTextFromDecorated(item._text)
+      //console.log(text)
+
+      //console.log(selections)
+      //alert('yo')
+
       let newItem = Object.assign({}, item, {
         selections,
         _selectionPopover: true,
         _selectionId: selection.id,
         solutions,
-        _text: utils.makeTextHtml(item._text, item.mode === 'find' ? solutions : selections)
+        text,
+        _text: utils.makeTextHtml(text, item.mode === 'find' ? solutions : selections)
       })
 
       return cleanItem(newItem)
@@ -207,5 +218,7 @@ function cleanItem(item)
     solutions.splice(solIdx, 1)
   })
 
-  return Object.assign({}, item, {selections, solutions})
+  let text = utils.getTextFromDecorated(item._text)
+
+  return Object.assign({}, item, {selections, solutions, text})
 }
