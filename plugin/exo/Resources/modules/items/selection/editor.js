@@ -64,7 +64,7 @@ function reduce(item = {}, action) {
       item = Object.assign({}, item, obj)
       //set the dislayed text here
       if (action.parameter === 'text') {
-        //then we need to update the positions here
+        //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
         item = recomputePositions(item, action.offsets)
         item = Object.assign({}, item, {text: action.value, _text: action.value})
       }
@@ -173,6 +173,7 @@ function validate(/*item*/) {
   return []
 }
 
+//this is not working as intended actually
 function recomputePositions(item, offsets) {
   return item
   let toSort = item.mode === 'find' ? item.solutions : item.selections
@@ -196,7 +197,6 @@ function recomputePositions(item, offsets) {
 
   const newData = item.mode === 'find' ? {solutions: toSort} : {selections: toSort}
 
-  console.log(newData)
   item = Object.assign({}, item, newData)
 
   return item
@@ -213,10 +213,12 @@ function cleanItem(item)
   let toRemove = []
   tmp.innerHTML = _text
 
+  //what are the selection in the text ?
   $(tmp).find('.selection-button').each(function () {
     ids.push($(this).attr('data-selection-id'))
   })
 
+  //if we're missing selections in the items, then we'll have to remove them
   if (item.mode !== 'find' && item.selections) {
     item.selections.forEach(selection => {
       let idx = ids.findIndex(id => id === selection.id)
@@ -224,13 +226,13 @@ function cleanItem(item)
     })
   }
 
-  toRemove = toRemove.filter(function(item, pos) {
-      return toRemove.indexOf(item) == pos;
-  })
+  //= php array_unique
+  toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
 
   const solutions = cloneDeep(item.solutions)
   const selections = cloneDeep(item.selections)
 
+  //and now we finally remove them !!!
   toRemove.forEach(selectionId => {
     const selIdx = selections.findIndex(selection => selection.id === selectionId)
     const solIdx = solutions.findIndex(solution => solution.selectionId === selectionId)
@@ -239,7 +241,9 @@ function cleanItem(item)
     solutions.splice(solIdx, 1)
   })
 
+  //also we just check the text is correct
   let text = utils.getTextFromDecorated(item._text)
 
+  //that'all for now folks !
   return Object.assign({}, item, {selections, solutions, text})
 }

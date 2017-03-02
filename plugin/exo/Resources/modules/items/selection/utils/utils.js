@@ -5,7 +5,6 @@ export const utils = {}
 
 utils.makeTextHtml = (text, elements) => {
   let idx = 0
-  console.log('make')
 
   elements.sort((a, b) => {return a.begin - b.begin})
 
@@ -37,18 +36,18 @@ utils.getHtmlLength = (solution) => {
 function getEditButtons(solution) {
 
   const id = solution.selectionId ? solution.selectionId: solution.id
-
-  //a one liner is important otherwise space and \n will mess everything up
-  //return `<span class="selection-buttons"><i style="cursor: pointer" class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}"></i><i style="cursor: pointer"class="fa fa-trash delete-selection-btn selection-button"  data-selection-id="${id}"></i></span>`
-
+  //A one liner is important otherwise space and \n will mess everything up for some reason I don't know
+  //Also DO NOT INCLUDE 'style' for tinymce because it'll mess everything aswell for it. He doesn't like that at all.
+  //Positions can't be computed that way because he recursively adds it everywhere like a retard
   return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button"  data-selection-id="${id}">&nbsp;</em></span>`
-
 }
 
+//This function allows us to remove our decorations class to get to proper text.
 utils.getTextFromDecorated = (_text) => {
   const tmp = document.createElement('div')
   tmp.innerHTML = _text
 
+  //we replace with '' because remove() leaves us with blank space (juste so you know)
   $(tmp).find('.selection-buttons').replaceWith('');
   $(tmp).find('.span-selection').each(function () {
     $(this).replaceWith($(this).text())
