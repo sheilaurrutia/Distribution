@@ -215,7 +215,7 @@ class SelectionQuestionSerializer implements SerializerInterface
 
       // Remaining color are no longer in the Question
       foreach ($selectionEntities as $selectionToRemove) {
-          $selectionEntities->removeSelection($selectionToRemove);
+          $selectionQuestion->removeSelection($selectionToRemove);
       }
     }
 

@@ -5,6 +5,7 @@ import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils/utils'
 import $ from 'jquery'
+import {getOffsets} from '../../components/form/selection/selection'
 
 const UPDATE_QUESTION = 'UPDATE_QUESTION'
 const ADD_SELECTION = 'ADD_SELECTION'
@@ -24,7 +25,7 @@ const EDIT_COLOR = 'EDIT_COLOR'
 //const ADD_ANSWER = 'ADD_ANSWER'
 
 export const actions = {
-  updateQuestion: makeActionCreator(UPDATE_QUESTION, 'value', 'parameter'),
+  updateQuestion: makeActionCreator(UPDATE_QUESTION, 'value', 'parameter', 'offsets'),
   addColor: makeActionCreator(ADD_COLOR),
   updateSelection: makeActionCreator(UPDATE_SELECTION, 'score', 'selectionId'),
   editColor: makeActionCreator(EDIT_COLOR, 'colorId', 'colorCode'),
@@ -41,7 +42,7 @@ export default {
 
 function decorate(item) {
   return Object.assign({}, item, {
-    _text: utils.makeTextHtml(item.text, item.solutions)
+    _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections)
   })
 }
 
@@ -64,6 +65,7 @@ function reduce(item = {}, action) {
       //set the dislayed text here
       if (action.parameter === 'text') {
         //then we need to update the positions here
+        item = recomputePositions(item, action.offsets)
         item = Object.assign({}, item, {text: action.value, _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors
@@ -125,19 +127,13 @@ function reduce(item = {}, action) {
       }
 
       let toSort = item.mode === 'find' ? solutions : selections
-      toSort = toSort.filter(sort => {
-         return sort.begin < action.begin}
-       )
+      toSort = toSort.filter(sort => { return sort.begin < action.begin})
 
       toSort = toSort.sort((a, b) => {a.begin - b.begin})
-      console.log(toSort)
       const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
 
-      //console.log(sum)
       selection.begin = action.begin - sum
       selection.end = action.end - sum
-
-      //console.log(selection)
 
       if (item.mode !== 'find') {
         selections.push(selection)
@@ -146,10 +142,6 @@ function reduce(item = {}, action) {
       solutions.push(solution)
 
       const text = utils.getTextFromDecorated(item._text)
-      //console.log(text)
-
-      //console.log(selections)
-      //alert('yo')
 
       let newItem = Object.assign({}, item, {
         selections,
@@ -179,6 +171,35 @@ function reduce(item = {}, action) {
 
 function validate(/*item*/) {
   return []
+}
+
+function recomputePositions(item, offsets) {
+  return item
+  let toSort = item.mode === 'find' ? item.solutions : item.selections
+  toSort = cloneDeep(toSort)
+  toSort.sort((a, b) => a.begin - b.begin)
+  let idx = 0
+
+  //please filter now
+  toSort.forEach(element => {
+    element._trueBegin = utils.getHtmlLength(element) * idx + element.begin
+    idx++
+
+    console.log('truestart', offsets)
+
+    if (offsets.trueStart < element._trueBegin) {
+      element._trueBegin ++
+      element.begin ++
+      element.end ++
+    }
+  })
+
+  const newData = item.mode === 'find' ? {solutions: toSort} : {selections: toSort}
+
+  console.log(newData)
+  item = Object.assign({}, item, newData)
+
+  return item
 }
 
 //depending on the values of some properties, some others must be unset

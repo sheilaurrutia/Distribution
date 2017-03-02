@@ -1,7 +1,18 @@
 import rangy from 'rangy'
 
-export function getOffsets(element) {
-  let range = window.getSelection().getRangeAt(0);
+export function getOffsets(element, selection = null, html = null) {
+  let toAdd = 0
+  let i = 0
+  let j = 0
+  let forward = 0
+  let addForTag = false
+  let addForSpecialChar = false
+
+  if (!selection) {
+    selection = window.getSelection()
+  }
+
+  let range = selection.getRangeAt(0);
   let priorRange = range.cloneRange();
   priorRange.selectNodeContents(element);
   priorRange.setEnd(range.startContainer, range.startOffset);
@@ -12,17 +23,10 @@ export function getOffsets(element) {
     start, end
   }
 
-  let toAdd = 0
-
-  let addForTag = false
-  let addForSpecialChar = false
-  let i = 0
-  let j = 0
-  let forward = 0
-
-  const html = element.innerHTML
+  if (!html) html = element.innerHTML
 
   while (i <= offsets.start) {
+
     if (html[j] === '<' ) {
       forward = getTillChar(html, j, '>')
     }
@@ -33,6 +37,7 @@ export function getOffsets(element) {
     }
 
     toAdd += forward
+    console.log(i, html[j], toAdd, forward)
 
     if (forward > 0) {
       j += forward
@@ -46,6 +51,7 @@ export function getOffsets(element) {
 
   offsets.trueStart = toAdd + offsets.start
   offsets.trueEnd = toAdd + offsets.end
+
   return offsets
 }
 
@@ -54,6 +60,7 @@ function getTillChar(html, index, marker) {
   let length = 0
 
   for (let i = index; keepGoing === true; i++) {
+          console.log('keepgoing', length, html[i], marker)
     if (html[i] === marker) {
       keepGoing = false
     }

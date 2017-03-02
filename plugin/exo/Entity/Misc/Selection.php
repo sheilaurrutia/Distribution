@@ -65,7 +65,6 @@ class Selection implements AnswerPartInterface
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
-     * @ORM\OrderBy({"order" = "ASC"})
      */
     private $colorSelections;
 

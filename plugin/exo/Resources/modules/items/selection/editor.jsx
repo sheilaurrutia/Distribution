@@ -206,8 +206,10 @@ export class Selection extends Component {
   }
 
   onSelect(selected, cb, offsets) {
-    this.begin = offsets.trueStart
-    this.end = offsets.trueEnd
+    if (offsets) {
+      this.begin = offsets.trueStart
+      this.end = offsets.trueEnd
+    }
   }
 
   addSelection() {
@@ -308,7 +310,7 @@ export class Selection extends Component {
           <Textarea
             id={this.props.item.id}
             onSelect={this.onSelect}
-            onChange={text => this.props.onChange(actions.updateQuestion(text, 'text'))}
+            onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
             content={this.props.item._text}
             updateText={this.updateText}
             plugins={this.pmPlugins}

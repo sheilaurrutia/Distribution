@@ -5,71 +5,6 @@ import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
 import rangy from 'rangy'
 import {getOffsets} from './selection/selection'
 
-export class ProseMirrorEditor extends Component {
-  constructor(props) {
-    super(props)
-    this.getSelection = this.getSelection.bind(this)
-    this.emitChange = this.emitChange.bind(this)
-    this.prosemirror = null
-    this.lastContent = null
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      {
-        ref: 'pm',
-        onMouseUp: this.getSelection,
-        onInput:this.emitChange,
-        onBlur:this.emitChange
-      }
-    )
-  }
-
-  emitChange() {
-    if (!this.refs.pm) {
-      return
-    }
-
-    const content = this.prosemirror.getEditor().content.innerHTML
-
-    if (this.props.onChange && content !== this.lastContent) {
-      this.props.onChange(content)
-    }
-
-    this.lastContent = content
-  }
-
-  componentDidMount() {
-    console.log(this.props.plugins)
-    this.prosemirror = new ProseMirror(this.refs.pm)
-    this.prosemirror.instantiate(this.props.content, this.props.plugins)
-  }
-
-
-  getSelection() {
-    const selection = this.prosemirror.getEditor().selectionReader
-    const beginOffset = selection.lastSelection.$from.pos
-    const endOffset = selection.lastSelection.$head.pos
-    this.props.onSelect(beginOffset, endOffset)
-  }
-}
-
-ProseMirrorEditor.propTypes = {
-  options: T.object.isRequired,
-  onSelect: T.func.isRequired,
-  onChange: T.func.isRequired,
-  content: T.string,
-  updateText: T.func,
-  plugins: T.array.isRequired
-}
-
-ProseMirrorEditor.defaultProps = {
-  options: {docFormat: 'html'},
-  onSelect: () => {},
-  plugins: []
-}
-
 // see https://github.com/lovasoa/react-contenteditable
 export class ContentEditable extends Component {
   constructor() {
@@ -95,7 +30,8 @@ export class ContentEditable extends Component {
 
     const selected = window.getSelection().toString()
     const offsets = getOffsets(document.getElementById(this.props.id))
-    
+        console.log(offsets)
+
     this.props.onSelect(selected, this.updateText.bind(this), offsets)
   }
 
@@ -158,9 +94,10 @@ export class ContentEditable extends Component {
     }
 
     const content = this.el.innerHTML
+    const offsets = getOffsets(document.getElementById(this.props.id))
 
     if (this.props.onChange && content !== this.lastContent) {
-      this.props.onChange(content)
+      this.props.onChange(content, offsets)
     }
 
     this.lastContent = content
@@ -200,7 +137,12 @@ export class Tinymce extends Component {
           this.getSelection()
         })
         this.editor.on('change', e => {
-          this.props.onChange(e.target.getContent())
+          const tinyContent = this.editor.getContent()
+          const tmp = document.createElement('div')
+          tmp.innerHTML = tinyContent
+
+          const offsets = getOffsets(tmp, this.editor.selection.getSel())
+          this.props.onChange(e.target.getContent(), offsets)
         })
         this.editor.on('click', e => {
           this.props.onClick(e.target)
@@ -236,7 +178,11 @@ export class Tinymce extends Component {
       commonAncestorContainer: rng.commonAncestorContainer
 
     })
-    this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this))
+
+    const offsets = getOffsets(this.editor.dom.getRoot(), this.editor.selection.getSel())
+    console.log(offsets)
+
+    this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this), offsets)
   }
 
   render() {

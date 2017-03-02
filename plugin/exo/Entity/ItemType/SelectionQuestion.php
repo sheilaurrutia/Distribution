@@ -74,7 +74,6 @@ class SelectionQuestion extends AbstractItem
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
-     * @ORM\OrderBy({"order" = "ASC"})
      */
     private $color;
 

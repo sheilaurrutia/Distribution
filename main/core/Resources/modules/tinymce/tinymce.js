@@ -232,7 +232,8 @@ tinymce.claroline.configuration = {
   'content_css': [
     themeCSS,
     home.asset + 'bundles/clarolinecore/css/common/tinymce.css',
-    home.asset + 'packages/font-awesome/css/font-awesome.min.css'
+    home.asset + 'packages/font-awesome/css/font-awesome.min.css',
+    home.asset+ 'vendor/ujmexo/exercise.css'
   ],
   'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
     'media link charmap | print preview code',
