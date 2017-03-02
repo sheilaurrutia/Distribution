@@ -53,17 +53,17 @@ export default class ConditionEditCtrl {
     })
   }
 
-  openAvailableFromPicker () {
+  openAvailableFromPicker() {
     //dirty hack : to avoid a broken datepicker when input field is empty
     if (!this.step.condition.availableFromDate){
-        this.step.condition.availableFromDate = new Date()
+      this.step.condition.availableFromDate = new Date()
     }
     this.filterAvailableFromDate['open'] = true
   }
 
-  openAvailableUntilPicker () {
+  openAvailableUntilPicker() {
     if (!this.step.condition.availableUntilDate){
-        this.step.condition.availableUntilDate = new Date()
+      this.step.condition.availableUntilDate = new Date()
     }
     this.filterAvailableUntilDate['open'] = true
   }

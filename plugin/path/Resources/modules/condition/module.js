@@ -41,7 +41,7 @@ angular
   .directive('conditionEdit', [
     () => new ConditionEditDirective
   ])
-  .directive('datetimepickerNeutralTimezone', function() {
+  .directive('datetimepickerNeutralTimezone', function () {
     return {
       restrict: 'A',
       priority: 1,
@@ -58,7 +58,7 @@ angular
           let date = null
           //to allow null value in the picker
           if (value) {
-              date = new Date(value.getTime() - (60000 * value.getTimezoneOffset()))
+            date = new Date(value.getTime() - (60000 * value.getTimezoneOffset()))
           }
           return date
         })
