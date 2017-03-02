@@ -148,7 +148,7 @@ class StepConditionManager
         $toRemove = array_filter($existingGoups, function (Criteriagroup $current) use ($neededGroups) {
             $removeGroup = true;
             foreach ($neededGroups as $group) {
-                if ($current->getId() == $group->getId()) {
+                if ($current->getId() === $group->getId()) {
                     $removeGroup = false;
                     break;
                 }
