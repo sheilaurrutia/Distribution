@@ -88,14 +88,14 @@ export default class StepConditionsService {
       let fromdate = new Date(from)
       let fromstring = this.twoDigits(fromdate.getDate())+'/'+
         this.twoDigits(fromdate.getMonth()+1)+'/'+fromdate.getFullYear()
-      message = this.Translator.trans('condition.date.notStarted', {from:fromstring}, 'path_wizards')
+      message = this.Translator.trans('condition_date_notStarted', {from:fromstring}, 'path_wizards')
     }
 
     if (until != null && new Date(until) < today) {
       let untildate = new Date(until)
       let untilstring = this.twoDigits(untildate.getDate())+'/'+
         this.twoDigits(untildate.getMonth()+1)+'/'+untildate.getFullYear()
-      message = this.Translator.trans('condition.date.finished', {until:untilstring}, 'path_wizards')
+      message = this.Translator.trans('condition_date_finished', {until:untilstring}, 'path_wizards')
     }
     return message
   }
