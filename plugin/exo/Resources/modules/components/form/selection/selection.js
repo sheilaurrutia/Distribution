@@ -37,7 +37,6 @@ export function getOffsets(element, selection = null, html = null) {
     }
 
     toAdd += forward
-    console.log(i, html[j], toAdd, forward)
 
     if (forward > 0) {
       j += forward
@@ -60,7 +59,6 @@ function getTillChar(html, index, marker) {
   let length = 0
 
   for (let i = index; keepGoing === true; i++) {
-          console.log('keepgoing', length, html[i], marker)
     if (html[i] === marker) {
       keepGoing = false
     }

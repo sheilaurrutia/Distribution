@@ -17,7 +17,8 @@ utils.makeTextHtml = (text, elements) => {
     + getEditButtons(solution)
     + text.slice(solution.end + idx)
 
-    idx += utils.getHtmlLength(solution);
+    idx += utils.getHtmlLength(solution) + 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+
   })
 
   return text
@@ -29,9 +30,8 @@ function getFirstSpan() {
 
 utils.getHtmlLength = (solution) => {
   let html = getFirstSpan() + '</span>' + getEditButtons(solution)
-    console.log(html.length)
-  return html.length
 
+  return html.length
 }
 
 function getEditButtons(solution) {
