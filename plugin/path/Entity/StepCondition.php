@@ -205,7 +205,7 @@ class StepCondition implements \JsonSerializable
             'id' => $this->id,
             'scid' => $this->id,
             'availableFromDate' => ($availableFromDate instanceof \DateTime) ? $availableFromDate->format('Y-m-d') : null,
-            'availableUntilDate' => ($availableUntilDate instanceof \DateTime) ? $availableUntilDate->format('Y-m-d') : null
+            'availableUntilDate' => ($availableUntilDate instanceof \DateTime) ? $availableUntilDate->format('Y-m-d') : null,
         ];
 
         $criteriagroups = [];
