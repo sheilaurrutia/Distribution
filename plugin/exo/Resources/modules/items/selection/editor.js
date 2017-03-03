@@ -60,12 +60,14 @@ function reduce(item = {}, action) {
     }
     case UPDATE_QUESTION: {
       const obj = {}
+      const oldText = item._text
+
       set(obj, action.parameter, action.value)
       item = Object.assign({}, item, obj)
       //set the dislayed text here
       if (action.parameter === 'text') {
         //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
-        item = recomputePositions(item, action.offsets)
+        item = recomputePositions(item, action.offsets, oldText)
         item = Object.assign({}, item, {text: action.value, _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors
@@ -127,10 +129,17 @@ function reduce(item = {}, action) {
       }
 
       let toSort = item.mode === 'find' ? solutions : selections
-      toSort = toSort.filter(sort => { return sort.begin < action.begin})
-
-      toSort = toSort.sort((a, b) => {a.begin - b.begin})
+      console.log(action.begin)
+      let idx = -1
+      toSort = toSort.filter(element => {
+        idx++
+        return utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan().length < action.begin
+      })
+      console.log(toSort)
+      toSort = toSort.sort((a, b) => a.begin - b.begin)
       const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
+
+      console.log(toSort, sum)
 
       selection.begin = action.begin - sum
       selection.end = action.end - sum
@@ -174,24 +183,26 @@ function validate(/*item*/) {
 }
 
 //this is not working as intended actually
-function recomputePositions(item, offsets) {
-  return item
+function recomputePositions(item, offsets, oldText) {
   let toSort = item.mode === 'find' ? item.solutions : item.selections
   toSort = cloneDeep(toSort)
   toSort.sort((a, b) => a.begin - b.begin)
   let idx = 0
 
-  //please filter now
   toSort.forEach(element => {
-    element._trueBegin = utils.getHtmlLength(element) * idx + element.begin
+    //this is where the word really start
+    element._trueBegin = utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan().length
     idx++
 
-    console.log('truestart', offsets)
+    //console.log('truestart', offsets, toSort)
+    const amount = item.text.length - oldText.length
+    //console.log(amount, item.text, oldText)
 
     if (offsets.trueStart < element._trueBegin) {
-      element._trueBegin ++
-      element.begin ++
-      element.end ++
+      //console.log('add ' + amount, element)
+      element._trueBegin += amount
+      element.begin += amount
+      element.end += amount
     }
   })
 

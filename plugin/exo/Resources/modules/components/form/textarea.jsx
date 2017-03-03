@@ -1,7 +1,6 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import {tex} from './../../utils/translate'
-import {Editor as ProseMirror} from '#/main/core/prosemirror/prosemirror'
 import rangy from 'rangy'
 import {getOffsets} from './selection/selection'
 

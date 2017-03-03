@@ -10,7 +10,6 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
-import {HighlithPlugin} from '#/main/core/prosemirror/plugins/highlight'
 
 class ChoiceItem extends Component {
   constructor(props) {
@@ -197,8 +196,6 @@ export class Selection extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
-    const highlightPlugin = new HighlithPlugin()
-    this.pmPlugins = [highlightPlugin]
   }
 
   updateText() {
@@ -209,6 +206,7 @@ export class Selection extends Component {
     if (offsets) {
       this.begin = offsets.trueStart
       this.end = offsets.trueEnd
+      console.log(this.props.item._text.substring(0, this.begin))
     }
   }
 
@@ -313,7 +311,6 @@ export class Selection extends Component {
             onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
             content={this.props.item._text}
             updateText={this.updateText}
-            plugins={this.pmPlugins}
           />
           <button
             type="button"

@@ -10,25 +10,25 @@ utils.makeTextHtml = (text, elements) => {
 
   elements.forEach(solution => {
     text = text.slice(0, solution.begin + idx)
-    + getFirstSpan()
+    + utils.getFirstSpan()
     + text.slice(solution.begin + idx, solution.end + idx)
     + '</span>'
     + getEditButtons(solution)
     + text.slice(solution.end + idx)
 
-    idx += utils.getHtmlLength(solution) + 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+    idx += utils.getHtmlLength(solution) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
 
   })
 
   return text
 }
 
-function getFirstSpan() {
+utils.getFirstSpan = () => {
   return '<span class="span-selection">';
 }
 
 utils.getHtmlLength = (solution) => {
-  let html = getFirstSpan() + '</span>' + getEditButtons(solution)
+  let html = utils.getFirstSpan() + '</span>' + getEditButtons(solution)
 
   return html.length
 }
@@ -39,7 +39,7 @@ function getEditButtons(solution) {
   //A one liner is important otherwise space and \n will mess everything up for some reason I don't know
   //Also DO NOT INCLUDE 'style' for tinymce because it'll mess everything aswell for it. He doesn't like that at all.
   //Positions can't be computed that way because he recursively adds it everywhere like a retard
-  return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button"  data-selection-id="${id}">&nbsp;</em></span>`
+  return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em></span>`
 }
 
 //This function allows us to remove our decorations class to get to proper text.
