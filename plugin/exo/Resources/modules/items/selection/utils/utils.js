@@ -24,7 +24,7 @@ utils.makeTextHtml = (text, elements) => {
 }
 
 utils.getFirstSpan = () => {
-  return '<span class="span-selection">';
+  return '<span class="span-selection">'
 }
 
 utils.getHtmlLength = (solution) => {
@@ -39,6 +39,7 @@ function getEditButtons(solution) {
   //A one liner is important otherwise space and \n will mess everything up for some reason I don't know
   //Also DO NOT INCLUDE 'style' for tinymce because it'll mess everything aswell for it. He doesn't like that at all.
   //Positions can't be computed that way because he recursively adds it everywhere like a retard
+  //DO NOT ADD EXTRA SPACES HERE EITHER. Or it'll brake tinymce again. This is a scared line and must not be changed !
   return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em></span>`
 }
 
@@ -48,7 +49,7 @@ utils.getTextFromDecorated = (_text) => {
   tmp.innerHTML = _text
 
   //we replace with '' because remove() leaves us with blank space (juste so you know)
-  $(tmp).find('.selection-buttons').replaceWith('');
+  $(tmp).find('.selection-buttons').replaceWith('')
   $(tmp).find('.span-selection').each(function () {
     $(this).replaceWith($(this).text())
   })

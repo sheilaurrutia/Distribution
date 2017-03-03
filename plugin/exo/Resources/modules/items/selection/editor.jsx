@@ -3,7 +3,7 @@ import React, {Component, PropTypes as T} from 'react'
 import {FormGroup} from './../../components/form/form-group.jsx'
 import classes from 'classnames'
 import {t, tex} from './../../utils/translate'
-import {Textarea, ProseMirrorEditor} from './../../components/form/textarea.jsx'
+import {Textarea} from './../../components/form/textarea.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {ColorPicker} from './../../components/form/color-picker.jsx'
 import Popover from 'react-bootstrap/lib/Popover'
@@ -73,7 +73,8 @@ ChoiceItem.defaultProps = {
 }
 
 ChoiceItem.propTypes = {
-  score: T.number.isRequired
+  score: T.number.isRequired,
+  onChange: T.func.isRequired,
 }
 
 class SelectionForm extends Component {
@@ -206,7 +207,6 @@ export class Selection extends Component {
     if (offsets) {
       this.begin = offsets.trueStart
       this.end = offsets.trueEnd
-      console.log(this.props.item._text.substring(0, this.begin))
     }
   }
 
@@ -309,6 +309,7 @@ export class Selection extends Component {
             id={this.props.item.id}
             onSelect={this.onSelect}
             onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
+            onClick={this.onSelectionClick.bind(this)}
             content={this.props.item._text}
             updateText={this.updateText}
           />

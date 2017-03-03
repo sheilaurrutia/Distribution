@@ -5,18 +5,18 @@ import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils/utils'
 import $ from 'jquery'
-import {getOffsets} from '../../components/form/selection/selection'
 
 const UPDATE_QUESTION = 'UPDATE_QUESTION'
 const ADD_SELECTION = 'ADD_SELECTION'
 const UPDATE_SELECTION = 'UPDATE_SELECTION'
-/*
 const OPEN_SELECTION = 'OPEN_SELECTION'
+const REMOVE_SELECTION = 'REMOVESELECTION'
 
+/*
 const ADD_ANSWER = 'ADD_ANSWER'
 const UPDATE_ANSWER = 'UPDATE_ANSWER'
 const SAVE_SELECTION = 'SAVE_SELECTION'
-const REMOVE_SELECTION = 'REMOVESELECTION'
+
 const REMOVE_ANSWER = 'REMOVE_ANSWER'
 */
 const CLOSE_POPOVER = 'CLOSE_POPOVER'
@@ -30,7 +30,9 @@ export const actions = {
   updateSelection: makeActionCreator(UPDATE_SELECTION, 'score', 'selectionId'),
   editColor: makeActionCreator(EDIT_COLOR, 'colorId', 'colorCode'),
   addSelection: makeActionCreator(ADD_SELECTION, 'begin', 'end'),
-  closePopover: makeActionCreator(CLOSE_POPOVER)
+  closePopover: makeActionCreator(CLOSE_POPOVER),
+  openSelection: makeActionCreator(OPEN_SELECTION, 'selectionId'),
+  removeSelection: makeActionCreator(REMOVE_SELECTION, 'selectionId')
 }
 
 export default {
@@ -129,17 +131,14 @@ function reduce(item = {}, action) {
       }
 
       let toSort = item.mode === 'find' ? solutions : selections
-      console.log(action.begin)
       let idx = -1
+
       toSort = toSort.filter(element => {
         idx++
         return utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan().length < action.begin
-      })
-      console.log(toSort)
-      toSort = toSort.sort((a, b) => a.begin - b.begin)
-      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
+      }).sort((a, b) => a.begin - b.begin)
 
-      console.log(toSort, sum)
+      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
 
       selection.begin = action.begin - sum
       selection.end = action.end - sum
@@ -163,6 +162,30 @@ function reduce(item = {}, action) {
 
       return cleanItem(newItem)
 
+    }
+    case OPEN_SELECTION: {
+      return Object.assign({}, item, {
+        _selectionPopover: true,
+        _selectionId: action.selectionId
+      })
+    }
+    case REMOVE_SELECTION: {
+      //this is only valid for the default 'visible' one
+      const selections = cloneDeep(item.selections)
+      const solutions = cloneDeep(item.solutions)
+      selections.splice(selections.findIndex(selection => selection.id === action.selectionId), 1)
+      solutions.splice(solutions.findIndex(solution => solution.selectionId === action.selectionId), 1)
+      item = Object.assign(
+        {},
+        item,
+        {
+          selections,
+          solutions,
+          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections)
+        }
+      )
+
+      return cleanItem(item)
     }
     case CLOSE_POPOVER: {
       return Object.assign({}, item, {_selectionPopover: false})
@@ -236,7 +259,15 @@ function cleanItem(item)
       if (idx < 0) toRemove.push(selection.id)
     })
   }
-
+/*
+  //the opposite is also true
+  if (item.mode !== 'find' && item.selections) {
+    ids.forEach(id => {
+      let idx = item.selections.findIndex(selection => id === selection.id)
+      if (idx < 0) toRemove.push(id)
+    })
+  }
+*/
   //= php array_unique
   toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
 

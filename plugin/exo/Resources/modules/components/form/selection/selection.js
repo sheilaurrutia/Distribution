@@ -1,6 +1,4 @@
-import rangy from 'rangy'
-
-export function getOffsets(element, selection = null, html = null) {
+export function getOffsets(element, selection = null) {
   //some initialization. This will be usefull later
   let toAdd = 0
   let i = 0
@@ -14,18 +12,18 @@ export function getOffsets(element, selection = null, html = null) {
 
   //I saw that on stackoverflow http://stackoverflow.com/questions/42272239/get-the-position-of-a-selected-text-from-html-document
   //This is already a little hack to get the offset inside a particular div
-  let range = selection.getRangeAt(0);
-  let priorRange = range.cloneRange();
-  priorRange.selectNodeContents(element);
-  priorRange.setEnd(range.startContainer, range.startOffset);
-  let start = priorRange.toString().length;
-  let end = start + range.toString().length;
+  let range = selection.getRangeAt(0)
+  let priorRange = range.cloneRange()
+  priorRange.selectNodeContents(element)
+  priorRange.setEnd(range.startContainer, range.startOffset)
+  let start = priorRange.toString().length
+  let end = start + range.toString().length
 
   const offsets = {
     start, end
   }
 
-  if (!html) html = element.innerHTML
+  const html = element.innerHTML
 
   //here we do magic so we can know the real offset.
   //the selection API always return offset from the textContent (aka plain text with no HTML)
@@ -49,8 +47,8 @@ export function getOffsets(element, selection = null, html = null) {
     if (forward > 0) {
       j += forward
     } else {
-        j++
-        i++
+      j++
+      i++
     }
 
     forward = 0
