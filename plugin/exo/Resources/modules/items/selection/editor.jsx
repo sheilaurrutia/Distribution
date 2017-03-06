@@ -74,7 +74,7 @@ ChoiceItem.defaultProps = {
 
 ChoiceItem.propTypes = {
   score: T.number.isRequired,
-  onChange: T.func.isRequired,
+  onChange: T.func.isRequired
 }
 
 class SelectionForm extends Component {

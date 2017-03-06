@@ -259,16 +259,7 @@ function cleanItem(item)
       if (idx < 0) toRemove.push(selection.id)
     })
   }
-/*
-  //the opposite is also true
-  if (item.mode !== 'find' && item.selections) {
-    ids.forEach(id => {
-      let idx = item.selections.findIndex(selection => id === selection.id)
-      if (idx < 0) toRemove.push(id)
-    })
-  }
-*/
-  //= php array_unique
+
   toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
 
   const solutions = cloneDeep(item.solutions)

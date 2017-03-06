@@ -1,34 +1,37 @@
 import {tex} from './../../../utils/translate'
 import $ from 'jquery'
+import cloneDeep from 'lodash/cloneDeep'
 
 export const utils = {}
 
-utils.makeTextHtml = (text, elements) => {
+utils.makeTextHtml = (text, elements, mode = 'editor') => {
+  elements = cloneDeep(elements)
   let idx = 0
-
   elements.sort((a, b) => {return a.begin - b.begin})
 
   elements.forEach(solution => {
-    text = text.slice(0, solution.begin + idx)
-    + utils.getFirstSpan()
-    + text.slice(solution.begin + idx, solution.end + idx)
-    + '</span>'
-    + getEditButtons(solution)
-    + text.slice(solution.end + idx)
+    let end = text.slice(solution.end + idx)
+     text = text.slice(0, solution.begin + idx)
+     + utils.getFirstSpan(solution)
+     + text.slice(solution.begin + idx, solution.end + idx)
+     + '</span>'
+     if (mode === 'editor') text += getEditButtons(solution)
+     text += end
 
-    idx += utils.getHtmlLength(solution) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+     idx += utils.getHtmlLength(solution, mode) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
 
-  })
+   })
 
   return text
 }
 
-utils.getFirstSpan = () => {
-  return '<span class="span-selection">'
+utils.getFirstSpan = (selection) => {
+  return `<span data-id=${selection.id} id="selection-${selection.id}" class="span-selection">`
 }
 
-utils.getHtmlLength = (solution) => {
-  let html = utils.getFirstSpan() + '</span>' + getEditButtons(solution)
+utils.getHtmlLength = (solution, mode = 'editor') => {
+  let html = utils.getFirstSpan(solution) + '</span>'
+  if (mode === 'editor') html += getEditButtons(solution)
 
   return html.length
 }
