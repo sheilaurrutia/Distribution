@@ -2,7 +2,7 @@
 
 namespace Icap\BibliographyBundle\Manager;
 
-use Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -11,19 +11,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class BookReferenceManager
 {
+    private $om;
     protected $container;
     protected $repository;
 
     /**
      * @DI\InjectParams({
      *      "container"   = @DI\Inject("service_container"),
-     *      "repository"  = @DI\Inject("icap_bibliography.repository.book_reference_configuration")
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
      * })
      */
-    public function __construct(ContainerInterface $container, BookReferenceConfigurationRepository $repository)
+    public function __construct(ContainerInterface $container, ObjectManager $om)
     {
+        $this->om = $om;
         $this->container = $container;
-        $this->repository = $repository;
+        $this->repository = $this->om->getRepository('IcapBibliographyBundle:BookReferenceConfiguration');
     }
 
     public function updateConfiguration(AudioRecorderConfiguration $config, $postData)

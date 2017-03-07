@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * BookReferenceConfiguration Entity.
  *
  * @ORM\Table(name="icap__bibliography_book_reference_configuration")
- * @ORM\Entity(repositoryClass="IcapBibliographyBundle\Repository\BookReferenceConfigurationRepository")
+ * @ORM\Entity(repositoryClass="Icap\BibliographyBundle\Repository\BookReferenceConfigurationRepository")
  */
 class BookReferenceConfiguration
 {
@@ -25,6 +25,28 @@ class BookReferenceConfiguration
      * @ORM\Column(name="new_window", type="boolean", nullable=false)
      */
     protected $newWindow = false;
+
+    /**
+     * @var string
+     * @ORM\Column(name="api_key", type="string", nullable=true)
+     */
+    protected $api_key;
+
+    /**
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
+    }
+
+    /**
+     * @param string $api_key
+     */
+    public function setApiKey($api_key)
+    {
+        $this->api_key = $api_key;
+    }
 
     public function getId()
     {

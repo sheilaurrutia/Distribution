@@ -5,11 +5,25 @@ namespace Icap\BibliographyBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BookReferenceConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add(
+            'api_key',
+            'text',
+            [
+                'required' => true,
+                'label' => 'api_key',
+                'constraints' => new Assert\NotBlank(),
+                'attr' => [
+                    'autofocus' => true,
+                ],
+            ]
+        );
+        $builder->add();
     }
 
     public function configureOptions(OptionsResolver $resolver)

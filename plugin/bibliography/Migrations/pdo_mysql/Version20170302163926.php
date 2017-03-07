@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2017/02/09 09:44:22
+ * Generation date: 2017/03/02 04:39:30
  */
-class Version20170209094419 extends AbstractMigration
+class Version20170302163926 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -37,6 +37,7 @@ class Version20170209094419 extends AbstractMigration
             CREATE TABLE icap__bibliography_book_reference_configuration (
                 id INT AUTO_INCREMENT NOT NULL, 
                 new_window TINYINT(1) NOT NULL, 
+                api_key VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ');
@@ -45,6 +46,10 @@ class Version20170209094419 extends AbstractMigration
             ADD CONSTRAINT FK_D961F495B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
+        ');
+        $this->addSql('
+            INSERT INTO icap__bibliography_book_reference_configuration (id, new_window)
+            VALUES (NULL, 0);
         ');
     }
 
