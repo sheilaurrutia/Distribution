@@ -113,11 +113,11 @@ class SelectionDefinition extends AbstractDefinition
      *
      * @return CorrectedAnswer
      */
-    public function correctAnswer(AbstractItem $question, $answer)
+    public function correctAnswer(AbstractItem $question, $answers)
     {
         $corrected = new CorrectedAnswer();
 
-        if (!is_null($answer)) {
+        if (!is_null($answers)) {
             switch ($question->getMode()) {
                case $question::MODE_FIND:
                   break;
@@ -138,7 +138,32 @@ class SelectionDefinition extends AbstractDefinition
      */
     public function expectAnswer(AbstractItem $question)
     {
-        return;
+        switch ($question->getMode()) {
+           case $question::MODE_FIND:
+              break;
+           case $question::MODE_SELECT:
+              $bestScore = 0;
+              $best = null;
+              $selections = $question->getSelections()->toArray();
+
+              return array_filter($selections, function ($selection) {
+                  return $selection->getScore() > 0;
+              });
+           case $question::MODE_HIGHLIGHT:
+               return array_map(function (Selection $selection) {
+                   $best = $colorSelection;
+                   $bestScore = 0;
+
+                   foreach ($selection->getColorSelections() as $colorSelection) {
+                       if ($colorSelection->getScore() > $bestScore) {
+                           $bestScore = $colorSelection->getScore();
+                           $best = $colorSelection;
+                       }
+                   }
+
+                   return $best;
+               }, $question->getSelections()->toArray());
+        }
     }
 
     /**

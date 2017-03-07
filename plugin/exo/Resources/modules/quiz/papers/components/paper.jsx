@@ -89,7 +89,7 @@ function getItemScoreMax(item) {
         break
       case 'sum':
         expectedAnswers = getDefinition(item.type).expectAnswer(item)
-
+        
         if (expectedAnswers.length > 0) {
           scoreMax = 0
           expectedAnswers.forEach(ca => {

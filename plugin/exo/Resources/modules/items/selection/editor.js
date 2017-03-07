@@ -27,7 +27,7 @@ const EDIT_COLOR = 'EDIT_COLOR'
 export const actions = {
   updateQuestion: makeActionCreator(UPDATE_QUESTION, 'value', 'parameter', 'offsets'),
   addColor: makeActionCreator(ADD_COLOR),
-  updateSelection: makeActionCreator(UPDATE_SELECTION, 'score', 'selectionId'),
+  updateSelection: makeActionCreator(UPDATE_SELECTION, 'value', 'selectionId', 'parameter'),
   editColor: makeActionCreator(EDIT_COLOR, 'colorId', 'colorCode'),
   addSelection: makeActionCreator(ADD_SELECTION, 'begin', 'end'),
   closePopover: makeActionCreator(CLOSE_POPOVER),
@@ -191,12 +191,24 @@ function reduce(item = {}, action) {
       return Object.assign({}, item, {_selectionPopover: false})
     }
     case UPDATE_SELECTION: {
-      const solutions = cloneDeep(item.solutions)
-      const selection = item.selections.find(selection => selection.id === action.selectionId)
-      const solution = solutions.find(solution => solution.selectionId === selection.id)
-      solution.score = action.score
+      if (item.solutions) {
+        const solutions = cloneDeep(item.solutions)
+        const solution = solutions.find(solution => solution.selectionId === action.selectionId)
 
-      return Object.assign({}, item, {solutions})
+        switch (item.mode) {
+          case 'select':
+            solution[action.parameter] = action.value
+        }
+
+        item = Object.assign({}, item, {solutions})
+      }
+
+      if (item.selections) {
+        const selections = cloneDeep(item.selections)
+        const selection = item.selections.find(selection => selection.id === action.selectionId)
+      }
+
+      return item
     }
   }
 }
@@ -205,7 +217,6 @@ function validate(/*item*/) {
   return []
 }
 
-//this is not working as intended actually
 function recomputePositions(item, offsets, oldText) {
   let toSort = item.mode === 'find' ? item.solutions : item.selections
   toSort = cloneDeep(toSort)

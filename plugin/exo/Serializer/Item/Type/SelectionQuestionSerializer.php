@@ -174,23 +174,31 @@ class SelectionQuestionSerializer implements SerializerInterface
         foreach ($selections as $selectionData) {
             $selection = null;
 
-          // Searches for an existing color entity.
-          foreach ($selectionEntities as $entityIndex => $selectionEntity) {
-              if ($selectionEntity->getUuid() === $selectionData->id) {
-                  $selection = $selectionEntity;
-                  unset($selectionEntities[$entityIndex]);
-                  break;
-              }
-          }
+            // Searches for an existing color entity.
+            foreach ($selectionEntities as $entityIndex => $selectionEntity) {
+                if ($selectionEntity->getUuid() === $selectionData->id) {
+                    $selection = $selectionEntity;
+                    unset($selectionEntities[$entityIndex]);
+                    break;
+                }
+            }
 
             if (empty($selection)) {
                 $selection = new Selection();
             }
 
-          // Force client ID if needed
-          if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-              $selection->setUuid($selectionData->id);
-          }
+            // Force client ID if needed
+            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
+                $selection->setUuid($selectionData->id);
+            }
+
+            $solutionsD = array_values(array_filter($solutions, function ($solution) use ($selectionData) {
+                return $solution->selectionId === $selectionData->id;
+            }));
+
+            if (isset($solutionsD[0])) {
+                $selection->setFeedback($solutionsD[0]->feedback);
+            }
 
             $selection->setBegin($selectionData->begin);
             $selection->setEnd($selectionData->end);
@@ -229,6 +237,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                 $solutionData->score = $selection->getScore();
                 $solutionData->begin = $selection->getBegin();
                 $solutionData->end = $selection->getEnd();
+                $solutionData->feedback = $selection->getFeedback();
 
                 return $solutionData;
             }, $selectionQuestion->getSelections());
@@ -237,6 +246,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                  $solutionData = new \stdClass();
                  $solutionData->selectionId = $selection->getUuid();
                  $solutionData->score = $selection->getScore();
+                 $solutionData->feedback = $selection->getFeedback();
 
                  return $solutionData;
              }, $selectionQuestion->getSelections()->toArray());
@@ -250,6 +260,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                      $answer = new \stdClass();
                      $answer->score = $colorSelection->getScore();
                      $answer->colorId = $colorSelection->getColor()->getUuid();
+                     $answer->feedback = $colorSelection->getFeedback();
                      $solutionData->answers[] = $answer;
                  }
 

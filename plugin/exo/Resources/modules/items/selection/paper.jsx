@@ -1,6 +1,6 @@
 import React, {PropTypes as T} from 'react'
 
-export const SelectionPaper = (/*props*/) => {
+export const SelectionPaper = (props) => {
   return <div>paper</div>
 }
 

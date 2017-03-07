@@ -32,7 +32,7 @@ class ChoiceItem extends Component {
               type="number"
               value={this.props.score}
               onChange={e => this.props.onChange(
-                actions.updateSelection(parseInt(e.target.value), this.props.selection.id)
+                actions.updateSelection(parseInt(e.target.value), this.props.selection.id, 'score')
               )}
             />
           </div>
@@ -57,6 +57,10 @@ class ChoiceItem extends Component {
             <Textarea
               id={`choice-${this.props.id}-feedback`}
               title={tex('feedback')}
+              onChange={text => this.props.onChange(
+                actions.updateSelection(text, this.props.selection.id, 'feedback')
+              )}
+              content={this.props.solution.feedback}
             />
           </div>
           }
@@ -91,9 +95,7 @@ class SelectionForm extends Component {
   }
 
   getSolution() {
-    const solution = this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
-
-    return solution
+    return this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
   }
 
   closePopover() {
@@ -128,6 +130,7 @@ class SelectionForm extends Component {
             <ChoiceItem
               score={this.getSolution().score}
               selection={this.getSelection()}
+              solution={this.getSolution()}
               item={this.props.item}
               onChange={this.props.onChange}
             />
