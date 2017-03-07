@@ -1,7 +1,31 @@
 import React, {PropTypes as T} from 'react'
+import {PaperTabs} from '../components/paper-tabs.jsx'
+import {Highlight} from './utils/highlight.jsx'
 
 export const SelectionPaper = (props) => {
-  return <div>paper</div>
+  return (
+    <PaperTabs
+      item={props.item}
+      answer={props.answer}
+      id={props.item.id}
+      yours={
+        <Highlight
+          item={props.item}
+          answer={props.answer}
+          showScore={true}
+          displayTrueAnswer={false}
+        />
+      }
+      expected={
+        <Highlight
+          item={props.item}
+          answer={props.answer}
+          showScore={true}
+          displayTrueAnswer={true}
+        />
+      }
+    />
+  )
 }
 
 SelectionPaper.propTypes = {

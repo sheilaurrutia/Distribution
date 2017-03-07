@@ -12,7 +12,7 @@ utils.makeTextHtml = (text, elements, mode = 'editor') => {
   elements.forEach(solution => {
     let end = text.slice(solution.end + idx)
      text = text.slice(0, solution.begin + idx)
-     + utils.getFirstSpan(solution)
+     + utils.getFirstSpan(solution, mode)
      + text.slice(solution.begin + idx, solution.end + idx)
      + '</span>'
      if (mode === 'editor') text += getEditButtons(solution)
@@ -25,7 +25,7 @@ utils.makeTextHtml = (text, elements, mode = 'editor') => {
   return text
 }
 
-utils.getFirstSpan = (selection) => {
+utils.getFirstSpan = (selection, mode) => {
   return `<span data-id=${selection.id} id="selection-${selection.id}" class="span-selection">`
 }
 
