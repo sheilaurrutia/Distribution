@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 export const utils = {}
 
-utils.makeTextHtml = (text, elements, mode = 'editor') => {
+utils.makeTextHtml = (text, elements, mode) => {
   elements = cloneDeep(elements)
   let idx = 0
   elements.sort((a, b) => {return a.begin - b.begin})
@@ -25,11 +25,13 @@ utils.makeTextHtml = (text, elements, mode = 'editor') => {
   return text
 }
 
-utils.getFirstSpan = (selection, mode) => {
-  return `<span data-id=${selection.id} id="selection-${selection.id}" class="span-selection">`
+utils.getFirstSpan = (item, mode) => {
+  const id = item.selectionId ? item.selectionId: item.id
+
+  return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection">`
 }
 
-utils.getHtmlLength = (solution, mode = 'editor') => {
+utils.getHtmlLength = (solution, mode) => {
   let html = utils.getFirstSpan(solution) + '</span>'
   if (mode === 'editor') html += getEditButtons(solution)
 

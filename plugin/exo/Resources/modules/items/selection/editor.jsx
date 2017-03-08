@@ -15,6 +15,7 @@ class ChoiceItem extends Component {
   constructor(props) {
     super(props)
     this.state = {showFeedback: false}
+    this.selectionId = this.props.selection ? this.props.selection.id: this.props.solution.selectionId
   }
 
   render() {
@@ -32,7 +33,7 @@ class ChoiceItem extends Component {
               type="number"
               value={this.props.score}
               onChange={e => this.props.onChange(
-                actions.updateSelection(parseInt(e.target.value), this.props.selection.id, 'score')
+                actions.updateSelection(parseInt(e.target.value), this.selectionId, 'score')
               )}
             />
           </div>
@@ -58,7 +59,7 @@ class ChoiceItem extends Component {
               id={`choice-${this.props.id}-feedback`}
               title={tex('feedback')}
               onChange={text => this.props.onChange(
-                actions.updateSelection(text, this.props.selection.id, 'feedback')
+                actions.updateSelection(text, this.selectionId, 'feedback')
               )}
               content={this.props.solution.feedback}
             />
@@ -95,7 +96,7 @@ class SelectionForm extends Component {
   }
 
   getSolution() {
-    return this.props.item.solutions.find(solution => solution.selectionId === this.getSelection().id)
+    return this.props.item.solutions.find(solution => solution.selectionId === this.props.item._selectionId)
   }
 
   closePopover() {
@@ -103,7 +104,7 @@ class SelectionForm extends Component {
   }
 
   removeAndClose() {
-    this.props.onChange(actions.removeSelection(this.getSelection().id))
+    this.props.onChange(actions.removeSelection(this.props.item._selectionId))
     this.closePopover()
   }
 
@@ -111,7 +112,7 @@ class SelectionForm extends Component {
     return (
       <Popover
         bsClass="hole-form-content"
-        id={this.getSelection().id}
+        id={this.props.item._selectionId}
         placement="right"
         positionLeft={this.offsetLeft}
         positionTop={this.offsetTop}
@@ -138,10 +139,10 @@ class SelectionForm extends Component {
           {this.state.showFeedback &&
             <div className="feedback-container selection-form-row">
               <Textarea
-                id={`choice-${this.getSelection().id}-feedback`}
+                id={`choice-${this.props.item._selectionId}-feedback`}
                 title={tex('feedback')}
                 onChange={text => this.props.onChange(
-                  actions.updateAnswer(this.getSelection().id, 'feedback', text)
+                  actions.updateAnswer(this.props.item._selectionId, 'feedback', text)
                 )}
               />
             </div>
@@ -151,7 +152,7 @@ class SelectionForm extends Component {
               <button
                 className="btn btn-default"
                 onClick={() => this.props.onChange(
-                  actions.addAnswer(this.getSelection().id))}
+                  actions.addAnswer(this.props.item._selectionId))}
                 type="button"
               >
                 <i className="fa fa-plus"/>
@@ -200,6 +201,7 @@ export class Selection extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
+    console.log(props.item.tries)
   }
 
   updateText() {
@@ -231,43 +233,6 @@ export class Selection extends Component {
     return(
       <div>
         <div>
-          <FormGroup
-            controlId="globalScore"
-            label={t('global_score')}
-            warnOnly={!this.props.validating}
-          >
-            <input
-               type="checkbox"
-               onChange={e => this.props.onChange(actions.updateQuestion(e.target.checked, 'globalScore'))}
-               checked={this.props.item.globalScore}
-             />
-          </FormGroup>
-          {this.props.item.globalScore &&
-            <div>
-              <FormGroup
-                controlId="selection-global-success-score"
-                label={t('selection-global-success-score')}
-                warnOnly={!this.props.validating}
-              >
-                <input
-                   type="number"
-                   onChange={e => this.props.onChange(actions.updateQuestion(e.target.value, 'globalScore.success'))}
-                   value={this.props.item.globalScore.success}
-                 />
-              </FormGroup>
-              <FormGroup
-                controlId="selection-global-failure-score"
-                label={t('selection-global-failure-score')}
-                warnOnly={!this.props.validating}
-              >
-                <input
-                   type="number"
-                   onChange={e => this.props.onChange(actions.updateQuestion(e.target.value, 'globalScore.failure'))}
-                   value={this.props.item.globalScore.failure}
-                 />
-              </FormGroup>
-            </div>
-          }
           <Radios
             groupName="mode-group"
             options={[
@@ -277,9 +242,16 @@ export class Selection extends Component {
             ]}
             checkedValue={this.props.item.mode}
             inline={true}
-            onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode'))}
+            onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
           >
           </Radios>
+          {this.props.item.mode === 'find' &&
+            <input
+               type="number"
+               onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
+               value={this.props.item.tries}
+             />
+          }
           {this.props.item.mode === 'highlight' &&
             <div>
               <FormGroup
@@ -287,11 +259,12 @@ export class Selection extends Component {
                 label={t('global_penalty')}
                 warnOnly={!this.props.validating}
               >
-                <input
-                   type="number"
-                   onChange={e => this.props.onChange(actions.updateQuestion(e.target.value, 'penalty'))}
-                   value={this.props.item.penalty}
-                 />
+              <input
+                 className="form-control"
+                 type="number"
+                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty'))}
+                 value={this.props.item.penalty}
+               />
               </FormGroup>
               <div>{tex('possible_color_choices')}</div>
               {

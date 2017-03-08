@@ -44,7 +44,7 @@ export default {
 
 function decorate(item) {
   return Object.assign({}, item, {
-    _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections)
+    _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections, 'editor')
   })
 }
 
@@ -73,8 +73,21 @@ function reduce(item = {}, action) {
         item = Object.assign({}, item, {text: action.value, _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors
-      if (action.parameter === 'mode' && action.value === 'highlight') {
-        item = Object.assign({}, item, {colors: []})
+      if (action.parameter === 'mode') {
+        switch (action.value) {
+          case 'highlight': {
+            item = Object.assign({}, item, {colors: []})
+            break
+          }
+          case 'find': {
+            item = toFindMode(item)
+            break
+          }
+          case 'select': {
+            item = toSelectMode(item)
+            break
+          }
+        }
       }
 
       return cleanItem(item)
@@ -135,10 +148,10 @@ function reduce(item = {}, action) {
 
       toSort = toSort.filter(element => {
         idx++
-        return utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan().length < action.begin
+        return utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length < action.begin
       }).sort((a, b) => a.begin - b.begin)
 
-      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
+      const sum = toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val, 'editor')}, 0)
 
       selection.begin = action.begin - sum
       selection.end = action.end - sum
@@ -149,6 +162,8 @@ function reduce(item = {}, action) {
 
       solutions.push(solution)
 
+      console.log(solutions, selections)
+
       const text = utils.getTextFromDecorated(item._text)
 
       let newItem = Object.assign({}, item, {
@@ -157,7 +172,7 @@ function reduce(item = {}, action) {
         _selectionId: selection.id,
         solutions,
         text,
-        _text: utils.makeTextHtml(text, item.mode === 'find' ? solutions : selections)
+        _text: utils.makeTextHtml(text, item.mode === 'find' ? solutions : selections, 'editor')
       })
 
       return cleanItem(newItem)
@@ -181,7 +196,7 @@ function reduce(item = {}, action) {
         {
           selections,
           solutions,
-          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections)
+          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections, 'editor')
         }
       )
 
@@ -196,7 +211,7 @@ function reduce(item = {}, action) {
         const solution = solutions.find(solution => solution.selectionId === action.selectionId)
 
         switch (item.mode) {
-          case 'select':
+          case 'select' || 'find':
             solution[action.parameter] = action.value
         }
 
@@ -225,7 +240,7 @@ function recomputePositions(item, offsets, oldText) {
 
   toSort.forEach(element => {
     //this is where the word really start
-    element._trueBegin = utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan().length
+    element._trueBegin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
     idx++
 
     //console.log('truestart', offsets, toSort)
@@ -258,13 +273,15 @@ function cleanItem(item)
   let toRemove = []
   tmp.innerHTML = _text
 
+  //REMOVE THE SELECTIONS HERE
   //what are the selection in the text ?
-  $(tmp).find('.selection-button').each(function () {
+  $(tmp).find('.span-selection').each(function () {
     ids.push($(this).attr('data-selection-id'))
   })
 
+  console.log('lolwut', ids, item.selections, item._text)
   //if we're missing selections in the items, then we'll have to remove them
-  if (item.mode !== 'find' && item.selections) {
+  if (item.selections) {
     item.selections.forEach(selection => {
       let idx = ids.findIndex(id => id === selection.id)
       if (idx < 0) toRemove.push(selection.id)
@@ -272,6 +289,8 @@ function cleanItem(item)
   }
 
   toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
+
+  console.log('toRemove', toRemove)
 
   const solutions = cloneDeep(item.solutions)
   const selections = cloneDeep(item.selections)
@@ -290,4 +309,53 @@ function cleanItem(item)
 
   //that'all for now folks !
   return Object.assign({}, item, {selections, solutions, text})
+}
+
+function toFindMode(item) {
+  const solutions = cloneDeep(item.solutions)
+  //add beging and end to solutions
+  solutions.forEach(solution => {
+    let selection = item.selections.find(selection => selection.id === solution.selectionId)
+    solution.begin = selection.begin
+    solution.end = selection.end
+  })
+
+  //remove selections
+  delete item.selections
+
+  //remove colors
+  delete item.colors
+
+  return Object.assign({}, item, {solutions, tries: solutions.length})
+}
+
+function toSelectMode(item) {
+  item = addSelectionsFromAnswers(item)
+
+  return item
+}
+
+function toHighlightMode(item) {
+  item = addSelectionsFromAnswers(item)
+
+  return item
+}
+
+function addSelectionsFromAnswers(item) {
+  console.log(item.selections)
+  if (!item.selections) {
+    const selections = []
+    const solutions = cloneDeep(item.solutions)
+    console.log(solutions)
+
+    solutions.forEach(solution => selections.push({
+      id: solution.selectionId,
+      begin: solution.begin,
+      end: solution.end
+    }))
+
+    item =  Object.assign({}, item, {selections})
+  }
+
+  return item
 }

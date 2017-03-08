@@ -240,7 +240,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                 $solutionData->feedback = $selection->getFeedback();
 
                 return $solutionData;
-            }, $selectionQuestion->getSelections());
+            }, $selectionQuestion->getSelections()->toArray());
          case SelectionQuestion::MODE_SELECT:
              return array_map(function (Selection $selection) {
                  $solutionData = new \stdClass();

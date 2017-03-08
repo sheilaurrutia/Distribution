@@ -29,7 +29,6 @@ export class ContentEditable extends Component {
 
     const selected = window.getSelection().toString()
     const offsets = getOffsets(document.getElementById(this.props.id))
-        console.log(offsets)
 
     this.props.onSelect(selected, this.updateText.bind(this), offsets)
   }
