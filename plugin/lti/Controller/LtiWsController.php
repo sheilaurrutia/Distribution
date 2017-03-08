@@ -26,7 +26,7 @@ class LtiWsController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function tool_appsAction(\Claroline\CoreBundle\Entity\Workspace\Workspace $workspace)
+    public function tool_appsAction(Workspace $workspace)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
@@ -100,7 +100,7 @@ class LtiWsController extends Controller
      *
      * @return mixed
      */
-    private function getLtiData(\Claroline\CoreBundle\Entity\Workspace\Workspace $ws, LtiApp $app)
+    private function getLtiData(Workspace $ws, LtiApp $app)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $isWorkspaceManager = $this->isWorkspaceManager($ws, $user);
@@ -167,7 +167,7 @@ class LtiWsController extends Controller
      *
      * @return bool
      */
-    private function isWorkspaceManager(\Claroline\CoreBundle\Entity\Workspace\Workspace $workspace, User $user)
+    private function isWorkspaceManager(Workspace $workspace, User $user)
     {
         $isWorkspaceManager = false;
         $managerRole = 'ROLE_WS_MANAGER_'.$workspace->getGuid();
