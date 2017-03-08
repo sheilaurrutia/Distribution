@@ -182,7 +182,7 @@
             "Claroline\\DashboardBundle\\": "plugin/dashboard",
             "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
             "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
-            "UJM\\LtiBundle": "plugin/lti"
+            "UJM\\LtiBundle\\": "plugin/lti"
         }
     },
     "extra": {
