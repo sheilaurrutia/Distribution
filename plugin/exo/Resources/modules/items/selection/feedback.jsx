@@ -1,7 +1,15 @@
 import React, {PropTypes as T} from 'react'
+import {Highlight} from './utils/highlight.jsx'
 
-export const SelectionFeedback = (/*props*/) => {
-  return <div>Feedback</div>
+export const SelectionFeedback = (props) => {
+  return (
+    <Highlight
+      item={props.item}
+      showScore={false}
+      answer={props.answer}
+      displayTrueAnswer={false}
+    />
+  )
 }
 
 SelectionFeedback.propTypes = {

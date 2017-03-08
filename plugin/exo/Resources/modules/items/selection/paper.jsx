@@ -12,7 +12,7 @@ export const SelectionPaper = (props) => {
         <Highlight
           item={props.item}
           answer={props.answer}
-          showScore={true}
+          showScore={false}
           displayTrueAnswer={false}
         />
       }
