@@ -22,7 +22,7 @@ export class SelectionPlayer extends Component {
 
   onAnswer(options = {}) {
     const answers = cloneDeep(this.props.answer)
-
+    console.log(options)
     switch (options.mode) {
       case 'select': {
         let selectionId = options.selectionId
@@ -69,7 +69,7 @@ export class SelectionPlayer extends Component {
               e => {
                 const el = e.target
                 const check = !el.classList.contains('checked-selection')
-                const selectionId = el.getAttribute('data-id')
+                const selectionId = el.getAttribute('data-selection-id')
 
                 check ? el.classList.add('checked-selection'): el.classList.remove('checked-selection')
                 this.props.onChange(this.onAnswer({
