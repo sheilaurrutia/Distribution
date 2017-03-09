@@ -2,6 +2,7 @@ import React, {Component, PropTypes as T} from 'react'
 import {utils} from './utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {getOffsets} from '../../components/form/selection/selection'
+import classes from 'classnames'
 
 export class SelectionPlayer extends Component {
   constructor(props) {
@@ -16,12 +17,11 @@ export class SelectionPlayer extends Component {
 
     return this.props.item.mode !== 'find' ?
       utils.makeTextHtml(this.props.item.text, this.elements, 'select'):
-      utils.makeTextHtml(this.props.item.text, this.elements.filter(element => this.props.answer.find(ans =>  ans > element.begin && ans < element.end)), 'select')
+      utils.makeTextHtml(this.props.item.text, this.elements.filter(element => this.props.answer.find(ans => ans >= element.begin && ans <= element.end)), 'select')
   }
 
   onAnswer(options = {}) {
     const answers = cloneDeep(this.props.answer)
-    console.log(options)
 
     switch (options.mode) {
       case 'select': {
@@ -49,7 +49,11 @@ export class SelectionPlayer extends Component {
       {this.props.item.mode === 'find' &&
         <div className='select-tries'>Tries: {this._leftTries}</div>
       }
-      <div id="selection-text-box" dangerouslySetInnerHTML={{__html: this.getHtml()}} />
+      <div
+        id="selection-text-box"
+        className={classes({'pointer-hand': this.props.item.mode === 'find'})}
+        dangerouslySetInnerHTML={{__html: this.getHtml()}}
+      />
     </div>
   }
 
@@ -84,15 +88,10 @@ export class SelectionPlayer extends Component {
           'click',
           e => {
             let offsets = getOffsets(document.getElementById('selection-text-box'))
-            console.log(offsets)
-            console.log(this.elements)
-            console.log(document.getElementById('selection-text-box').textContent)
-            console.log(document.getElementById('selection-text-box').innerHTML)
             //this._leftTries--
             //if (this._leftTries > 0) {
               this.elements.forEach(element => {
                 if (offsets.start >= element.begin && offsets.end <= element.end) {
-                  alert('found')
                   this.props.onChange(this.onAnswer({
                     mode: this.props.item.mode,
                     selectionId: element.selectionId,

@@ -123,7 +123,11 @@ class SelectionForm extends Component {
   }
 
   getSelection() {
-    return this.props.item.selections.find(selection => selection.id === this.props.item._selectionId)
+    return this.props.item.selection ?
+      this.props.item.selections.find(selection => selection.id === this.props.item._selectionId):
+      {
+        id: this.props.item._selectionId
+      }
   }
 
   getSolution() {
