@@ -76,7 +76,7 @@ utils.getRealOffsetFromBegin = (toSort, begin, mode) => {
 utils.cleanItem = (item) => {
   //here we remove the unused selections
   const _text = item._text
-
+  const elements = item.mode === 'find' ? item.solutions: item.selections
   const tmp = document.createElement('div')
   const ids = []
   let toRemove = []
@@ -89,24 +89,32 @@ utils.cleanItem = (item) => {
   })
 
   //if we're missing selections in the items, then we'll have to remove them
-  if (item.selections) {
-    item.selections.forEach(selection => {
-      let idx = ids.findIndex(id => id === selection.id)
-      if (idx < 0) toRemove.push(selection.id)
+  if (elements) {
+    elements.forEach(element => {
+      let elId = element.id || element.selectionId
+      let idx = ids.findIndex(id => id === elId)
+      if (idx < 0) toRemove.push(elId)
     })
   }
 
-  toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
+  toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) === pos)
+
+  console.log(ids, toRemove)
+
   const solutions = cloneDeep(item.solutions)
   const selections = cloneDeep(item.selections)
 
   //and now we finally remove them !!!
   toRemove.forEach(selectionId => {
-    const selIdx = selections.findIndex(selection => selection.id === selectionId)
-    const solIdx = solutions.findIndex(solution => solution.selectionId === selectionId)
+    if (selections) {
+      const selIdx = selections.findIndex(selection => selection.id === selectionId)
+      selections.splice(selIdx, 1)
+    }
 
-    selections.splice(selIdx, 1)
-    solutions.splice(solIdx, 1)
+    if (solutions) {
+      const solIdx = solutions.findIndex(solution => solution.selectionId === selectionId)
+      solutions.splice(solIdx, 1)
+    }
   })
 
   //also we just check the text is correct

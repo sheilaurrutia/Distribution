@@ -31,7 +31,6 @@ export function reduce(item = {}, action) {
       const text = utils.getTextFromDecorated(item._text)
 
       let newItem = Object.assign({}, item, {
-        selections,
         _selectionPopover: true,
         _selectionId: id,
         solutions,
@@ -43,15 +42,12 @@ export function reduce(item = {}, action) {
     }
     case FIND_REMOVE_ANSWER: {
       //this is only valid for the default 'visible' one
-      const selections = cloneDeep(item.selections)
       const solutions = cloneDeep(item.solutions)
-      selections.splice(selections.findIndex(selection => selection.id === action.selectionId), 1)
       solutions.splice(solutions.findIndex(solution => solution.selectionId === action.selectionId), 1)
       item = Object.assign(
         {},
         item,
         {
-          selections,
           solutions,
           _text: utils.makeTextHtml(item.text, solutions, 'editor')
         }
