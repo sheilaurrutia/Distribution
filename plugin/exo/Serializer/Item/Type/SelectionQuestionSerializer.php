@@ -84,8 +84,12 @@ class SelectionQuestionSerializer implements SerializerInterface
 
         $options['selection_mode'] = $data->mode;
 
-        if (isset($data->selections)) {
+        if (isset($data->selections) && $data->mode !== 'find') {
             $this->deserializeSelections($selectionQuestion, $data->selections, $data->solutions, $options);
+        }
+
+        if (isset($data->solutions) && $data->mode === 'find') {
+            $this->deserializeSolutions($selectionQuestion, $data->solutions, $options);
         }
 
         return $selectionQuestion;
@@ -174,7 +178,6 @@ class SelectionQuestionSerializer implements SerializerInterface
         foreach ($selections as $selectionData) {
             $selection = null;
 
-            // Searches for an existing color entity.
             foreach ($selectionEntities as $entityIndex => $selectionEntity) {
                 if ($selectionEntity->getUuid() === $selectionData->id) {
                     $selection = $selectionEntity;
@@ -196,7 +199,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                 return $solution->selectionId === $selectionData->id;
             }));
 
-            if (isset($solutionsD[0])) {
+            if (isset($solutionsD[0]) && isset($solutionsD[0]->feedback)) {
                 $selection->setFeedback($solutionsD[0]->feedback);
             }
 
@@ -206,18 +209,60 @@ class SelectionQuestionSerializer implements SerializerInterface
             foreach ($solutions as $solutionData) {
                 if ($solutionData->selectionId === $selectionData->id) {
                     switch ($options['selection_mode']) {
-                    case SelectionQuestion::MODE_SELECT:
-                      $selection->setScore($solutionData->score);
-                      break;
-                    case SelectionQuestion::MODE_FIND:
-                      $selection->setScore($solutionData->score);
-                      break;
-                    case SelectionQuestion::MODE_HIGHLIGHT:
-                      break;
-                    }
+                      case SelectionQuestion::MODE_SELECT:
+                        $selection->setScore($solutionData->score);
+                        break;
+                      case SelectionQuestion::MODE_HIGHLIGHT:
+                        break;
+                      }
                 }
             }
 
+            $selectionQuestion->addSelection($selection);
+        }
+
+      // Remaining color are no longer in the Question
+      foreach ($selectionEntities as $selectionToRemove) {
+          $selectionQuestion->removeSelection($selectionToRemove);
+      }
+    }
+
+    /**
+     * Deserializes Question solutions.
+     *
+     * @param SelectionQuestion $clozeQuestion
+     */
+    private function deserializeSolutions(SelectionQuestion $selectionQuestion, $solutions, $options = [])
+    {
+        $selectionEntities = $selectionQuestion->getSelections()->toArray();
+
+        foreach ($solutions as $solutionData) {
+            $selection = null;
+
+            foreach ($selectionEntities as $entityIndex => $selectionEntity) {
+                if ($selectionEntity->getUuid() === $solutionData->selectionId) {
+                    $selection = $selectionEntity;
+                    unset($selectionEntities[$entityIndex]);
+                    break;
+                }
+            }
+
+            if (empty($selection)) {
+                $selection = new Selection();
+            }
+
+            // Force client ID if needed
+            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
+                $selection->setUuid($solutionData->selectionId);
+            }
+
+            if (isset($solutionData->feedback)) {
+                $selection->setFeedback($solutionData->feedback);
+            }
+
+            $selection->setBegin($solutionData->begin);
+            $selection->setEnd($solutionData->end);
+            $selection->setScore($solutionData->score);
             $selectionQuestion->addSelection($selection);
         }
 

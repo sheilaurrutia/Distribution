@@ -158,12 +158,12 @@ function reduce(item = {}, action) {
 
       if (item.mode !== 'find') {
         selections.push(selection)
+      } else {
+        solution.begin = action.begin - sum
+        solution.end = action.end - sum
       }
 
       solutions.push(solution)
-
-      console.log(solutions, selections)
-
       const text = utils.getTextFromDecorated(item._text)
 
       let newItem = Object.assign({}, item, {
@@ -210,8 +210,7 @@ function reduce(item = {}, action) {
         const solutions = cloneDeep(item.solutions)
         const solution = solutions.find(solution => solution.selectionId === action.selectionId)
 
-        switch (item.mode) {
-          case 'select' || 'find':
+        if (item.mode === 'select' || item.mode === 'find') {
             solution[action.parameter] = action.value
         }
 
@@ -243,12 +242,9 @@ function recomputePositions(item, offsets, oldText) {
     element._trueBegin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
     idx++
 
-    //console.log('truestart', offsets, toSort)
     const amount = item.text.length - oldText.length
-    //console.log(amount, item.text, oldText)
 
     if (offsets.trueStart < element._trueBegin) {
-      //console.log('add ' + amount, element)
       element._trueBegin += amount
       element.begin += amount
       element.end += amount
@@ -275,11 +271,10 @@ function cleanItem(item)
 
   //REMOVE THE SELECTIONS HERE
   //what are the selection in the text ?
-  $(tmp).find('.span-selection').each(function () {
+  $(tmp).find('.selection-button').each(function () {
     ids.push($(this).attr('data-selection-id'))
   })
 
-  console.log('lolwut', ids, item.selections, item._text)
   //if we're missing selections in the items, then we'll have to remove them
   if (item.selections) {
     item.selections.forEach(selection => {
@@ -289,9 +284,7 @@ function cleanItem(item)
   }
 
   toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
-
-  console.log('toRemove', toRemove)
-
+  console.log(toRemove)
   const solutions = cloneDeep(item.solutions)
   const selections = cloneDeep(item.selections)
 
@@ -342,11 +335,9 @@ function toHighlightMode(item) {
 }
 
 function addSelectionsFromAnswers(item) {
-  console.log(item.selections)
   if (!item.selections) {
     const selections = []
     const solutions = cloneDeep(item.solutions)
-    console.log(solutions)
 
     solutions.forEach(solution => selections.push({
       id: solution.selectionId,
