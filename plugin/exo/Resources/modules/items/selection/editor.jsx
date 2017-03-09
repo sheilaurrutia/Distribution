@@ -11,6 +11,48 @@ import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
 
+function updateAnswer(value, parameter, selectionId, mode) {
+  switch(mode) {
+    case 'select': {
+      return actions.findUpdateAnswer(value, selectionId, parameter)
+    }
+    case 'find': {
+      return actions.selectUpdateAnswer(value, selectionId, parameter)
+    }
+    case 'highlight': {
+      alert('nope')
+    }
+  }
+}
+
+function removeSelection(selectionId, mode) {
+  switch(mode) {
+    case 'select': {
+      return actions.selectRemoveSelection(selectionId)
+    }
+    case 'find': {
+      return actions.findRemoveAnswer(selectionId)
+    }
+    case 'highlight': {
+      alert('nope')
+    }
+  }
+}
+
+function addSelection(begin, end, mode) {
+  switch(mode) {
+    case 'select': {
+      return actions.selectAddSelection(begin, end)
+    }
+    case 'find': {
+      return actions.findAddAnswer(begin, end)
+    }
+    case 'highlight': {
+      alert('nope')
+    }
+  }
+}
+
 class ChoiceItem extends Component {
   constructor(props) {
     super(props)
@@ -32,9 +74,7 @@ class ChoiceItem extends Component {
               className="form-control choice-form"
               type="number"
               value={this.props.score}
-              onChange={e => this.props.onChange(
-                actions.updateSelection(parseInt(e.target.value), this.selectionId, 'score')
-              )}
+              onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
             />
           </div>
           <div className="col-xs-3">
@@ -44,13 +84,6 @@ class ChoiceItem extends Component {
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
-          {this.props.item.mode === 'highlight' &&
-              <TooltipButton
-                id={`answer-${this.props.id}-delete`}
-                className="fa fa-trash-o"
-                title={t('delete')}
-              />
-            }
           </div>
         </div>
         {this.state.showFeedback &&
@@ -58,9 +91,7 @@ class ChoiceItem extends Component {
             <Textarea
               id={`choice-${this.props.id}-feedback`}
               title={tex('feedback')}
-              onChange={text => this.props.onChange(
-                actions.updateSelection(text, this.selectionId, 'feedback')
-              )}
+              onChange={text => this.props.onChange(updateAnswer(text, 'feedback', this.selectionId, this.props.item.mode))}
               content={this.props.solution.feedback}
             />
           </div>
@@ -104,7 +135,7 @@ class SelectionForm extends Component {
   }
 
   removeAndClose() {
-    this.props.onChange(actions.removeSelection(this.props.item._selectionId))
+    removeSelection(this.props.item._selectionId, this.props.item.mode)
     this.closePopover()
   }
 
@@ -141,25 +172,10 @@ class SelectionForm extends Component {
               <Textarea
                 id={`choice-${this.props.item._selectionId}-feedback`}
                 title={tex('feedback')}
-                onChange={text => this.props.onChange(
-                  actions.updateAnswer(this.props.item._selectionId, 'feedback', text)
-                )}
+                onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
               />
             </div>
           }
-          <div className="selection-form-row">
-            {this.props.item.mode === 'highlight' &&
-              <button
-                className="btn btn-default"
-                onClick={() => this.props.onChange(
-                  actions.addAnswer(this.props.item._selectionId))}
-                type="button"
-              >
-                <i className="fa fa-plus"/>
-                {tex('color')}
-              </button>
-            }
-          </div>
         </div>
       </Popover>
     )
@@ -173,26 +189,6 @@ SelectionForm.propTypes = {/*
   _errors: T.object*/
 }
 
-class ColorElement extends Component {
-  render() {
-    return (
-      <div>
-        <span>{tex('color')} {this.props.index}</span>
-        <ColorPicker color={this.props.color.code}
-          onPick={(e) => {this.props.onChange(actions.editColor(this.props.color.id, e.hex))}}>
-        </ColorPicker>
-      </div>
-    )
-  }
-}
-
-ColorElement.propTypes = {/*
-  index: T.number.isRequired,
-  color: T.object.isRequired,
-  onChange: T.func.isRequired,
-  _errors: T.object*/
-}
-
 export class Selection extends Component {
   constructor(props) {
     super(props)
@@ -201,7 +197,6 @@ export class Selection extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
-    console.log(props.item.tries)
   }
 
   updateText() {
@@ -216,15 +211,15 @@ export class Selection extends Component {
   }
 
   addSelection() {
-    this.props.onChange(actions.addSelection(this.begin, this.end))
+    this.props.onChange(addSelection(this.begin, this.end, this.props.item.mode))
   }
 
   onSelectionClick(el) {
     if (el.classList.contains('edit-selection-btn')) {
-      this.props.onChange(actions.openSelection(el.dataset.selectionId))
+      this.props.onChange(actions.openAnswer(el.dataset.selectionId))
     } else {
       if (el.classList.contains('delete-selection-btn')) {
-        this.props.onChange(actions.removeSelection(el.dataset.selectionId))
+        this.props.onChange(removeSelection(el.dataset.selectionId, this.props.item.mode))
       }
     }
   }
@@ -251,35 +246,6 @@ export class Selection extends Component {
                onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
                value={this.props.item.tries}
              />
-          }
-          {this.props.item.mode === 'highlight' &&
-            <div>
-              <FormGroup
-                controlId="selection-default-penalty"
-                label={t('global_penalty')}
-                warnOnly={!this.props.validating}
-              >
-              <input
-                 className="form-control"
-                 type="number"
-                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty'))}
-                 value={this.props.item.penalty}
-               />
-              </FormGroup>
-              <div>{tex('possible_color_choices')}</div>
-              {
-                this.props.item.colors.map((color, index) => {
-                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
-                })
-              }
-                <button
-                  type="button"
-                  className="btn btn-default"
-                  onClick={() => this.props.onChange(actions.addColor())}
-                >
-                  <i className="fa fa-plus"/>{tex('add_color')}
-                </button>
-            </div>
           }
           <Textarea
             id={this.props.item.id}

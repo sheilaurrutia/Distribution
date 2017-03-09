@@ -61,3 +61,57 @@ utils.getTextFromDecorated = (_text) => {
 
   return tmp.innerHTML
 }
+
+utils.getRealOffsetFromBegin = (toSort, begin, mode) => {
+  let idx = -1
+
+  toSort = toSort.filter(element => {
+    idx++
+    return utils.getHtmlLength(element, mode) * idx + element.begin + utils.getFirstSpan(element, mode).length < begin
+  }).sort((a, b) => a.begin - b.begin)
+
+  return toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val, mode)}, 0)
+}
+
+utils.cleanItem = (item) => {
+  //here we remove the unused selections
+  const _text = item._text
+
+  const tmp = document.createElement('div')
+  const ids = []
+  let toRemove = []
+  tmp.innerHTML = _text
+
+  //REMOVE THE SELECTIONS HERE
+  //what are the selection in the text ?
+  $(tmp).find('.selection-button').each(function () {
+    ids.push($(this).attr('data-selection-id'))
+  })
+
+  //if we're missing selections in the items, then we'll have to remove them
+  if (item.selections) {
+    item.selections.forEach(selection => {
+      let idx = ids.findIndex(id => id === selection.id)
+      if (idx < 0) toRemove.push(selection.id)
+    })
+  }
+
+  toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
+  const solutions = cloneDeep(item.solutions)
+  const selections = cloneDeep(item.selections)
+
+  //and now we finally remove them !!!
+  toRemove.forEach(selectionId => {
+    const selIdx = selections.findIndex(selection => selection.id === selectionId)
+    const solIdx = solutions.findIndex(solution => solution.selectionId === selectionId)
+
+    selections.splice(selIdx, 1)
+    solutions.splice(solIdx, 1)
+  })
+
+  //also we just check the text is correct
+  let text = utils.getTextFromDecorated(item._text)
+
+  //that'all for now folks !
+  return Object.assign({}, item, {selections, solutions, text})
+}

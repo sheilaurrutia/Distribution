@@ -29,7 +29,6 @@ export function getOffsets(element, selection = null) {
   //the selection API always return offset from the textContent (aka plain text with no HTML)
   //Therefore we have to add htmlentities and tags length to the offset
   while (i <= offsets.start) {
-
     //this is the beginning of a tag
     if (html[j] === '<' ) {
       forward = getTillChar(html, j, '>')

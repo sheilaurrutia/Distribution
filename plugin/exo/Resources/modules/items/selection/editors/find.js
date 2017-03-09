@@ -4,34 +4,29 @@ import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
 
-const SELECT_ADD_SELECTION = 'SELECT_ADD_SELECTION'
-const SELECT_UPDATE_ANSWER = 'SELECT_UPDATE_ANSWER'
-const SELECT_REMOVE_SELECTION = 'SELECT_REMOVE_SELECTION'
+const FIND_ADD_ANSWER = 'FIND_ADD_ANSWER'
+const FIND_UPDATE_ANSWER = 'FIND_UPDATE_ANSWER'
+const FIND_REMOVE_ANSWER = 'FIND_REMOVE_ANSWER'
 
 export const actions = {
-  selectUpdateAnswer: makeActionCreator(SELECT_UPDATE_ANSWER, 'value', 'selectionId', 'parameter'),
-  selectAddSelection: makeActionCreator(SELECT_ADD_SELECTION, 'begin', 'end'),
-  selectRemoveSelection: makeActionCreator(SELECT_REMOVE_SELECTION, 'selectionId')
+  findUpdateAnswer: makeActionCreator(FIND_UPDATE_ANSWER, 'value', 'selectionId', 'parameter'),
+  findAddAnswer: makeActionCreator(FIND_ADD_ANSWER, 'begin', 'end'),
+  findRemoveAnswer: makeActionCreator(FIND_REMOVE_ANSWER, 'selectionId')
 }
 
 export function reduce(item = {}, action) {
   switch (action.type) {
-    case SELECT_ADD_SELECTION: {
-      const selections = item.selections ? cloneDeep(item.selections): []
+    case FIND_ADD_ANSWER: {
       const solutions = item.solutions ? cloneDeep(item.solutions): []
-      const sum = utils.getRealOffsetFromBegin(selections, action.begin, 'editor')
+      const sum = utils.getRealOffsetFromBegin(solutions, action.begin, 'editor')
       const id = makeId()
 
-      selections.push({
-        id,
-        begin: action.begin - sum,
-        end: action.end - sum
-      })
-
       solutions.push({
-        selectionId: id,
-        score: 0
-      })
+          selectionId: id,
+          score: 0,
+          begin: action.begin - sum,
+          end: action.end - sum
+        })
 
       const text = utils.getTextFromDecorated(item._text)
 
@@ -41,13 +36,12 @@ export function reduce(item = {}, action) {
         _selectionId: id,
         solutions,
         text,
-        _text: utils.makeTextHtml(text, selections, 'editor')
+        _text: utils.makeTextHtml(text, solutions, 'editor')
       })
 
       return utils.cleanItem(newItem)
-
     }
-    case SELECT_REMOVE_SELECTION: {
+    case FIND_REMOVE_ANSWER: {
       //this is only valid for the default 'visible' one
       const selections = cloneDeep(item.selections)
       const solutions = cloneDeep(item.solutions)
@@ -59,13 +53,13 @@ export function reduce(item = {}, action) {
         {
           selections,
           solutions,
-          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections, 'editor')
+          _text: utils.makeTextHtml(item.text, solutions, 'editor')
         }
       )
 
       return utils.cleanItem(item)
     }
-    case SELECT_UPDATE_ANSWER: {
+    case FIND_UPDATE_ANSWER: {
       const solutions = cloneDeep(item.solutions)
       const solution = solutions.find(solution => solution.selectionId === action.selectionId)
       solution[action.parameter] = action.value
