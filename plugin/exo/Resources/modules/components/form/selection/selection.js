@@ -58,6 +58,8 @@ export function getOffsets(element, selection = null) {
   offsets.trueStart = toAdd + offsets.start
   offsets.trueEnd = toAdd + offsets.end
 
+  console.log(offsets)
+
   return offsets
 }
 

@@ -284,7 +284,6 @@ function cleanItem(item)
   }
 
   toRemove = toRemove.filter((item, pos) => toRemove.indexOf(item) == pos)
-  console.log(toRemove)
   const solutions = cloneDeep(item.solutions)
   const selections = cloneDeep(item.selections)
 

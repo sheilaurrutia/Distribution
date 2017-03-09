@@ -178,8 +178,6 @@ export class Tinymce extends Component {
     })
 
     const offsets = getOffsets(this.editor.dom.getRoot(), this.editor.selection.getSel())
-    console.log(offsets)
-
     this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this), offsets)
   }
 
