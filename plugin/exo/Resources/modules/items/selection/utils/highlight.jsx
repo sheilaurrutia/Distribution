@@ -9,17 +9,31 @@ export class Highlight extends Component {
     super(props)
 
     if (props.displayTrueAnswer) {
-      this.checkedElements = cloneDeep(this.props.item.selections)
-      this.checkedElements.sort((a, b) => {return a.begin - b.begin})
+      this.checkedElements = props.item.mode !== 'find' ? cloneDeep(this.props.item.selections): cloneDeep(this.props.item.solutions)
     } else {
       switch (props.item.mode) {
         case 'select': {
           this.checkedElements = this.props.item.selections
             .filter(selection => this.props.answer.indexOf(selection.id) > -1)
-            .sort((a, b) => {return a.begin - b.begin})
+        }
+        case 'find': {
+          this.checkedElements = this.props.item.solutions
+            .filter(solution => {
+              let found = false
+
+              this.props.answer.forEach(a => {
+                if (a >= solution.begin && a <= solution.end) {
+                  found = true
+                }
+              })
+
+              return found
+            })
         }
       }
     }
+
+    this.checkedElements.sort((a, b) => {return a.begin - b.begin})
   }
 
   render() {
@@ -27,13 +41,11 @@ export class Highlight extends Component {
   }
 
   isSolutionValid(selection) {
-    const solution = this.getSolutionForAnswer(selection)
-
-    return solution.score > 0
+    return selection.score ? selection.score: this.getSolutionForAnswer(selection).score
   }
 
   getSolutionForAnswer(selection) {
-    return this.props.item.solutions.find(solution => solution.selectionId === selection.id)
+    return selection.score ? selection: this.props.item.solutions.find(solution => solution.selectionId === selection.id)
   }
 
   //copied from the clozes
