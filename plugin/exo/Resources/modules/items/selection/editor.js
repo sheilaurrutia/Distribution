@@ -166,7 +166,7 @@ function toSelectMode(item) {
 function toHighlightMode(item) {
   item = addSelectionsFromAnswers(item)
 
-  return item
+  return Object.assign({}, item, {colors: []})
 }
 
 function addSelectionsFromAnswers(item) {

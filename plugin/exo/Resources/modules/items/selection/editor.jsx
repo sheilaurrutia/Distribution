@@ -20,7 +20,7 @@ function updateAnswer(value, parameter, selectionId, mode) {
       return actions.selectUpdateAnswer(value, selectionId, parameter)
     }
     case 'highlight': {
-      alert('nope')
+      return actions.highlightUpdateSelection(value, selectionId, parameter)
     }
   }
 }
@@ -34,7 +34,7 @@ function removeSelection(selectionId, mode) {
       return actions.findRemoveAnswer(selectionId)
     }
     case 'highlight': {
-      alert('nope')
+      return actions.highlightRemoveSelection(selectionId)
     }
   }
 }
@@ -48,7 +48,7 @@ function addSelection(begin, end, mode) {
       return actions.findAddAnswer(begin, end)
     }
     case 'highlight': {
-      alert('nope')
+      return actions.highlightAddSelection(begin, end)
     }
   }
 }
@@ -181,6 +181,19 @@ class SelectionForm extends Component {
             </div>
           }
         </div>
+        <div className="selection-form-row">
+          {this.props.item.mode === 'highlight' &&
+            <button
+              className="btn btn-default"
+              onClick={() => this.props.onChange(
+                actions.addAnswer(this.props.item._selectionId))}
+              type="button"
+            >
+              <i className="fa fa-plus"/>
+              {tex('color')}
+            </button>
+          }
+        </div>
       </Popover>
     )
   }
@@ -190,6 +203,26 @@ SelectionForm.propTypes = {/*
   item: T.shape.object,
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
+  _errors: T.object*/
+}
+
+class ColorElement extends Component {
+  render() {
+    return (
+      <div>
+        <span>{tex('color')} {this.props.index}</span>
+        <ColorPicker color={this.props.color.code}
+          onPick={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}>
+        </ColorPicker>
+      </div>
+    )
+  }
+}
+
+ColorElement.propTypes = {/*
+  index: T.number.isRequired,
+  color: T.object.isRequired,
+  onChange: T.func.isRequired,
   _errors: T.object*/
 }
 
@@ -250,6 +283,35 @@ export class Selection extends Component {
                onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
                value={this.props.item.tries}
              />
+          }
+          {this.props.item.mode === 'highlight' &&
+            <div>
+              <FormGroup
+                controlId="selection-default-penalty"
+                label={t('global_penalty')}
+                warnOnly={!this.props.validating}
+              >
+              <input
+                 className="form-control"
+                 type="number"
+                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty'))}
+                 value={this.props.item.penalty}
+               />
+              </FormGroup>
+              <div>{tex('possible_color_choices')}</div>
+              {
+                this.props.item.colors.map((color, index) => {
+                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
+                })
+              }
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={() => this.props.onChange(actions.highlightAddColor())}
+                >
+                  <i className="fa fa-plus"/>{tex('add_color')}
+                </button>
+            </div>
           }
           <Textarea
             id={this.props.item.id}

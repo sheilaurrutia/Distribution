@@ -22,7 +22,6 @@ export class SelectionPlayer extends Component {
 
   onAnswer(options = {}) {
     const answers = cloneDeep(this.props.answer)
-    console.log(options)
     switch (options.mode) {
       case 'select': {
         let selectionId = options.selectionId
