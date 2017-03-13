@@ -11,8 +11,8 @@
 
 namespace Claroline\ScormBundle\Transfert;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\ScormBundle\Entity\Scorm12Resource;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -74,7 +74,7 @@ class ScormImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return $type == 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -83,14 +83,14 @@ class ScormImporter extends Importer implements ConfigurationInterface
         $processor->processConfiguration($this, $data);
     }
 
-    public function export($workspace, array &$_files, $object)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
         $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);
         $_files[$uid] = $this->container
             ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash;
         $data = [];
-        $version = $object instanceof Scorm12Resource ? '1.2' : '2004';
+        $version = $object instanceof \Claroline\ScormBundle\Entity\Scorm12Resource ? '1.2' : '2004';
 
         if (file_exists($_files[$uid])) {
             $data = [['scorm' => [
