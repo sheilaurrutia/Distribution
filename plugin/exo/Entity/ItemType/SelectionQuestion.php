@@ -75,7 +75,7 @@ class SelectionQuestion extends AbstractItem
      *     orphanRemoval=true
      * )
      */
-    private $color;
+    private $colors;
 
     /**
      * SelectionQuestion constructor.
@@ -238,8 +238,8 @@ class SelectionQuestion extends AbstractItem
      */
     public function addColor(Color $color)
     {
-        if (!$this->$colors->contains($color)) {
-            $this->$colors->add($color);
+        if (!$this->colors->contains($color)) {
+            $this->colors->add($color);
             $color->setInteractionSelection($this);
         }
     }

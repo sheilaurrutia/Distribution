@@ -4,6 +4,8 @@ namespace UJM\ExoBundle\Serializer\Item\Type;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
+use UJM\ExoBundle\Entity\Misc\Color;
+use UJM\ExoBundle\Entity\Misc\ColorSelection;
 use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
@@ -77,7 +79,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selectionQuestion->setTries($data->tries);
         }
 
-        //colors must be unserialized first becaus they might be usefull for selections
+        //colors must be unserialized first because they might be usefull for selections
         if (isset($data->colors)) {
             $this->deserializeColors($selectionQuestion, $data->colors, $options);
         }
@@ -91,6 +93,15 @@ class SelectionQuestionSerializer implements SerializerInterface
         if (isset($data->solutions) && $data->mode === 'find') {
             $this->deserializeSolutions($selectionQuestion, $data->solutions, $options);
         }
+
+        /*
+        foreach ($selectionQuestion->getSelections() as $selection) {
+            foreach ($selection->getColorSelections() as $cs) {
+                var_dump($cs->getId());
+            }
+        }
+
+        throw new \Exception();*/
 
         return $selectionQuestion;
     }
@@ -107,14 +118,8 @@ class SelectionQuestionSerializer implements SerializerInterface
         return array_map(function (Selection $selection) use ($selectionQuestion) {
             $selectionData = new \stdClass();
             $selectionData->id = $selection->getUuid();
-
-            if ($selectionQuestion->getMode() === SelectionQuestion::MODE_SELECT) {
-                $selectionData->begin = $selection->getBegin();
-                $selectionData->end = $selection->getEnd();
-            } else {
-                if ($selectionQuestion->getMode() === SelectionQuestion::MODE_HIGHLIGHT) {
-                }
-            }
+            $selectionData->begin = $selection->getBegin();
+            $selectionData->end = $selection->getEnd();
 
             return $selectionData;
         }, $selectionQuestion->getSelections()->toArray());
@@ -148,7 +153,7 @@ class SelectionQuestionSerializer implements SerializerInterface
               }
           }
 
-            if (empty($hole)) {
+            if (empty($color)) {
                 $color = new Color();
             }
 
@@ -157,7 +162,8 @@ class SelectionQuestionSerializer implements SerializerInterface
               $color->setUuid($colorData->id);
           }
 
-            $hole->setColorCode($colorData->code);
+            $color->setColorCode($colorData->code);
+            $selectionQuestion->addColor($color);
         }
 
       // Remaining color are no longer in the Question
@@ -213,6 +219,8 @@ class SelectionQuestionSerializer implements SerializerInterface
                         $selection->setScore($solutionData->score);
                         break;
                       case SelectionQuestion::MODE_HIGHLIGHT:
+                        $selection->setScore(0);
+                        $this->deserializeColorSelection($selection, $solutionData->answers, $selectionQuestion->getColors()->toArray());
                         break;
                       }
                 }
@@ -225,6 +233,42 @@ class SelectionQuestionSerializer implements SerializerInterface
       foreach ($selectionEntities as $selectionToRemove) {
           $selectionQuestion->removeSelection($selectionToRemove);
       }
+    }
+
+    private function deserializeColorSelection(Selection $selection, array $answers, array $colors)
+    {
+        $colorSelectionsEntities = $selection->getColorSelections()->toArray();
+
+        foreach ($answers as $answerData) {
+            $colorSelection = null;
+            foreach ($colorSelectionsEntities as $entityIndex => $selectionEntity) {
+                if ($selectionEntity->getSelection()->getId() === $selectionData->getId()) {
+                    $colorSelection = $selectionEntity;
+                    unset($colorSelectionsEntities[$entityIndex]);
+                    break;
+                }
+            }
+
+            if (!$colorSelection) {
+                $colorSelection = new ColorSelection();
+            }
+
+            $colorE = array_values(array_filter($colors, function ($color) use ($answerData) {
+                return $color->getUuid() === $answerData->colorId;
+            }))[0];
+
+            $colorSelection->setColor($colorE);
+            //$colorE->addColorSelection($colorSelection);
+            $colorSelection->setSelection($selection);
+            $colorSelection->setScore($answerData->score);
+            $selection->addColorSelection($colorSelection);
+        }
+
+        foreach ($colorSelectionsEntities as $toRemove) {
+            $selection->removeColorSelection($toRemove);
+        }
+
+        return $selection;
     }
 
     /**
@@ -300,7 +344,6 @@ class SelectionQuestionSerializer implements SerializerInterface
                  $solutionData = new \stdClass();
                  $solutionData->selectionId = $selection->getUuid();
                  $solutionData->answers = [];
-
                  foreach ($selection->getColorSelections()->toArray() as $colorSelection) {
                      $answer = new \stdClass();
                      $answer->score = $colorSelection->getScore();
@@ -310,7 +353,7 @@ class SelectionQuestionSerializer implements SerializerInterface
                  }
 
                  return $solutionData;
-             }, $selectionQuestion->getSelections());
+             }, $selectionQuestion->getSelections()->toArray());
       }
     }
 }

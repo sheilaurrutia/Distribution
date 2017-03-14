@@ -10,6 +10,7 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
+import times from 'lodash/times'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -183,10 +184,15 @@ class SelectionForm extends Component {
         </div>
         <div className="selection-form-row">
           {this.props.item.mode === 'highlight' &&
+            this.getSolution().answers.map((answer, key) => {
+              return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
+            })
+          }
+          {this.props.item.mode === 'highlight' &&
             <button
               className="btn btn-default"
               onClick={() => this.props.onChange(
-                actions.addAnswer(this.props.item._selectionId))}
+                actions.highlightAddAnswer(this.props.item._selectionId))}
               type="button"
             >
               <i className="fa fa-plus"/>
@@ -224,6 +230,44 @@ ColorElement.propTypes = {/*
   color: T.object.isRequired,
   onChange: T.func.isRequired,
   _errors: T.object*/
+}
+
+class HighlightAnswer extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {showFeedback: false}
+  }
+
+  render() {
+    const color = this.props.item.colors.find(color => color.id === this.props.answer.colorId)
+
+    return (
+      <div>
+        <select
+          style={{ backgroundColor: color.code }}
+          onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
+          value={this.props.answer.colorId}
+        >
+          {this.props.item.colors.map((color, key) => {
+              return <option
+                className="color-option"
+                key={key}
+                value={color.id}
+                style={{ backgroundColor: color.code, hover: color.code }}
+              >
+                lol
+              </option>
+            })
+          }
+        </select>
+        <input
+           type="number"
+           onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
+           value={this.props.answer.score}
+         />
+      </div>
+    )
+  }
 }
 
 export class Selection extends Component {

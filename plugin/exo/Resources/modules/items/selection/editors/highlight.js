@@ -4,18 +4,21 @@ import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
 
+
 const HIGHLIGHT_ADD_SELECTION = 'HIGHLIGHT_ADD_SELECTION'
-const HIGHLIGHT_UPDATE_SELECTION = 'HIGHLIGHT_UPDATE_SELECTION'
+const HIGHLIGHT_UPDATE_ANSWER = 'HIGHLIGHT_UPDATE_ANSWER'
 const HIGHLIGHT_REMOVE_SELECTION = 'HIGHLIGHT_REMOVE_SELECTION'
 const HIGHLIGHT_ADD_COLOR = 'HIGHLIGHT_ADD_COLOR'
 const HIGHLIGHT_EDIT_COLOR = 'HIGHLIGHT_EDIT_COLOR'
+const HIGHLIGHT_ADD_ANSWER = 'HIGHLIGHT_ADD_ANSWER'
 
 export const actions = {
   highlightAddColor: makeActionCreator(HIGHLIGHT_ADD_COLOR),
   highlightEditColor: makeActionCreator(HIGHLIGHT_EDIT_COLOR, 'colorId', 'colorCode'),
-  highlightUpdateSelection: makeActionCreator(HIGHLIGHT_UPDATE_SELECTION, 'value', 'selectionId', 'parameter'),
+  highlightAddAnswer: makeActionCreator(HIGHLIGHT_ADD_ANSWER, 'selectionId'),
   highlightAddSelection: makeActionCreator(HIGHLIGHT_ADD_SELECTION, 'begin', 'end'),
-  highlightRemoveSelection: makeActionCreator(HIGHLIGHT_REMOVE_SELECTION, 'selectionId')
+  highlightRemoveSelection: makeActionCreator(HIGHLIGHT_REMOVE_SELECTION, 'selectionId'),
+  highlightUpdateAnswer: makeActionCreator(HIGHLIGHT_UPDATE_ANSWER, 'parameter', 'value', '_answerId')
 }
 
 export function reduce(item = {}, action) {
@@ -25,7 +28,7 @@ export function reduce(item = {}, action) {
 
       colors.push({
         id: makeId(),
-        code: '#FFFFFF'
+        code: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
       })
 
       return Object.assign({}, item, {colors})
@@ -53,7 +56,8 @@ export function reduce(item = {}, action) {
         selectionId: id,
         answers: [{
           score: 0,
-          colorId: item.colors[0].id
+          colorId: item.colors[0].id,
+          _answerId: makeId()
         }]
       })
 
@@ -68,7 +72,7 @@ export function reduce(item = {}, action) {
         _text: utils.makeTextHtml(text, selections, 'editor')
       })
 
-      return cleanItem(newItem)
+      return utils.cleanItem(newItem)
     }
     case HIGHLIGHT_REMOVE_SELECTION: {
       //this is only valid for the default 'visible' one
@@ -88,10 +92,25 @@ export function reduce(item = {}, action) {
 
       return utils.cleanItem(item)
     }
+    case HIGHLIGHT_ADD_ANSWER: {
+      const solutions = cloneDeep(item.solutions)
+      const solution = solutions.find(solution => solution.selectionId === action.selectionId)
+      solution.answers.push({score: 0, colorId: item.colors[0].id, _answerId: makeId()})
 
-    case HIGHLIGHT_UPDATE_SELECTION: {
+      return Object.assign({}, item, {solutions})
     }
-    
+    case HIGHLIGHT_UPDATE_ANSWER: {
+      const solutions = cloneDeep(item.solutions)
+      let answer = null
+
+      solutions.forEach(solution => {
+        if (!answer) answer = solution.answers.find(answer => answer._answerId === action._answerId)
+      })
+
+      answer[action.parameter] = action.value
+
+      return Object.assign({}, item, {solutions})
+    }
   }
   return item
 }

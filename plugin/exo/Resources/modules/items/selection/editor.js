@@ -36,9 +36,19 @@ export default {
 }
 
 function decorate(item) {
-  return Object.assign({}, item, {
+  item = Object.assign({}, item, {
     _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections, 'editor')
   })
+
+  if (item.mode === 'highlight') {
+    item.solutions.forEach(solution => {
+      solution.answers.forEach(answer => {
+        answer = Object.assign({}, answer, {_answerId: makeId()})
+      })
+    })
+  }
+
+  return item
 }
 
 function reduce(item = {}, action) {
@@ -160,13 +170,25 @@ function toFindMode(item) {
 function toSelectMode(item) {
   item = addSelectionsFromAnswers(item)
 
+  //remove colors
+  delete item.colors
+
   return item
 }
 
 function toHighlightMode(item) {
   item = addSelectionsFromAnswers(item)
 
-  return Object.assign({}, item, {colors: []})
+  const solutions = cloneDeep(item.solutions)
+
+  solutions.forEach(solution => {
+    solution.answers = []
+  })
+
+  return Object.assign({}, item, {colors: [{
+    id: makeId(),
+    code: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
+  }], solutions})
 }
 
 function addSelectionsFromAnswers(item) {

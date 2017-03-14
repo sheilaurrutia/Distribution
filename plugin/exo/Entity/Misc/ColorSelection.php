@@ -3,17 +3,20 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
+use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
  * Choice.
  *
  * @ORM\Entity()
- * @ORM\Table(name="ujm_color")
+ * @ORM\Table(name="ujm_color_selection")
  */
 class ColorSelection
 {
     use ScoreTrait;
+
+    use FeedbackTrait;
 
     /**
      * @var int
@@ -32,7 +35,7 @@ class ColorSelection
 
     /**
      * @ORM\ManyToOne(targetEntity="Color", inversedBy="colorSelections")
-     * @ORM\JoinColumn(name="selection_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="color_id", referencedColumnName="id")
      */
     private $color;
 
@@ -47,17 +50,17 @@ class ColorSelection
     /**
      * @return SelectionQuestion
      */
-    public function getInteractionSelection()
+    public function getSelection()
     {
-        return $this->interactionSelection;
+        return $this->selection;
     }
 
     /**
      * @param SelectionQuestion $interactionSelection
      */
-    public function setInteractionSelection(ChoiceQuestion $interactionSelection)
+    public function setSelection(Selection $selection)
     {
-        $this->interactionSelection = $interactionSelection;
+        $this->selection = $selection;
     }
 
     public function setColor(Color $color)

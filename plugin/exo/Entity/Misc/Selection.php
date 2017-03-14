@@ -133,11 +133,11 @@ class Selection implements AnswerPartInterface
      *
      * @param ColorSelection $colorSelection
      */
-    public function addColor(ColorSelection $colorSelection)
+    public function addColorSelection(ColorSelection $colorSelection)
     {
         if (!$this->colorSelections->contains($colorSelection)) {
             $this->colorSelections->add($colorSelection);
-            $colorSelection->setInteractionHole($this);
+            $colorSelection->setSelection($this);
         }
     }
 
@@ -146,7 +146,7 @@ class Selection implements AnswerPartInterface
      *
      * @param ColorSelection $colorSelection
      */
-    public function removeColor(ColorSelection $colorSelection)
+    public function removeColorSelection(ColorSelection $colorSelection)
     {
         if ($this->colorSelections->contains($colorSelection)) {
             $this->colorSelections->removeElement($colorSelection);

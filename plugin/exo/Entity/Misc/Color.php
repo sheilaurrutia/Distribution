@@ -2,15 +2,17 @@
 
 namespace UJM\ExoBundle\Entity\Misc;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * Choice.
  *
  * @ORM\Entity()
- * @ORM\Table(name="ujm_selection_color")
+ * @ORM\Table(name="ujm_color")
  */
 class Color
 {
@@ -43,9 +45,7 @@ class Color
     /**
      * @ORM\OneToMany(
      *     targetEntity="UJM\ExoBundle\Entity\Misc\ColorSelection",
-     *     mappedBy="color",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
+     *     mappedBy="color", cascade={"persist", "remove"}, orphanRemoval=true
      * )
      */
     private $colorSelections;
@@ -85,7 +85,7 @@ class Color
     /**
      * @param SelectionQuestion $interactionSelection
      */
-    public function setInteractionSelection(ChoiceQuestion $interactionSelection)
+    public function setInteractionSelection(SelectionQuestion $interactionSelection)
     {
         $this->interactionSelection = $interactionSelection;
     }
@@ -105,11 +105,11 @@ class Color
      *
      * @param ColorSelection $colorSelection
      */
-    public function addColor(ColorSelection $colorSelection)
+    public function addColorSelection(ColorSelection $colorSelection)
     {
         if (!$this->colorSelections->contains($colorSelection)) {
             $this->colorSelections->add($colorSelection);
-            $colorSelection->setInteractionHole($this);
+            $colorSelection->setColor($this);
         }
     }
 
