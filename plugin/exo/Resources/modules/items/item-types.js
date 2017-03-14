@@ -11,6 +11,8 @@ import open from './open'
 import pair from './pair'
 import words from './words'
 import set from './set'
+import grid from './grid'
+import ordering from './ordering'
 
 const typeProperties = [
   'name',
@@ -47,7 +49,7 @@ export function registerItemType(definition) {
 
 export function registerDefaultItemTypes() {
   if (!defaultRegistered) {
-    [choice, match, cloze, graphic, open, pair, words, set, selection].forEach(registerItemType)
+    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, selection].forEach(registerItemType)
     defaultRegistered = true
   }
 }
@@ -82,6 +84,12 @@ export function getDecorators() {
 // testing purposes only
 export function resetTypes() {
   registeredTypes = {}
+}
+
+export function isQuestionType(type) {
+  const matches = type.match(/^application\/x\.[^/]+\+json$/)
+
+  return matches !== null
 }
 
 function assertValidItemType(definition) {

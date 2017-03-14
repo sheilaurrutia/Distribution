@@ -63,6 +63,22 @@ final class ItemType
      */
     const OPEN = 'application/x.open+json';
 
+    const CONTENT = 'content';
+
+    /**
+     * The user has to write his answer using predefined keywords in a grid.
+     *
+     * @var string
+     */
+    const GRID = 'application/x.grid+json';
+
+    /**
+     * The user has to sort items.
+     *
+     * @var string
+     */
+    const ORDERING = 'application/x.ordering+json';
+
     /**
      * The user has to write his answer.
      *
@@ -87,6 +103,9 @@ final class ItemType
             static::WORDS,
             static::OPEN,
             static::SELECTION,
+            static::GRID,
+            static::CONTENT,
+            static::ORDERING,
         ];
     }
 
