@@ -13,11 +13,21 @@ export class SelectionPlayer extends Component {
   }
 
   getHtml() {
+   const elements = cloneDeep(this.elements)
 
+   if (this.props.item.mode === 'highlight') {
+     elements.forEach(element => {
+       element._answers = this.props.item.solutions.find(solution => solution.selectionId === element.id).answers
+     })
+   }
 
     return this.props.item.mode !== 'find' ?
-      utils.makeTextHtml(this.props.item.text, this.elements, 'select'):
-      utils.makeTextHtml(this.props.item.text, this.elements.filter(element => this.props.answer.find(ans => ans >= element.begin && ans <= element.end)), 'select')
+      utils.makeTextHtml(this.props.item.text, elements, this.props.item.mode, this.props.item.colors ? this.props.item.colors: []):
+      utils.makeTextHtml(
+        this.props.item.text,
+        this.elements.filter(element => this.props.answer.find(ans => ans >= element.begin && ans <= element.end)),
+        'select'
+      )
   }
 
   onAnswer(options = {}) {
@@ -36,6 +46,18 @@ export class SelectionPlayer extends Component {
       }
       case 'find': {
         answers.push(options.begin)
+        break
+      }
+      case 'highlight': {
+        const answer = answers.find(answer => answer.selectionId === options.selectionId)
+        if (answer) {
+          answer.colorId = options.colorId
+        } else {
+          answers.push({
+            colorId: options.colorId,
+            selectionId: options.selectionId
+          })
+        }
         break
       }
     }
@@ -102,6 +124,33 @@ export class SelectionPlayer extends Component {
             //}
           }
         )
+        break
+      }
+      case 'highlight': {
+        this.elements.forEach((el, key) => {
+          let htmlElement = document.getElementById(`select-highlight-${el.id}`)
+          if (htmlElement) {
+            //check the class (add or remove)
+            htmlElement.addEventListener(
+              'change',
+              e => {
+                const el = e.target
+                const colorId = el.value
+                const selectionId = el.getAttribute('data-selection-id')
+                const color = this.props.item.colors.find(color => color.id === colorId)
+                // htmlElement.style.backgroundColor = color.code
+                document.getElementById(`selection-${selectionId}`).style.backgroundColor = color.code
+
+                this.props.onChange(this.onAnswer({
+                  mode: this.props.item.mode,
+                  selectionId,
+                  colorId
+                }))
+              }
+            )
+          }
+        })
+        break
       }
     }
   }

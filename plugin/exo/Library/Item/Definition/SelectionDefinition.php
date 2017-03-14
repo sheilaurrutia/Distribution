@@ -153,7 +153,7 @@ class SelectionDefinition extends AbstractDefinition
               });
            case $question::MODE_HIGHLIGHT:
                return array_map(function (Selection $selection) {
-                   $best = $colorSelection;
+                   $best = null;
                    $bestScore = 0;
 
                    foreach ($selection->getColorSelections() as $colorSelection) {
