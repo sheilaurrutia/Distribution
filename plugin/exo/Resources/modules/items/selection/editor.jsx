@@ -246,7 +246,7 @@ class ColorElement extends Component {
 
 ColorElement.propTypes = {
   index: T.number.isRequired,
-  color: T.object.shape({
+  color: T.shape({
     code: T.string.isRequired,
     id: T.string.isRequired
   }),
