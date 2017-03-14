@@ -241,8 +241,9 @@ class SelectionQuestionSerializer implements SerializerInterface
 
         foreach ($answers as $answerData) {
             $colorSelection = null;
+
             foreach ($colorSelectionsEntities as $entityIndex => $selectionEntity) {
-                if ($selectionEntity->getSelection()->getId() === $selectionData->getId()) {
+                if ($selectionEntity->getColor()->getUuid() === $answerData->colorId) {
                     $colorSelection = $selectionEntity;
                     unset($colorSelectionsEntities[$entityIndex]);
                     break;
@@ -258,7 +259,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             }))[0];
 
             $colorSelection->setColor($colorE);
-            //$colorE->addColorSelection($colorSelection);
+            $colorSelection->setFeedback($answerData->feedback);
             $colorSelection->setSelection($selection);
             $colorSelection->setScore($answerData->score);
             $selection->addColorSelection($colorSelection);

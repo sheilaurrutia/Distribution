@@ -15,6 +15,7 @@ export class Highlight extends Component {
         case 'select': {
           this.checkedElements = this.props.item.selections
             .filter(selection => this.props.answer.indexOf(selection.id) > -1)
+          break
         }
         case 'find': {
           this.checkedElements = this.props.item.solutions
@@ -29,6 +30,10 @@ export class Highlight extends Component {
 
               return found
             })
+          break
+        }
+        case 'highlight': {
+          this.checkedElements = []
         }
       }
     }

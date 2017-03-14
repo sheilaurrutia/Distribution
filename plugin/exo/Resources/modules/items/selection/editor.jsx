@@ -243,30 +243,54 @@ class HighlightAnswer extends Component {
 
     return (
       <div>
-        <select
-          style={{ backgroundColor: color.code }}
-          onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
-          value={this.props.answer.colorId}
-        >
-          {this.props.item.colors.map((color, key) => {
-              return <option
-                className="color-option"
-                key={key}
-                value={color.id}
-                style={{ backgroundColor: color.code, hover: color.code }}
-              >
-                lol
-              </option>
-            })
-          }
-        </select>
-        <input
-           type="number"
-           onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
-           value={this.props.answer.score}
-         />
+        <div className='row'>
+          <div className="col-xs-4">
+            <select
+              style={{ backgroundColor: color.code }}
+              onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
+              value={this.props.answer.colorId}
+            >
+              {this.props.item.colors.map((color, key) => {
+                  return <option
+                    className="color-option"
+                    key={key}
+                    value={color.id}
+                    style={{ backgroundColor: color.code, hover: color.code }}
+                  >
+                    lol
+                  </option>
+                })
+              }
+            </select>
+          </div>
+          <div className="col-xs-3">
+            <input
+               type="number"
+               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
+               value={this.props.answer.score}
+               className="form-control choice-form"
+            />
+         </div>
+         <div className="col-xs-2">
+           <TooltipButton
+             id={`choice-${this.props.id}-feedback-toggle`}
+             className="fa fa-comments-o"
+             title={tex('choice_feedback_info')}
+             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+           />
+        </div>
       </div>
-    )
+      {this.state.showFeedback &&
+        <div className="feedback-container selection-form-row">
+          <Textarea
+            id={`choice-${this.props.id}-feedback`}
+            title={tex('feedback')}
+            onChange={text => this.props.onChange(actions.highlightUpdateAnswer('feedback', text, this.props.answer._answerId))}
+            content={this.props.answer.feedback}
+          />
+        </div>
+      }
+    </div>)
   }
 }
 

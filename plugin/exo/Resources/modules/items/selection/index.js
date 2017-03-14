@@ -9,6 +9,8 @@ function expectAnswer(item) {
           return item.solutions.filter(s => s.score > 0).map(s => s.id)
         case 'find':
           return item.solutions.filter(s => s.score > 0).map(s => { return {begin: s.begin, end: s.end} })
+        case 'highlight':
+          return item.solutions.map(solution => solution.answers.reduce((prev, current) => prev.score > current.score ? prev : current))
     }
 }
 

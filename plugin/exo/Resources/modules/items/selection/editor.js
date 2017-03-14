@@ -41,11 +41,17 @@ function decorate(item) {
   })
 
   if (item.mode === 'highlight') {
-    item.solutions.forEach(solution => {
+    const solutions = cloneDeep(item.solutions)
+
+    solutions.forEach(solution => {
+      let answers = []
       solution.answers.forEach(answer => {
-        answer = Object.assign({}, answer, {_answerId: makeId()})
+        answers.push(Object.assign({}, answer, {_answerId: makeId()}))
       })
+      solution.answers = answers
     })
+
+    item = Object.assign({}, item, {solutions})
   }
 
   return item
