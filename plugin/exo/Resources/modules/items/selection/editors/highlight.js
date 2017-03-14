@@ -1,9 +1,6 @@
-import {ITEM_CREATE} from '../../../quiz/editor/actions'
 import {makeActionCreator, makeId} from '../../../utils/utils'
-import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
-
 
 const HIGHLIGHT_ADD_SELECTION = 'HIGHLIGHT_ADD_SELECTION'
 const HIGHLIGHT_UPDATE_ANSWER = 'HIGHLIGHT_UPDATE_ANSWER'
@@ -115,6 +112,6 @@ export function reduce(item = {}, action) {
   return item
 }
 
-function validate(/*item*/) {
+export function validate(/*item*/) {
   return []
 }

@@ -1,6 +1,4 @@
-import {ITEM_CREATE} from '../../../quiz/editor/actions'
 import {makeActionCreator, makeId} from '../../../utils/utils'
-import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
 
@@ -22,11 +20,11 @@ export function reduce(item = {}, action) {
       const id = makeId()
 
       solutions.push({
-          selectionId: id,
-          score: 0,
-          begin: action.begin - sum,
-          end: action.end - sum
-        })
+        selectionId: id,
+        score: 0,
+        begin: action.begin - sum,
+        end: action.end - sum
+      })
 
       const text = utils.getTextFromDecorated(item._text)
 
@@ -66,6 +64,6 @@ export function reduce(item = {}, action) {
   return item
 }
 
-function validate(/*item*/) {
+export function validate(/*item*/) {
   return []
 }

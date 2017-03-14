@@ -13,13 +13,13 @@ export class SelectionPlayer extends Component {
   }
 
   getHtml() {
-   const elements = cloneDeep(this.elements)
+    const elements = cloneDeep(this.elements)
 
-   if (this.props.item.mode === 'highlight') {
-     elements.forEach(element => {
-       element._answers = this.props.item.solutions.find(solution => solution.selectionId === element.id).answers
-     })
-   }
+    if (this.props.item.mode === 'highlight') {
+      elements.forEach(element => {
+        element._answers = this.props.item.solutions.find(solution => solution.selectionId === element.id).answers
+      })
+    }
 
     return this.props.item.mode !== 'find' ?
       utils.makeTextHtml(this.props.item.text, elements, this.props.item.mode, this.props.item.colors ? this.props.item.colors: []):
@@ -39,8 +39,8 @@ export class SelectionPlayer extends Component {
         if (checked) {
           answers.push(selectionId)
         } else {
-          const index = answers.indexOf(selectionId);
-          if (index > -1) answers.splice(index, 1);
+          const index = answers.indexOf(selectionId)
+          if (index > -1) answers.splice(index, 1)
         }
         break
       }
@@ -81,7 +81,7 @@ export class SelectionPlayer extends Component {
   componentDidMount() {
     switch (this.props.item.mode) {
       case 'select': {
-        this.elements.forEach((el, key) => {
+        this.elements.forEach(el => {
           let htmlElement = document.getElementById('selection-' + el.id)
           if (htmlElement) {
             //check the class (add or remove)
@@ -107,27 +107,27 @@ export class SelectionPlayer extends Component {
       case 'find': {
         document.getElementById('selection-text-box').addEventListener(
           'click',
-          e => {
+          () => {
             let offsets = getOffsets(document.getElementById('selection-text-box'))
             //this._leftTries--
             //if (this._leftTries > 0) {
-              this.elements.forEach(element => {
-                if (offsets.start >= element.begin && offsets.end <= element.end) {
-                  this.props.onChange(this.onAnswer({
-                    mode: this.props.item.mode,
-                    selectionId: element.selectionId,
-                    begin: offsets.start,
-                    end: offsets.end
-                  }))
-                }
-              })
+            this.elements.forEach(element => {
+              if (offsets.start >= element.begin && offsets.end <= element.end) {
+                this.props.onChange(this.onAnswer({
+                  mode: this.props.item.mode,
+                  selectionId: element.selectionId,
+                  begin: offsets.start,
+                  end: offsets.end
+                }))
+              }
+            })
             //}
           }
         )
         break
       }
       case 'highlight': {
-        this.elements.forEach((el, key) => {
+        this.elements.forEach(el => {
           let htmlElement = document.getElementById(`select-highlight-${el.id}`)
           if (htmlElement) {
             //check the class (add or remove)

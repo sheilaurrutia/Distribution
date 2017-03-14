@@ -1,4 +1,3 @@
-import {tex} from './../../../utils/translate'
 import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -11,17 +10,16 @@ utils.makeTextHtml = (text, elements, mode, colors = []) => {
 
   elements.forEach(solution => {
     let end = text.slice(solution.end + idx)
-     text = text.slice(0, solution.begin + idx)
-     + utils.getFirstSpan(solution, mode)
-     + text.slice(solution.begin + idx, solution.end + idx)
-     + '</span>'
-     if (mode === 'editor') text += getEditButtons(solution)
-     if (mode === 'highlight') text += getHighlightButtons(solution, colors)
-     text += end
+    text = text.slice(0, solution.begin + idx)
+    + utils.getFirstSpan(solution, mode)
+    + text.slice(solution.begin + idx, solution.end + idx)
+    + '</span>'
+    if (mode === 'editor') text += getEditButtons(solution)
+    if (mode === 'highlight') text += getHighlightButtons(solution, colors)
+    text += end
 
-     idx += utils.getHtmlLength(solution, mode, colors) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
-
-   })
+    idx += utils.getHtmlLength(solution, mode, colors) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+  })
 
   return text
 }
@@ -55,12 +53,12 @@ function getEditButtons(solution) {
 }
 
 function getHighlightButtons(solution, colors) {
-  let options = `<option disabled selected value> -- select a color -- </option>`;
+  let options = '<option disabled selected value> -- select a color -- </option>'
   solution._answers.forEach(answer => {
     let color = colors.find(color => color.id === answer.colorId)
     options += `<option value="${answer.colorId}" style="background-color: ${color.code}"></option>`
   })
-  
+
   return `<select data-selection-id="${solution.id}" id="select-highlight-${solution.id}" class="select-highlight">${options}</select>`
 }
 

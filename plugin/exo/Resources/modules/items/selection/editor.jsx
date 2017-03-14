@@ -1,5 +1,4 @@
 import React, {Component, PropTypes as T} from 'react'
-
 import {FormGroup} from './../../components/form/form-group.jsx'
 import classes from 'classnames'
 import {t, tex} from './../../utils/translate'
@@ -10,7 +9,6 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
-import times from 'lodash/times'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -110,6 +108,17 @@ ChoiceItem.defaultProps = {
 }
 
 ChoiceItem.propTypes = {
+  id: T.string.isRequired,
+  selection: T.shape({
+    id: T.string.isRequired
+  }),
+  solution: T.shape({
+    selectionId: T.string.isRequired,
+    feedback: T.string
+  }),
+  item: T.shape({
+    mode: T.string.isRequired
+  }),
   score: T.number.isRequired,
   onChange: T.func.isRequired
 }
@@ -124,7 +133,7 @@ class SelectionForm extends Component {
   }
 
   getSelection() {
-    return this.props.item.selection ?
+    return this.props.item.selections ?
       this.props.item.selections.find(selection => selection.id === this.props.item._selectionId):
       {
         id: this.props.item._selectionId
@@ -205,11 +214,21 @@ class SelectionForm extends Component {
   }
 }
 
-SelectionForm.propTypes = {/*
-  item: T.shape.object,
+SelectionForm.propTypes = {
+  item: T.shape({
+    _selectionId: T.string,
+    mode: T.string.isRequired,
+    id: T.string.isRequired,
+    solutions: T.arrayOf(T.shape({
+      selectionId: T.string.isRequired
+    })),
+    selections: T.arrayOf(T.sjape({
+      id: T.string.isRequired
+    }))
+  }).isRequired,
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
-  _errors: T.object*/
+  _errors: T.object
 }
 
 class ColorElement extends Component {
@@ -225,11 +244,14 @@ class ColorElement extends Component {
   }
 }
 
-ColorElement.propTypes = {/*
+ColorElement.propTypes = {
   index: T.number.isRequired,
-  color: T.object.isRequired,
+  color: T.object.shape({
+    code: T.string.isRequired,
+    id: T.string.isRequired
+  }),
   onChange: T.func.isRequired,
-  _errors: T.object*/
+  _errors: T.object
 }
 
 class HighlightAnswer extends Component {
@@ -250,17 +272,16 @@ class HighlightAnswer extends Component {
               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
               value={this.props.answer.colorId}
             >
-              {this.props.item.colors.map((color, key) => {
-                  return <option
-                    className="color-option"
-                    key={key}
-                    value={color.id}
-                    style={{ backgroundColor: color.code, hover: color.code }}
-                  >
-                    lol
-                  </option>
-                })
-              }
+            {this.props.item.colors.map((color, key) => {
+              return <option
+                className="color-option"
+                key={key}
+                value={color.id}
+                style={{ backgroundColor: color.code, hover: color.code }}
+              >
+                lol
+              </option>
+            })}
             </select>
           </div>
           <div className="col-xs-3">
@@ -273,7 +294,7 @@ class HighlightAnswer extends Component {
          </div>
          <div className="col-xs-2">
            <TooltipButton
-             id={`choice-${this.props.id}-feedback-toggle`}
+             id={`choice-${this.props.answer._answerId}-feedback-toggle`}
              className="fa fa-comments-o"
              title={tex('choice_feedback_info')}
              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
@@ -283,7 +304,7 @@ class HighlightAnswer extends Component {
       {this.state.showFeedback &&
         <div className="feedback-container selection-form-row">
           <Textarea
-            id={`choice-${this.props.id}-feedback`}
+            id={`choice-${this.props.answer._answerId}-feedback`}
             title={tex('feedback')}
             onChange={text => this.props.onChange(actions.highlightUpdateAnswer('feedback', text, this.props.answer._answerId))}
             content={this.props.answer.feedback}
@@ -292,6 +313,22 @@ class HighlightAnswer extends Component {
       }
     </div>)
   }
+}
+
+HighlightAnswer.propTypes = {
+  item: T.shape({
+    colors: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      code: T.string.isRequired
+    }))
+  }),
+  onChange: T.func.isRequired,
+  answer: T.shape({
+    colorId: T.string.isRequired,
+    _answerId: T.string,
+    score: T.number.isRequired,
+    feedback: T.string
+  })
 }
 
 export class Selection extends Component {

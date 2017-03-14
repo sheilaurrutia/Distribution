@@ -1,4 +1,3 @@
-import {tex} from './../../../utils/translate'
 import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
 import React, {Component, PropTypes as T} from 'react'
@@ -100,27 +99,26 @@ export class Highlight extends Component {
   }
 
   getHtml() {
-    let isSolutionValid
     let idx = 0
     let text = this.props.item.text
 
     this.checkedElements.forEach(solution => {
       let isSolutionValid = this.props.displayTrueAnswer ? true: this.isSolutionValid(solution)
-       let end = text.slice(solution.end + idx)
-       text = text.slice(0, solution.begin + idx)
-       + this.getFirstSpan(solution, this.props.displayTrueAnswer, isSolutionValid)
-       + text.slice(solution.begin + idx, solution.end + idx)
-       + this.getWarningIcon(solution)
+      let end = text.slice(solution.end + idx)
+      text = text.slice(0, solution.begin + idx)
+      + this.getFirstSpan(solution, this.props.displayTrueAnswer, isSolutionValid)
+      + text.slice(solution.begin + idx, solution.end + idx)
+      + this.getWarningIcon(solution)
 
-       if (this.props.showScore) {
-         text += this.getSolutionScore(solution) + this.getFeedback(solution)
-       }
+      if (this.props.showScore) {
+        text += this.getSolutionScore(solution) + this.getFeedback(solution)
+      }
 
-       text += '</span>'
-       + end
+      text += '</span>'
+      + end
 
-       idx += this.getHtmlLength(solution, this.props.displayTrueAnswer, isSolutionValid) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
-     })
+      idx += this.getHtmlLength(solution, this.props.displayTrueAnswer, isSolutionValid) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+    })
 
     return text
   }
@@ -128,4 +126,25 @@ export class Highlight extends Component {
   componentDidMount() {
     $('[data-toggle="popover"]').popover()
   }
+}
+
+Highlight.propTypes = {
+  displayTrueAnswer: T.bool.isRequired,
+  answer: T.array,
+  showScore: T.bool.isRequired,
+  item: T.shape({
+    text: T.string.isRequired,
+    colors: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      code: T.string.isRequired
+    })),
+    mode: T.string.isRequired,
+    id: T.string.isRequired,
+    solutions: T.arrayOf(T.shape({
+      selectionId: T.string.isRequired
+    })),
+    selections: T.arrayOf(T.sjape({
+      id: T.string.isRequired
+    }))
+  })
 }
