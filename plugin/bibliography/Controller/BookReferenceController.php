@@ -3,6 +3,7 @@
 namespace Icap\BibliographyBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Form\BookReferenceConfigurationType;
 use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
@@ -77,7 +78,7 @@ class BookReferenceController extends Controller
     /**
      * @EXT\Route(
      *     "/configure/form",
-     *     name="bibliography_config_form"
+     *     name="icap_bibliography_config_form"
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
@@ -93,7 +94,7 @@ class BookReferenceController extends Controller
     }
 
     /**
-     * @EXT\Route("/update/configuration/{id}", name="bibliography_config_save")
+     * @EXT\Route("/update/configuration/{id}", name="icap_bibliography_config_save")
      * @EXT\ParamConverter("config", class="BibliographyBundle:BookReferenceConfiguration")
      * @EXT\Method("POST")
      */

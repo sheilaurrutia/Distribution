@@ -1,5 +1,5 @@
-<div class='modal-dialog'>
-    <form role="form" novalidate="novalidate"
+<div class='modal-dialog' id="icap-bibliography-modal">
+    <form role="form" novalidate="novalidate" name="bibliographyForm"
           action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
           method="post" {{ form_enctype(form) }}
           id="generic-form"
@@ -9,14 +9,90 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title">{{ 'create_resource' | trans({}, 'platform') }} ({{ resourceType | trans({}, 'resource') }})</h4>
         </div>
-        <div class='modal-body'>
-            {{ form_widget(form) }}
+        <div class='modal-body' data-ng-controller="bibliographyController as vm">
+
+
+            {{ form_row(form.name) }}
+            {{ form_row(form.isbn) }}
+            {{ form_row(form.author) }}
+
+            {{ form_row(form.description) }}
+            {{ form_row(form.abstract) }}
+            {{ form_row(form.publisher) }}
+            {{ form_row(form.printer) }}
+            {{ form_row(form.publicationYear) }}
+            {{ form_row(form.language) }}
+            {{ form_row(form.pageCount) }}
+            {{ form_row(form.url) }}
+            {{ form_row(form.coverUrl) }}
+
+            <div class="">
+                {{ 'add_more_info'|trans({}, 'icap_bibliography') }}
+                <div style="display: inline-block;"
+                     uib-tooltip="{{ 'use_at_least_one_field'|trans({}, 'icap_bibliography') }}"
+                     tooltip-placement="bottom"
+                     tooltip-enable="!vm.bookReference.title && !vm.bookReference.isbn && !vm.bookReference.author">
+                    <button type="button"
+
+                        class="btn btn-default"
+                        data-ng-click="vm.search(bibliographyForm)"
+                        data-ng-if="!vm.enterDataManually"
+                        data-ng-disabled="!vm.bookReference.title && !vm.bookReference.isbn && !vm.bookReference.author">{{ 'fetch_from_api'|trans({}, 'icap_bibliography') }}</button>
+                </div>
+                    <button type="button"
+                        id="manual-entry"
+                        class="btn btn-default"
+                        data-ng-if="!vm.searchFromApi"
+                        data-ng-click="vm.enterData()"
+                        >{{ 'manual_entry'|trans({}, 'icap_bibliography') }}</button>
+
+                <button type="button"
+                        class="btn btn-default"
+                        data-ng-click="vm.cancel()"
+                        data-ng-if="vm.searchFromApi || vm.enterDataManually">{{ 'cancel'|trans({}, 'platform') }}</button>
+
+            </div>
+
+            <div data-ng-if="vm.searchFromApi && vm.searchResults !== null && vm.searchResults.length == 0">No results</div>
+            <div data-ng-if="vm.searchFromApi && vm.searchResults === null">Search in progress</div>
+            <table data-ng-if="vm.searchFromApi && vm.searchResults.length > 0">
+                <thead>
+                    <tr>
+                        <th>{{ 'title'|trans({}, 'platform') }}</th>
+                        <th>{{ 'author'|trans({}, 'platform') }}</th>
+                        <th>{{ 'isbn'|trans({}, 'platform') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot></tfoot>
+                <tbody>
+                    <tr data-ng-repeat="book in vm.searchResults">
+                        {% verbatim %}
+                        <td>{{ book.title }}</td>
+                        <td><span data-ng-repeat="author in book.author_data">{{ author.name }}</span></td>
+                        <td>{{ book.isbn13 }}</td>
+                        {% endverbatim %}
+                        <td><button type="button" data-ng-click="vm.selectBook(book)">Choisir</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
             {{ form_rest(form) }}
+
+            {% verbatim %}<pre>
+    {{ vm.bookReference | json }}</pre>
+    {% endverbatim %}
         </div>
-        <div class="modal-footer">
-            {#{{ render(controller('IcapBibliographyBundle:BookReferenceController:addApiConnectorAction')) }}#}
+
+        <div class="modal-footer">{{ 'save_book_reference'|trans({}, 'icap_bibliography') }}
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
         </div>
+        <script src="{{ hotAsset('dist/claroline-distribution-plugin-bibliography-list.js') }}"></script>
+        <style>
+            [disabled] {
+               pointer-events: none;
+            }
+        </style>
     </form>
 </div>

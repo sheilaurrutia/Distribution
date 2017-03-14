@@ -20,7 +20,21 @@ class BookReferenceType extends AbstractType
                 'constraints' => new Assert\NotBlank(),
                 'attr' => [
                     'autofocus' => true,
+                    'data-ng-model' => 'vm.bookReference.title',
                 ],
+            ]
+        );
+
+        $builder->add(
+            'isbn',
+            'text',
+            [
+                'required' => false,
+                'attr' => [
+                    'data-ng-model' => 'vm.bookReference.isbn13',
+                ],
+                'label' => 'isbn',
+                'constraints' => new Assert\Length(['min' => 10, 'max' => 14]),
             ]
         );
 
@@ -31,34 +45,41 @@ class BookReferenceType extends AbstractType
                 'required' => true,
                 'label' => 'author',
                 'constraints' => new Assert\NotBlank(),
+                'attr' => [
+                    'data-ng-model' => 'vm.bookReference.author_data[0].name',
+                ],
             ]
         );
 
         $builder->add(
             'description',
-            'tinymce',
+            'textarea',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.summary',
+                ],
                 'label' => 'description',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
             ]
         );
 
         $builder->add(
             'abstract',
-            'tinymce',
+            'textarea',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.abstract',
+                ],
                 'label' => 'abstract',
-            ]
-        );
-
-        $builder->add(
-            'isbn',
-            'text',
-            [
-                'required' => false,
-                'label' => 'isbn',
-                'constraints' => new Assert\Length(['min' => 10, 'max' => 14]),
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
             ]
         );
 
@@ -67,7 +88,14 @@ class BookReferenceType extends AbstractType
             'text',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.publisher_text',
+                ],
                 'label' => 'publisher',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
             ]
         );
 
@@ -76,8 +104,14 @@ class BookReferenceType extends AbstractType
             'text',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.printer',
+                ],
                 'label' => 'printer',
-
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
             ]
         );
 
@@ -86,7 +120,14 @@ class BookReferenceType extends AbstractType
             'integer',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.publicationYear',
+                ],
                 'label' => 'publication_year',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
                 'constraints' => new Assert\Range(['min' => 0]),
             ]
         );
@@ -96,7 +137,14 @@ class BookReferenceType extends AbstractType
             'language',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.language',
+                ],
                 'label' => 'language',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
             ]
         );
 
@@ -105,7 +153,14 @@ class BookReferenceType extends AbstractType
             'integer',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.pageCount',
+                ],
                 'label' => 'page_count',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
                 'constraints' => new Assert\Range(['min' => 1]),
             ]
         );
@@ -115,7 +170,14 @@ class BookReferenceType extends AbstractType
             'url',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.url',
+                ],
                 'label' => 'url',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
                 'constraints' => new Assert\Url(['checkDNS' => true]),
             ]
         );
@@ -125,7 +187,14 @@ class BookReferenceType extends AbstractType
             'url',
             [
                 'required' => false,
+                'attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                    'data-ng-model' => 'vm.bookReference.coverUrl',
+                ],
                 'label' => 'cover_url',
+                'label_attr' => [
+                    'data-ng-hide' => '!vm.enterDataManually',
+                ],
                 'constraints' => new Assert\Url(['checkDNS' => true]),
             ]
         );

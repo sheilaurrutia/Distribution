@@ -12,3 +12,5 @@ url: URL
 cover_url: URL de la couverture
 api_search: Rechercher
 icap_book_reference_config: Configuration de l'éditeur de références bibliographiques
+fetch_from_api: Depuis l'API
+manual_entry: À la main

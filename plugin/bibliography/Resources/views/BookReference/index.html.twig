@@ -81,3 +81,8 @@
         ) %}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_wiki' }) }}"></script>
+{% endblock %}

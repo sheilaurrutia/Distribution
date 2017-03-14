@@ -11,3 +11,5 @@ page_count: Page count
 url: URL
 cover_url: Cover URL
 icap_book_reference_config: Book reference editor configuration
+fetch_from_api: Fetch from API
+manual_entry: Enter data manually
