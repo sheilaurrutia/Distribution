@@ -222,7 +222,7 @@ SelectionForm.propTypes = {
     solutions: T.arrayOf(T.shape({
       selectionId: T.string.isRequired
     })),
-    selections: T.arrayOf(T.sjape({
+    selections: T.arrayOf(T.shape({
       id: T.string.isRequired
     }))
   }).isRequired,
