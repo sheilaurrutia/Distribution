@@ -141,12 +141,12 @@ function validate(item) {
   }
 
   if (notBlank(item.text, true)) {
-    _errors.text = tex('text_required')
+    _errors.text = tex('selection_empty_text_error')
   }
 
   if (!_errors.text) {
     if (item.solutions.length === 0) {
-      _errors.text = tex('text_must_contain_selections')
+      _errors.text = tex('selection_text_must_contain_selections_error')
     }
   }
 

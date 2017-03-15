@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import {FormGroup} from './../../components/form/form-group.jsx'
 import classes from 'classnames'
-import {t, tex} from './../../utils/translate'
+import {tex} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {ColorPicker} from './../../components/form/color-picker.jsx'
@@ -243,6 +243,7 @@ class ColorElement extends Component {
         <ColorPicker color={this.props.color.code}
           onPick={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}>
         </ColorPicker>
+        <i onClick={() => this.props.onChange(actions.highlightRemoveColor(this.props.color.id))} className="fa fa-trash-o pointer"></i>
       </div>
     )
   }
@@ -380,8 +381,8 @@ export class Selection extends Component {
           <Radios
             groupName="mode-group"
             options={[
-              {value: 'select', label: tex('visible')},
-              {value: 'find', label: tex('invisible')},
+              {value: 'select', label: tex('select')},
+              {value: 'find', label: tex('find')},
               {value: 'highlight', label: tex('highlight')}
             ]}
             checkedValue={this.props.item.mode}
@@ -400,7 +401,7 @@ export class Selection extends Component {
             <div>
               <FormGroup
                 controlId="selection-default-penalty"
-                label={t('global_penalty')}
+                label={tex('global_penalty')}
                 warnOnly={!this.props.validating}
               >
               <input
@@ -444,7 +445,7 @@ export class Selection extends Component {
             type="button"
             className="btn btn-default"
             onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
-            {tex('create_answer_zone')}
+            {tex('create_selection_zone')}
           </button>
           {this.props.item._selectionPopover &&
             <div>

@@ -10,6 +10,7 @@ const HIGHLIGHT_ADD_COLOR = 'HIGHLIGHT_ADD_COLOR'
 const HIGHLIGHT_EDIT_COLOR = 'HIGHLIGHT_EDIT_COLOR'
 const HIGHLIGHT_ADD_ANSWER = 'HIGHLIGHT_ADD_ANSWER'
 const HIGHLIGHT_REMOVE_ANSWER = 'HIGHLIGHT_REMOVE_ANSWER'
+const HIGHLIGHT_REMOVE_COLOR = 'HIGHLIGHT_REMOVE_COLOR'
 
 export const actions = {
   highlightAddColor: makeActionCreator(HIGHLIGHT_ADD_COLOR),
@@ -18,7 +19,8 @@ export const actions = {
   highlightAddSelection: makeActionCreator(HIGHLIGHT_ADD_SELECTION, 'begin', 'end'),
   highlightRemoveSelection: makeActionCreator(HIGHLIGHT_REMOVE_SELECTION, 'selectionId'),
   highlightUpdateAnswer: makeActionCreator(HIGHLIGHT_UPDATE_ANSWER, 'parameter', 'value', '_answerId'),
-  highlightRemoveAnswer: makeActionCreator(HIGHLIGHT_REMOVE_ANSWER, '_answerId')
+  highlightRemoveAnswer: makeActionCreator(HIGHLIGHT_REMOVE_ANSWER, '_answerId'),
+  highlightRemoveColor: makeActionCreator(HIGHLIGHT_REMOVE_COLOR, 'colorId')
 }
 
 export function reduce(item = {}, action) {
@@ -118,6 +120,17 @@ export function reduce(item = {}, action) {
 
       return Object.assign({}, item, {solutions})
     }
+    case HIGHLIGHT_REMOVE_COLOR: {
+      const colors = cloneDeep(item.colors)
+      colors.splice(colors.findIndex(color => color.id === action.colorId), 1)
+
+      const solutions = cloneDeep(item.solutions)
+      solutions.forEach(solution => {
+        solution.answers.splice(solution.answers.findIndex(answer => answer.colorId === action.colorId))
+      })
+
+      return Object.assign({}, item, {colors, solutions})
+    }
   }
   return item
 }
@@ -135,21 +148,25 @@ export function validate(item) {
   })
 
   if (!hasValidAnswers) {
-    _errors.text = tex('selection_text_must_have_valid_answers')
+    _errors.text = tex('selection_text_must_have_valid_answers_error')
   }
 
-  const solution = item.solutions.find(solution => solution.selectionId === item._selectionId)
+  if (item._selectionId) {
+    const solution = item.solutions.find(solution => solution.selectionId === item._selectionId)
 
-  let hasModalValidAnswer = false
+    let hasModalValidAnswer = false
 
-  solution.answers.forEach(answer => {
-    if (answer.score > 0) {
-      hasModalValidAnswer = true
+    if (solution && solution.answers) {
+      solution.answers.forEach(answer => {
+        if (answer.score > 0) {
+          hasModalValidAnswer = true
+        }
+      })
     }
-  })
 
-  if (!hasModalValidAnswer) {
-    _errors.solutions = tex('selection_must_have_valid_answers')
+    if (!hasModalValidAnswer) {
+      _errors.solutions = tex('selection_must_have_valid_answers_errors')
+    }
   }
 
   return _errors

@@ -589,5 +589,17 @@
     "yes": "Oui",
     "your_answer": "Votre réponse",
     "your_answers": "Vos réponses",
-    "paper_legend": "Copies qui nécessitent une correction manuelle."
+    "paper_legend": "Copies qui nécessitent une correction manuelle.",
+    "add_color": "Ajouter une couleur",
+    "colour": "Couleur",
+    "possible_color_choices": "Choix de couleur possible",
+    "global_penalty": "Pénalité globale",
+    "create_selection_zone": "Créer une zone de sélection",
+    "selection_text_must_have_valid_answers_error": "Les sélection doivent contenir au moins une réponse valide",
+    "selection_empty_text_error": "Veuillez remplir le texte",
+    "selection_text_must_contain_selections_error": "Le texte doit contenir au moins une sélection",
+    "selection_must_have_valid_answers_errors": "Vous devez indiquer au moins une réponse valide",
+    "selection_text": "text",
+    "find": "Rechercher",
+    "highlight": "Surligner"
 }

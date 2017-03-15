@@ -76,7 +76,7 @@ export function validate(item) {
   })
 
   if (!hasValidAnswers) {
-    _errors.text = tex('selection_text_must_have_valid_answers')
+    _errors.text = tex('selection_text_must_have_valid_answers_error')
   }
 
   return _errors
