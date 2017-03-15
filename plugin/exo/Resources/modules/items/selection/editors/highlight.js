@@ -155,19 +155,35 @@ export function validate(item) {
     const solution = item.solutions.find(solution => solution.selectionId === item._selectionId)
 
     let hasModalValidAnswer = false
+    const selectedColors = []
 
     if (solution && solution.answers) {
       solution.answers.forEach(answer => {
         if (answer.score > 0) {
           hasModalValidAnswer = true
         }
+        selectedColors.push(answer.colorId)
       })
     }
 
     if (!hasModalValidAnswer) {
       _errors.solutions = tex('selection_must_have_valid_answers_errors')
     }
+
+    if (hasDuplicates(selectedColors)) {
+      _errors.solutions = tex('selection_answers_must_use_different_colors ')
+    }
+  }
+
+  const allowedColors = item.colors.map(color => color.code)
+
+  if (hasDuplicates(allowedColors)) {
+    _errors.colors = tex('selection_colors_must_be_differents')
   }
 
   return _errors
+}
+
+function hasDuplicates(array) {
+  return (new Set(array)).size !== array.length;
 }

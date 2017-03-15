@@ -11,6 +11,8 @@ import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
 import get from 'lodash/get'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
+import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
+import {CheckGroup} from './../../components/form/check-group.jsx'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -239,10 +241,10 @@ class ColorElement extends Component {
   render() {
     return (
       <div>
-        <span>{tex('color')} {this.props.index}</span>
         <ColorPicker color={this.props.color.code}
           onPick={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}>
         </ColorPicker>
+        {'\u00a0'}
         <i onClick={() => this.props.onChange(actions.highlightRemoveColor(this.props.color.id))} className="fa fa-trash-o pointer"></i>
       </div>
     )
@@ -378,6 +380,47 @@ export class Selection extends Component {
     return(
       <div>
         <div>
+          <CheckGroup
+            checkId={`item-${this.props.item.id}-fixedScore`}
+            checked={this.props.item.score.type === SCORE_FIXED}
+            label={tex('fixed_score')}
+            onChange={checked => this.props.onChange(actions.updateQuestion(checked ? SCORE_FIXED : SCORE_SUM, 'score.type', {}))}
+          />
+          {this.props.item.score.type === SCORE_FIXED &&
+            <div>
+              <FormGroup
+                controlId={`item-${this.props.item.id}-fixedSuccess`}
+                label={tex('fixed_score_on_success')}
+                warnOnly={!this.props.validating}
+              >
+                <input
+                  id={`item-${this.props.item.id}-fixedSuccess`}
+                  type="number"
+                  min="0"
+                  value={this.props.item.score.success}
+                  className="form-control"
+                  onChange={e => this.props.onChange(
+                    actions.updateQuestion(parseInt(e.target.value), 'score.success', {})
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                controlId={`item-${this.props.item.id}-fixedFailure`}
+                label={tex('fixed_score_on_failure')}
+                warnOnly={!this.props.validating}
+              >
+                <input
+                  id={`item-${this.props.item.id}-fixedFailure`}
+                  type="number"
+                  value={this.props.item.score.failure}
+                  className="form-control"
+                  onChange={e => this.props.onChange(
+                    actions.updateQuestion(parseInt(e.target.value), 'score.failure', {})
+                  )}
+                />
+              </FormGroup>
+            </div>
+          }
           <Radios
             groupName="mode-group"
             options={[
@@ -399,24 +442,30 @@ export class Selection extends Component {
           }
           {this.props.item.mode === 'highlight' &&
             <div>
-              <FormGroup
-                controlId="selection-default-penalty"
-                label={tex('global_penalty')}
-                warnOnly={!this.props.validating}
-              >
-              <input
-                 className="form-control"
-                 type="number"
-                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty'))}
-                 value={this.props.item.penalty}
-               />
-              </FormGroup>
+              {this.props.item.score.type === SCORE_SUM &&
+                <FormGroup
+                  controlId="selection-default-penalty"
+                  label={tex('global_penalty')}
+                  warnOnly={!this.props.validating}
+                >
+                <input
+                   className="form-control"
+                   type="number"
+                   min="0"
+                   onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+                   value={this.props.item.penalty}
+                 />
+                </FormGroup>
+              }
               <div>{tex('possible_color_choices')}</div>
               {
                 this.props.item.colors.map((color, index) => {
                   return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
                 })
               }
+                {get(this.props.item, '_errors.colors') &&
+                  <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+                }
                 <button
                   type="button"
                   className="btn btn-default"
@@ -429,7 +478,6 @@ export class Selection extends Component {
           <FormGroup
             error={get(this.props.item, '_errors.text')}
             warnOnly={!this.props.validating}
-            label={tex('selection_text')}
             controlId="selection-text-box"
           >
             <Textarea

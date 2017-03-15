@@ -1,7 +1,6 @@
 import {Selection as component} from './editor.jsx'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {makeActionCreator, makeId} from './../../utils/utils'
-import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils/utils'
 import {reduce as findReduce} from './editors/find'
@@ -74,11 +73,24 @@ function reduce(item = {}, action) {
       })
     }
     case UPDATE_QUESTION: {
-      const obj = {}
       const oldText = item._text
 
-      set(obj, action.parameter, action.value)
-      item = Object.assign({}, item, obj)
+      if (action.parameter === 'score.type') {
+        item = cloneDeep(item)
+        item.score.type = action.value
+      }
+
+      if (action.parameter === 'score.success') {
+        item = cloneDeep(item)
+        item.score.success = action.value
+      }
+
+      if (action.parameter === 'score.failure') {
+        item = cloneDeep(item)
+        item.score.failure = action.value
+      }
+
+      //item = Object.assign({}, item, obj)
       //set the dislayed text here
       if (action.parameter === 'text') {
         //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
