@@ -1,6 +1,7 @@
 import {makeActionCreator, makeId} from '../../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
+import {tex} from './../../../utils/translate'
 
 const HIGHLIGHT_ADD_SELECTION = 'HIGHLIGHT_ADD_SELECTION'
 const HIGHLIGHT_UPDATE_ANSWER = 'HIGHLIGHT_UPDATE_ANSWER'
@@ -8,6 +9,7 @@ const HIGHLIGHT_REMOVE_SELECTION = 'HIGHLIGHT_REMOVE_SELECTION'
 const HIGHLIGHT_ADD_COLOR = 'HIGHLIGHT_ADD_COLOR'
 const HIGHLIGHT_EDIT_COLOR = 'HIGHLIGHT_EDIT_COLOR'
 const HIGHLIGHT_ADD_ANSWER = 'HIGHLIGHT_ADD_ANSWER'
+const HIGHLIGHT_REMOVE_ANSWER = 'HIGHLIGHT_REMOVE_ANSWER'
 
 export const actions = {
   highlightAddColor: makeActionCreator(HIGHLIGHT_ADD_COLOR),
@@ -15,7 +17,8 @@ export const actions = {
   highlightAddAnswer: makeActionCreator(HIGHLIGHT_ADD_ANSWER, 'selectionId'),
   highlightAddSelection: makeActionCreator(HIGHLIGHT_ADD_SELECTION, 'begin', 'end'),
   highlightRemoveSelection: makeActionCreator(HIGHLIGHT_REMOVE_SELECTION, 'selectionId'),
-  highlightUpdateAnswer: makeActionCreator(HIGHLIGHT_UPDATE_ANSWER, 'parameter', 'value', '_answerId')
+  highlightUpdateAnswer: makeActionCreator(HIGHLIGHT_UPDATE_ANSWER, 'parameter', 'value', '_answerId'),
+  highlightRemoveAnswer: makeActionCreator(HIGHLIGHT_REMOVE_ANSWER, '_answerId')
 }
 
 export function reduce(item = {}, action) {
@@ -108,10 +111,46 @@ export function reduce(item = {}, action) {
 
       return Object.assign({}, item, {solutions})
     }
+    case HIGHLIGHT_REMOVE_ANSWER: {
+      const solutions = cloneDeep(item.solutions)
+      const solution = solutions.find(solution => solution.selectionId === item._selectionId)
+      solution.answers.splice(solution.answers.findIndex(answer => answer._answerId === action._answerId), 1)
+
+      return Object.assign({}, item, {solutions})
+    }
   }
   return item
 }
 
-export function validate(/*item*/) {
-  return []
+export function validate(item) {
+  const _errors = {}
+  let hasValidAnswers = false
+
+  item.solutions.forEach(solution => {
+    solution.answers.forEach(answer => {
+      if (answer.score > 0) {
+        hasValidAnswers = true
+      }
+    })
+  })
+
+  if (!hasValidAnswers) {
+    _errors.text = tex('selection_text_must_have_valid_answers')
+  }
+
+  const solution = item.solutions.find(solution => solution.selectionId === item._selectionId)
+
+  let hasModalValidAnswer = false
+
+  solution.answers.forEach(answer => {
+    if (answer.score > 0) {
+      hasModalValidAnswer = true
+    }
+  })
+
+  if (!hasModalValidAnswer) {
+    _errors.solutions = tex('selection_must_have_valid_answers')
+  }
+
+  return _errors
 }

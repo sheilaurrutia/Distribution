@@ -9,6 +9,8 @@ import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
+import get from 'lodash/get'
+import {ErrorBlock} from './../../components/form/error-block.jsx'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -200,8 +202,7 @@ class SelectionForm extends Component {
           {this.props.item.mode === 'highlight' &&
             <button
               className="btn btn-default"
-              onClick={() => this.props.onChange(
-                actions.highlightAddAnswer(this.props.item._selectionId))}
+              onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
               type="button"
             >
               <i className="fa fa-plus"/>
@@ -209,6 +210,9 @@ class SelectionForm extends Component {
             </button>
           }
         </div>
+        {get(this.props, '_errors.solutions') &&
+          <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
+        }
       </Popover>
     )
   }
@@ -299,6 +303,9 @@ class HighlightAnswer extends Component {
              title={tex('choice_feedback_info')}
              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
            />
+        </div>
+        <div className="col-xs-3">
+          <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer"></i>
         </div>
       </div>
       {this.state.showFeedback &&
@@ -418,14 +425,21 @@ export class Selection extends Component {
                 </button>
             </div>
           }
-          <Textarea
-            id={this.props.item.id}
-            onSelect={this.onSelect}
-            onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
-            onClick={this.onSelectionClick.bind(this)}
-            content={this.props.item._text}
-            updateText={this.updateText}
-          />
+          <FormGroup
+            error={get(this.props.item, '_errors.text')}
+            warnOnly={!this.props.validating}
+            label={tex('selection_text')}
+            controlId="selection-text-box"
+          >
+            <Textarea
+              id={this.props.item.id}
+              onSelect={this.onSelect}
+              onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
+              onClick={this.onSelectionClick.bind(this)}
+              content={this.props.item._text}
+              updateText={this.updateText}
+            />
+        </FormGroup>
           <button
             type="button"
             className="btn btn-default"

@@ -1,6 +1,7 @@
 import {makeActionCreator, makeId} from '../../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from '../utils/utils'
+import {tex} from './../../../utils/translate'
 
 const SELECT_ADD_SELECTION = 'SELECT_ADD_SELECTION'
 const SELECT_UPDATE_ANSWER = 'SELECT_UPDATE_ANSWER'
@@ -74,6 +75,19 @@ export function reduce(item = {}, action) {
   return item
 }
 
-export function validate(/*item*/) {
-  return []
+export function validate(item) {
+  const _errors = {}
+  let hasValidAnswers = false
+
+  item.solutions.forEach(solution => {
+    if (solution.score > 0) {
+      hasValidAnswers = true
+    }
+  })
+
+  if (!hasValidAnswers) {
+    _errors.text = tex('selection_text_must_have_valid_answers')
+  }
+
+  return _errors
 }

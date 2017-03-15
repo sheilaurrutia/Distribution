@@ -10,6 +10,11 @@ import {reduce as highlightReduce} from './editors/highlight'
 import {actions as findActions} from './editors/find'
 import {actions as selectActions} from './editors/select'
 import {actions as highlightActions} from './editors/highlight'
+import {validate as findValidate} from './editors/find'
+import {validate as selectValidate} from './editors/select'
+import {validate as highlightValidate} from './editors/highlight'
+import {notBlank} from './../../utils/validate'
+import {tex} from './../../utils/translate'
 
 const UPDATE_QUESTION = 'UPDATE_QUESTION'
 const CLOSE_POPOVER = 'CLOSE_POPOVER'
@@ -118,8 +123,34 @@ function reduce(item = {}, action) {
   return item
 }
 
-function validate(/*item*/) {
-  return []
+function validate(item) {
+  let _errors = {}
+
+  switch (item.mode) {
+    case 'find': {
+      _errors = Object.assign({}, _errors, findValidate(item))
+      break
+    }
+    case 'select': {
+      _errors = Object.assign({}, _errors, selectValidate(item))
+      break
+    }
+    case 'highlight': {
+      _errors = Object.assign({}, _errors, highlightValidate(item))
+    }
+  }
+
+  if (notBlank(item.text, true)) {
+    _errors.text = tex('text_required')
+  }
+
+  if (!_errors.text) {
+    if (item.solutions.length === 0) {
+      _errors.text = tex('text_must_contain_selections')
+    }
+  }
+
+  return _errors
 }
 
 export function recomputePositions(item, offsets, oldText) {
