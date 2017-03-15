@@ -94,15 +94,6 @@ class SelectionQuestionSerializer implements SerializerInterface
             $this->deserializeSolutions($selectionQuestion, $data->solutions, $options);
         }
 
-        /*
-        foreach ($selectionQuestion->getSelections() as $selection) {
-            foreach ($selection->getColorSelections() as $cs) {
-                var_dump($cs->getId());
-            }
-        }
-
-        throw new \Exception();*/
-
         return $selectionQuestion;
     }
 
@@ -259,7 +250,11 @@ class SelectionQuestionSerializer implements SerializerInterface
             }))[0];
 
             $colorSelection->setColor($colorE);
-            $colorSelection->setFeedback($answerData->feedback);
+
+            if ($answerData->feedback) {
+                $colorSelection->setFeedback($answerData->feedback);
+            }
+
             $colorSelection->setSelection($selection);
             $colorSelection->setScore($answerData->score);
             $selection->addColorSelection($colorSelection);
