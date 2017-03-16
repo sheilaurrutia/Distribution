@@ -92,7 +92,7 @@ class ChoiceItem extends Component {
          </div>
           <div className="col-xs-3">
             <TooltipButton
-              id={`choice-${this.props.id}-feedback-toggle`}
+              id={`choice-${this.selectionId}-feedback-toggle`}
               className="fa fa-comments-o"
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
@@ -102,7 +102,7 @@ class ChoiceItem extends Component {
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
-              id={`choice-${this.props.id}-feedback`}
+              id={`choice-${this.selectionId}-feedback`}
               title={tex('feedback')}
               onChange={text => this.props.onChange(updateAnswer(text, 'feedback', this.selectionId, this.props.item.mode))}
               content={this.props.solution.feedback}
@@ -122,7 +122,6 @@ ChoiceItem.defaultProps = {
 }
 
 ChoiceItem.propTypes = {
-  id: T.string.isRequired,
   selection: T.shape({
     id: T.string.isRequired
   }),
@@ -219,6 +218,7 @@ class SelectionForm extends Component {
               className="btn btn-default"
               onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
               type="button"
+              disabled={this.getSolution().answers.length >= this.props.item.colors.length }
             >
               <i className="fa fa-plus"/>
               {tex('color')}
@@ -243,7 +243,8 @@ SelectionForm.propTypes = {
     })),
     selections: T.arrayOf(T.shape({
       id: T.string.isRequired
-    }))
+    })),
+    colors: T.array
   }).isRequired,
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
@@ -299,7 +300,7 @@ class HighlightAnswer extends Component {
                 value={color.id}
                 style={{ backgroundColor: color.code, hover: color.code }}
               >
-                lol
+                {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
               </option>
             })}
             </select>
@@ -315,6 +316,7 @@ class HighlightAnswer extends Component {
             }
             {this.props.item.score.type === SCORE_FIXED &&
               <CheckGroup
+                label=""
                 checkId={this.props.answer._answerId}
                 checked={this.props.answer.score > 0}
                 onChange={checked => this.props.onChange(actions.highlightUpdateAnswer('score', checked ? 1 : 0, this.props.answer._answerId))}
