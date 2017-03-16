@@ -90,7 +90,6 @@ function reduce(item = {}, action) {
         item.score.failure = action.value
       }
 
-      //item = Object.assign({}, item, obj)
       //set the dislayed text here
       if (action.parameter === 'text') {
         //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
@@ -99,6 +98,8 @@ function reduce(item = {}, action) {
       }
       //if we set the mode to highlight, we also initialize the colors
       if (action.parameter === 'mode') {
+        item = Object.assign({}, item, {mode: action.value})
+
         switch (action.value) {
           case 'highlight': {
             item = toHighlightMode(item)
@@ -198,7 +199,8 @@ export function recomputePositions(item, offsets, oldText) {
 }
 
 function toFindMode(item) {
-  const solutions = cloneDeep(item.solutions)
+  const newItem = cloneDeep(item)
+  const solutions = newItem.solutions
   //add beging and end to solutions
   solutions.forEach(solution => {
     let selection = item.selections.find(selection => selection.id === solution.selectionId)
@@ -206,13 +208,10 @@ function toFindMode(item) {
     solution.end = selection.end
   })
 
-  //remove selections
-  delete item.selections
+  delete newItem.selections
+  delete newItem.colors
 
-  //remove colors
-  delete item.colors
-
-  return Object.assign({}, item, {solutions, tries: solutions.length})
+  return Object.assign({}, newItem, {solutions, tries: solutions.length})
 }
 
 function toSelectMode(item) {

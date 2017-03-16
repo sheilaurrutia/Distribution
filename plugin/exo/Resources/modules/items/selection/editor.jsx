@@ -446,11 +446,20 @@ export class Selection extends Component {
           >
           </Radios>
           {this.props.item.mode === 'find' &&
-            <input
-               type="number"
-               onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
-               value={this.props.item.tries}
-             />
+            <FormGroup
+              controlId={`item-${this.props.item.id}-tries`}
+              label={tex('tries')}
+              warnOnly={!this.props.validating}
+            >
+              <input
+                id={`item-${this.props.item.id}-tries`}
+                type="number"
+                min={this.props.item.solutions.length}
+                value={this.props.item.tries}
+                className="form-control"
+                onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
+              />
+            </FormGroup>
           }
           {this.props.item.mode === 'highlight' &&
             <div>
@@ -469,28 +478,31 @@ export class Selection extends Component {
                  />
                 </FormGroup>
               }
-              <div>{tex('possible_color_choices')}</div>
-              {
-                this.props.item.colors.map((color, index) => {
-                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
-                })
-              }
-                {get(this.props.item, '_errors.colors') &&
-                  <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+              <div className="panel-body">
+                <div>{tex('possible_color_choices')}</div>
+                {
+                  this.props.item.colors.map((color, index) => {
+                    return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
+                  })
                 }
-                <button
-                  type="button"
-                  className="btn btn-default"
-                  onClick={() => this.props.onChange(actions.highlightAddColor())}
-                >
-                  <i className="fa fa-plus"/>{tex('add_color')}
-                </button>
+                  {get(this.props.item, '_errors.colors') &&
+                    <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+                  }
+                  <button
+                    type="button"
+                    className="btn btn-default"
+                    onClick={() => this.props.onChange(actions.highlightAddColor())}
+                  >
+                    <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
+                  </button>
+              </div>
             </div>
           }
           <FormGroup
             error={get(this.props.item, '_errors.text')}
             warnOnly={!this.props.validating}
             controlId="selection-text-box"
+            label=""
           >
             <Textarea
               id={this.props.item.id}
@@ -505,7 +517,7 @@ export class Selection extends Component {
             type="button"
             className="btn btn-default"
             onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
-            {tex('create_selection_zone')}
+            {'\u00a0'}{tex('create_selection_zone')}
           </button>
           {this.props.item._selectionPopover &&
             <div>
