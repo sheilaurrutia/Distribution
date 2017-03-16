@@ -140,6 +140,10 @@ export function validate(item) {
   let hasValidAnswers = false
 
   item.solutions.forEach(solution => {
+    if (solution.answers.length === 0) {
+      _errors.text = tex('selection_solution_missing_colors')
+    }
+
     solution.answers.forEach(answer => {
       if (answer.score > 0) {
         hasValidAnswers = true
@@ -166,6 +170,9 @@ export function validate(item) {
       })
     }
 
+
+
+
     if (!hasModalValidAnswer) {
       _errors.solutions = tex('selection_must_have_valid_answers_errors')
     }
@@ -180,6 +187,7 @@ export function validate(item) {
   if (hasDuplicates(allowedColors)) {
     _errors.colors = tex('selection_colors_must_be_differents')
   }
+
 
   return _errors
 }
