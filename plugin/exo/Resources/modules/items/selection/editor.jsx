@@ -292,12 +292,21 @@ class HighlightAnswer extends Component {
             </select>
           </div>
           <div className="col-xs-3">
-            <input
-               type="number"
-               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
-               value={this.props.answer.score}
-               className="form-control choice-form"
-            />
+            {this.props.item.score.type === SCORE_SUM &&
+              <input
+                 type="number"
+                 onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
+                 value={this.props.answer.score}
+                 className="form-control choice-form"
+              />
+            }
+            {this.props.item.score.type === SCORE_FIXED &&
+              <CheckGroup
+                checkId={this.props.answer._answerId}
+                checked={this.props.answer.score > 0}
+                onChange={checked => this.props.onChange(actions.highlightUpdateAnswer('score', checked ? 1 : 0, this.props.answer._answerId))}
+              />
+            }
          </div>
          <div className="col-xs-2">
            <TooltipButton
@@ -330,7 +339,10 @@ HighlightAnswer.propTypes = {
     colors: T.arrayOf(T.shape({
       id: T.string.isRequired,
       code: T.string.isRequired
-    }))
+    })),
+    score: T.shape({
+      type: T.string.isRequired
+    })
   }),
   onChange: T.func.isRequired,
   answer: T.shape({
