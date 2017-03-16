@@ -165,7 +165,7 @@ class SelectionForm extends Component {
   }
 
   removeAndClose() {
-    removeSelection(this.props.item._selectionId, this.props.item.mode)
+    this.props.onChange(removeSelection(this.props.item._selectionId, this.props.item.mode))
     this.closePopover()
   }
 
@@ -484,13 +484,13 @@ export class Selection extends Component {
                   label={tex('global_penalty')}
                   warnOnly={!this.props.validating}
                 >
-                <input
-                   className="form-control"
-                   type="number"
-                   min="0"
-                   onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
-                   value={this.props.item.penalty}
-                 />
+                  <input
+                     className="form-control"
+                     type="number"
+                     min="0"
+                     onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+                     value={this.props.item.penalty}
+                   />
                 </FormGroup>
               }
               <div className="panel-body">
@@ -519,14 +519,14 @@ export class Selection extends Component {
             controlId="selection-text-box"
             label=""
           >
-            <Textarea
-              id={this.props.item.id}
-              onSelect={this.onSelect}
-              onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
-              onClick={this.onSelectionClick.bind(this)}
-              content={this.props.item._text}
-              updateText={this.updateText}
-            />
+          <Textarea
+            id={this.props.item.id}
+            onSelect={this.onSelect}
+            onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
+            onClick={this.onSelectionClick.bind(this)}
+            content={this.props.item._text}
+            updateText={this.updateText}
+          />
         </FormGroup>
           <button
             type="button"
