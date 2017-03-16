@@ -25,14 +25,14 @@ class ExerciseValidator extends JsonSchemaValidator
     {
         return 'quiz/schema.json';
     }
-    
+
     public function validateAfterSchema($exercise, array $options = []) {}
-    
+
     // ...
 }
 ```
 
-A JsonSchemaValidator must implements 2 methods : 
+A JsonSchemaValidator must implements 2 methods :
 - `getJsonSchemaUri()` : returns the relative path to the JSON Schema file.
 - `validateAfterSchema($data, array $options = [])` : adds some custom validation that can not be achieved by JSON Schema.
 
@@ -51,7 +51,7 @@ class ExerciseSerializer implements SerializerInterface
 }
 ```
 
-A Serializer exposes 2 methods : 
+A Serializer exposes 2 methods :
 - `serialize($entity, array $options = [])` : converts `$entity` into raw data (e.g. array, stdClass)
 - `deserialize($data, $entity = null, array $options = [])` : converts `$data` into symfony entities
 
@@ -67,15 +67,73 @@ This parameter permits to handle custom serialization logic (e.g. enable or disa
 
 Add your new type to [QuestionType.php](Library/Question/QuestionType.php).
 
-### Create the data model
-
 ### Create the JSON Schema
 
 In order to use validators, it is needed to add a schema for the new Question in [JSON Quiz](https://github.com/json-quiz/json-quiz).
 
-A new Question type needs 2 schemas : 
-- One to define the Question data format
-- One to define the Answer data format
+A new Question type needs 2 schemas:
+- One to define the Question data format in `format/question`
+- One to define the Answer data format in `format/answer-data`
+
+E.g. for the simple question type 'open', the Question data format:
+
+```{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "allOf": [
+    {
+      "$ref": "http://json-quiz.github.io/json-quiz/schemas/question/base/schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["application/x.open+json"]
+        },
+        "contentType": {
+          "enum": ["text", "audio", "video"],
+          "description": "The content type of the answer to submit to this question"
+        },
+        "maxLength": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0,
+          "description": "The maximum length of the answer"
+        }
+      },
+      "required": ["contentType"]
+    }
+  ]
+}
+```
+
+The Answer data schema:
+
+```{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": ["application/x.open+json"]
+    },
+    "data": {
+      "type": "string"
+    }
+  }
+}
+```
+Also create tests in `test` add the question type in:
+- `test/answer-data`
+- `test/question`
+
+and reference them in [Show assert.js](assert.js).
+
+### Create the MIME type
+
+Create a new MIME type in file [Show QuestionType.php](Library/Question/QuestionType.php).
+
+### Create the data model
+
+Create a question type entity in `Entity/QuestionType`.
 
 ### Create the Serializer
 
@@ -93,7 +151,38 @@ class ChoiceSerializer implements QuestionHandlerInterface, SerializerInterface
 }
 ```
 
-The `QuestionSerializer` is now able to forward the serialization to the correct question type serializer based 
-on the question type.
+The `QuestionSerializer` is now able to forward the serialization to the correct
+question type serializer based on the question type.
 
 ### Create the Validator
+
+Create a question type validator in `Library/Validator/JsonSchema/Question/Type`.
+
+### Create the Definition
+
+A definition is all necessary references to handle a question type:
+- question Validator
+- answer Validator
+- serializer
+- method `correctAnswer(AbstractQuestion $question, $answer)` : correct a given
+answer with expected, unexpected and missing answers
+- method `expectAnswer(AbstractQuestion $question)` : gives global score
+
+Create a definition for the question type in `Library/Question/Definition`.
+
+## [Font-end] Adding a new question type
+
+Front-end files of ExoBundle are located in `Resources/modules/items`.
+
+### Create an item type
+
+Add the new item type in [Show item-types.js](Resources/modules/items/item-types.js).
+
+### Create views of item
+
+Create or duplicate a folder named by your question type in `Resources/modules/items`.
+
+You need to create a file named index.js which specifies:
+- MIME type (same as API)
+- question type name (same as folder)
+- paper, editor, player and feedback views
