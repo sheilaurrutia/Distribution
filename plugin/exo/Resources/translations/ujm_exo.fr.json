@@ -609,7 +609,7 @@
     "selection_must_have_valid_answers_errors": "Vous devez indiquer au moins une réponse valide",
     "selection_answers_must_use_different_colors": "Les couleurs dovient être différentes",
     "selection_colors_must_be_differents": "Vous ne pouvez pas utiliser deux couleurs identiques",
-    "selection_text": "text",
     "find": "Rechercher",
-    "highlight": "Surligner"
+    "highlight": "Surligner",
+    "selection_solution_missing_colors_error": "Les sélections doivent au moins contenir une couleur"
 }

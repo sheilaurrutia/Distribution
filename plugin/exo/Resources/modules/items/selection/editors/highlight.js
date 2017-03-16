@@ -141,7 +141,7 @@ export function validate(item) {
 
   item.solutions.forEach(solution => {
     if (solution.answers.length === 0) {
-      _errors.text = tex('selection_solution_missing_colors')
+      _errors.text = tex('selection_solution_missing_colors_error')
     }
 
     solution.answers.forEach(answer => {

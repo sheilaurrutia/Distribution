@@ -251,7 +251,7 @@ class SelectionQuestionSerializer implements SerializerInterface
 
             $colorSelection->setColor($colorE);
 
-            if ($answerData->feedback) {
+            if (property_exists($answerData, 'feedback')) {
                 $colorSelection->setFeedback($answerData->feedback);
             }
 
