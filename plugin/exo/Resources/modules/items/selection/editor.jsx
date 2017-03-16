@@ -73,13 +73,23 @@ class ChoiceItem extends Component {
       }>
         <div className='row'>
           <div className="col-xs-4">
-            <input
-              className="form-control choice-form"
-              type="number"
-              value={this.props.score}
-              onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
-            />
-          </div>
+            {this.props.item.score.type === SCORE_SUM &&
+              <input
+                className="form-control choice-form"
+                type="number"
+                value={this.props.score}
+                onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
+              />
+            }
+            {this.props.item.score.type === SCORE_FIXED &&
+              <CheckGroup
+                label={tex('correct_answer')}
+                checkId={'selection-chk-' + this.selectionId}
+                checked={this.props.score > 0}
+                onChange={checked => this.props.onChange(updateAnswer(checked ? 1 : 0, 'score', this.selectionId, this.props.item.mode))}
+              />
+            }
+         </div>
           <div className="col-xs-3">
             <TooltipButton
               id={`choice-${this.props.id}-feedback-toggle`}
@@ -121,7 +131,10 @@ ChoiceItem.propTypes = {
     feedback: T.string
   }),
   item: T.shape({
-    mode: T.string.isRequired
+    mode: T.string.isRequired,
+    score: T.shape({
+      type: T.string.isReqired
+    })
   }),
   score: T.number.isRequired,
   onChange: T.func.isRequired

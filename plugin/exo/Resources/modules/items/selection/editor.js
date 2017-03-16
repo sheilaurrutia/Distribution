@@ -206,6 +206,7 @@ function toFindMode(item) {
     let selection = item.selections.find(selection => selection.id === solution.selectionId)
     solution.begin = selection.begin
     solution.end = selection.end
+    solution.score = 0
   })
 
   delete newItem.selections
