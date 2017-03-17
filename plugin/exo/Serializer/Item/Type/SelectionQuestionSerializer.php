@@ -84,6 +84,10 @@ class SelectionQuestionSerializer implements SerializerInterface
             $this->deserializeColors($selectionQuestion, $data->colors, $options);
         }
 
+        if (property_exists($data, 'penalty')) {
+            $selectionQuestion->setPenalty($data->penalty);
+        }
+
         $options['selection_mode'] = $data->mode;
 
         if (isset($data->selections) && $data->mode !== 'find') {

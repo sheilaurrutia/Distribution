@@ -3,13 +3,15 @@ import {utils} from './utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {getOffsets} from '../../components/form/selection/selection'
 import classes from 'classnames'
+import {tex} from './../../utils/translate'
 
 export class SelectionPlayer extends Component {
   constructor(props) {
     super(props)
     this.elements = this.props.item.mode === 'find' ? this.props.item.solutions : this.props.item.selections
     this.checkedElements = []
-    this._leftTries = this.props.item.tries
+    const answers = cloneDeep(this.props.answer)
+    this.answers = answers || this.props.item.mode === 'find' ? {positions:[], tries:0}: []
   }
 
   getHtml() {
@@ -25,13 +27,15 @@ export class SelectionPlayer extends Component {
       utils.makeTextHtml(this.props.item.text, elements, this.props.item.mode, this.props.item.colors ? this.props.item.colors: []):
       utils.makeTextHtml(
         this.props.item.text,
-        this.elements.filter(element => this.props.answer.find(ans => ans >= element.begin && ans <= element.end)),
+        this.elements.filter(element => this.answers.positions.find(ans => ans >= element.begin && ans <= element.end)),
         'select'
       )
   }
 
   onAnswer(options = {}) {
-    const answers = cloneDeep(this.props.answer)
+    this.answers = cloneDeep(this.answers)
+    const answers = this.answers
+
     switch (options.mode) {
       case 'select': {
         let selectionId = options.selectionId
@@ -45,7 +49,11 @@ export class SelectionPlayer extends Component {
         break
       }
       case 'find': {
-        answers.push(options.begin)
+        if (options.begin) {
+          answers.positions.push(options.begin)
+        }
+        //maybe this should be stored in the server
+        answers.tries++
         break
       }
       case 'highlight': {
@@ -66,9 +74,13 @@ export class SelectionPlayer extends Component {
   }
 
   render() {
+    const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
     return <div>
-      {this.props.item.mode === 'find' &&
-        <div className='select-tries'>Tries: {this._leftTries}</div>
+      {this.props.item.mode === 'find' && leftTries > 0 &&
+        <div style={{textAlign:'center'}} className='select-tries'>{tex('left_tries')}: {leftTries}</div>
+      }
+      {this.props.item.mode === 'find' && leftTries <= 0 &&
+        <div style={{textAlign:'center'}} className='selection-error'>{tex('no_try_left')}</div>
       }
       <div
         id="selection-text-box"
@@ -109,19 +121,23 @@ export class SelectionPlayer extends Component {
           'click',
           () => {
             let offsets = getOffsets(document.getElementById('selection-text-box'))
-            //this._leftTries--
-            //if (this._leftTries > 0) {
-            this.elements.forEach(element => {
-              if (offsets.start >= element.begin && offsets.end <= element.end) {
-                this.props.onChange(this.onAnswer({
-                  mode: this.props.item.mode,
-                  selectionId: element.selectionId,
-                  begin: offsets.start,
-                  end: offsets.end
-                }))
-              }
-            })
-            //}
+            const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
+            if (leftTries > 0) {
+              this.elements.forEach(element => {
+                if (offsets.start >= element.begin && offsets.end <= element.end) {
+                  this.props.onChange(this.onAnswer({
+                    mode: this.props.item.mode,
+                    selectionId: element.selectionId,
+                    begin: offsets.start,
+                    end: offsets.end
+                  }))
+                } else {
+                  this.props.onChange(this.onAnswer({
+                    mode: this.props.item.mode
+                  }))
+                }
+              })
+            }
           }
         )
         break
@@ -159,10 +175,14 @@ export class SelectionPlayer extends Component {
 
 SelectionPlayer.propTypes = {
   item: T.object,
-  answer: T.array,
+  answer: T.oneOfType([
+    T.array,
+    T.shape({
+      tries: T.number.isRequired,
+      positions: T.arrayOf(
+        T.number
+      )
+    })
+  ]),
   onChange: T.func.isRequired
-}
-
-SelectionPlayer.defaultProps = {
-  answer: []
 }

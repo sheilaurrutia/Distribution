@@ -69,12 +69,14 @@ function reduce(item = {}, action) {
         globalScore: false,
         solutions: [],
         _selectionPopover: false,
-        _text: ''
+        _text: '',
+        penalty: 0
       })
     }
     case UPDATE_QUESTION: {
       const oldText = item._text
 
+      //maybe simplifiable with lodash "set" function
       if (action.parameter === 'score.type') {
         item = cloneDeep(item)
         item.score.type = action.value
@@ -88,6 +90,16 @@ function reduce(item = {}, action) {
       if (action.parameter === 'score.failure') {
         item = cloneDeep(item)
         item.score.failure = action.value
+      }
+
+      if (action.parameter === 'penalty') {
+        item = cloneDeep(item)
+        item.penalty = action.value
+      }
+
+      if (action.parameter === 'tries') {
+        item = cloneDeep(item)
+        item.tries = action.value
       }
 
       //set the dislayed text here

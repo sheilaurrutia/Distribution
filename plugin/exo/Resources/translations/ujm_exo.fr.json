@@ -611,5 +611,8 @@
     "selection_colors_must_be_differents": "Vous ne pouvez pas utiliser deux couleurs identiques",
     "find": "Rechercher",
     "highlight": "Surligner",
-    "selection_solution_missing_colors_error": "Les sélections doivent au moins contenir une couleur"
+    "selection_solution_missing_colors_error": "Les sélections doivent au moins contenir une couleur",
+    "tries_number": "Nombre d'essais",
+    "left_tries": "Nombre d'essais restant",
+    "no_try_left": "Aucun essai restant"
 }

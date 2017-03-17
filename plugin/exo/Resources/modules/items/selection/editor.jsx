@@ -143,9 +143,6 @@ class SelectionForm extends Component {
   constructor(props) {
     super(props)
     this.state = {showFeedback: false}
-
-    this.offsetTop = window.scrollY + window.innerHeight / 2 - (420/2)
-    this.offsetLeft = window.scrollX + window.innerWidth / 2 - (420/2)
   }
 
   getSelection() {
@@ -172,11 +169,11 @@ class SelectionForm extends Component {
   render() {
     return (
       <Popover
-        bsClass="hole-form-content"
+        bsClass="selection-form-content"
         id={this.props.item._selectionId}
         placement="right"
-        positionLeft={this.offsetLeft}
-        positionTop={this.offsetTop}
+        positionLeft={window.scrollX + window.innerWidth / 2 - (420/2)}
+        positionTop={document.scrollY + window.innerHeight / 2 - (420/2)}
       >
         <div className="panel-default">
           <div className="panel-body pull-right close-popover hole-form-row">
@@ -186,16 +183,35 @@ class SelectionForm extends Component {
               <b onClick={this.closePopover.bind(this)}>x</b>
             }
           </div>
-        </div>
-        <div className="panel-body">
-          {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
-            <ChoiceItem
-              score={this.getSolution().score}
-              selection={this.getSelection()}
-              solution={this.getSolution()}
-              item={this.props.item}
-              onChange={this.props.onChange}
-            />
+          <div className="panel-body">
+            {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
+              <ChoiceItem
+                score={this.getSolution().score}
+                selection={this.getSelection()}
+                solution={this.getSolution()}
+                item={this.props.item}
+                onChange={this.props.onChange}
+              />
+            }
+            {this.props.item.mode === 'highlight' &&
+              this.getSolution().answers.map((answer, key) => {
+                return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
+              })
+            }
+            {this.props.item.mode === 'highlight' &&
+              <button
+                className="btn btn-default"
+                onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
+                type="button"
+                disabled={this.getSolution().answers.length >= this.props.item.colors.length }
+              >
+                <i className="fa fa-plus"/>
+                {tex('color')}
+              </button>
+            }
+          </div>
+          {get(this.props, '_errors.solutions') &&
+            <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
           }
           {this.state.showFeedback &&
             <div className="feedback-container selection-form-row">
@@ -207,27 +223,6 @@ class SelectionForm extends Component {
             </div>
           }
         </div>
-        <div className="selection-form-row">
-          {this.props.item.mode === 'highlight' &&
-            this.getSolution().answers.map((answer, key) => {
-              return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
-            })
-          }
-          {this.props.item.mode === 'highlight' &&
-            <button
-              className="btn btn-default"
-              onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
-              type="button"
-              disabled={this.getSolution().answers.length >= this.props.item.colors.length }
-            >
-              <i className="fa fa-plus"/>
-              {tex('color')}
-            </button>
-          }
-        </div>
-        {get(this.props, '_errors.solutions') &&
-          <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
-        }
       </Popover>
     )
   }
@@ -463,7 +458,7 @@ export class Selection extends Component {
           {this.props.item.mode === 'find' &&
             <FormGroup
               controlId={`item-${this.props.item.id}-tries`}
-              label={tex('tries')}
+              label={tex('tries_number')}
               warnOnly={!this.props.validating}
             >
               <input
@@ -476,41 +471,39 @@ export class Selection extends Component {
               />
             </FormGroup>
           }
+          {this.props.item.score.type === SCORE_SUM && (this.props.item.mode === 'highlight' || this.props.item.mode === 'find') &&
+            <FormGroup
+              controlId="selection-default-penalty"
+              label={tex('global_penalty')}
+              warnOnly={!this.props.validating}
+            >
+              <input
+                 className="form-control"
+                 type="number"
+                 min="0"
+                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+                 value={this.props.item.penalty}
+               />
+            </FormGroup>
+          }
           {this.props.item.mode === 'highlight' &&
-            <div>
-              {this.props.item.score.type === SCORE_SUM &&
-                <FormGroup
-                  controlId="selection-default-penalty"
-                  label={tex('global_penalty')}
-                  warnOnly={!this.props.validating}
-                >
-                  <input
-                     className="form-control"
-                     type="number"
-                     min="0"
-                     onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
-                     value={this.props.item.penalty}
-                   />
-                </FormGroup>
+            <div className="panel-body">
+              <div>{tex('possible_color_choices')}</div>
+              {
+                this.props.item.colors.map((color, index) => {
+                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
+                })
               }
-              <div className="panel-body">
-                <div>{tex('possible_color_choices')}</div>
-                {
-                  this.props.item.colors.map((color, index) => {
-                    return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
-                  })
+                {get(this.props.item, '_errors.colors') &&
+                  <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
                 }
-                  {get(this.props.item, '_errors.colors') &&
-                    <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
-                  }
-                  <button
-                    type="button"
-                    className="btn btn-default"
-                    onClick={() => this.props.onChange(actions.highlightAddColor())}
-                  >
-                    <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
-                  </button>
-              </div>
+                <button
+                  type="button"
+                  className="btn btn-default"
+                  onClick={() => this.props.onChange(actions.highlightAddColor())}
+                >
+                  <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
+                </button>
             </div>
           }
           <FormGroup
