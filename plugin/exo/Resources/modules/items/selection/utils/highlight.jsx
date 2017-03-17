@@ -21,7 +21,7 @@ export class Highlight extends Component {
             .filter(solution => {
               let found = false
 
-              this.props.answer.forEach(a => {
+              this.props.answer.positions.forEach(a => {
                 if (a >= solution.begin && a <= solution.end) {
                   found = true
                 }
@@ -130,7 +130,15 @@ export class Highlight extends Component {
 
 Highlight.propTypes = {
   displayTrueAnswer: T.bool.isRequired,
-  answer: T.array,
+  answer: T.oneOfType([
+    T.array,
+    T.shape({
+      tries: T.number.isRequired,
+      positions: T.arrayOf(
+        T.number
+      )
+    })
+  ]),
   showScore: T.bool.isRequired,
   item: T.shape({
     text: T.string.isRequired,

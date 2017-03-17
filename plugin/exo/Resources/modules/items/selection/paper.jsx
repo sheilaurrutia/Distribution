@@ -36,7 +36,15 @@ SelectionPaper.propTypes = {
     description: T.string.isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
-  answer: T.array.isRequired
+  answer: T.oneOfType([
+    T.array,
+    T.shape({
+      tries: T.number.isRequired,
+      positions: T.arrayOf(
+        T.number
+      )
+    })
+  ]).isRequired
 }
 
 SelectionPaper.defaultProps = {
