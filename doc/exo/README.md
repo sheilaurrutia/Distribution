@@ -230,16 +230,16 @@ This will optimize SVG file (removes overhead) and generate code to place in:
 
 ## Checklist for a new item type before making a Pull Request
 
-- Create a MIME type in [ItemType.php](../../plugin/exo/Library/Item/ItemType.php)
-- Create a JSON schema for question and answer and unit tests
-- Reference tests in [assert.js](https://github.com/json-quiz/json-quiz/assert.js)
-- Create the item entity
-- Create a JSON serializer/deserializer
-- Create a question and answer validator
-- Create the item type definition
-- Unit test the API code
-- Reference the new item type in [item-types.js](../../plugin/exo/Resources/modules/items/item-types.js)
-- Create paper, editor, player and feedback views of the new item
-- Unit test views
-- Create at least English and French translations for the new item type and its description
-- Create the item type icon and add SVG code in [item-icons.svg](../../plugin/exo/Resources/public/images/item-icons.svg)
+- [ ] Create a MIME type in [ItemType.php](../../plugin/exo/Library/Item/ItemType.php)
+- [ ] Create a JSON schema for question and answer and unit tests
+- [ ] Reference tests in [assert.js](https://github.com/json-quiz/json-quiz/assert.js)
+- [ ] Create the item entity
+- [ ] Create a JSON serializer/deserializer
+- [ ] Create a question and answer validator
+- [ ] Create the item type definition
+- [ ] Unit test the API code
+- [ ] Reference the new item type in [item-types.js](../../plugin/exo/Resources/modules/items/item-types.js)
+- [ ] Create paper, editor, player and feedback views of the new item
+- [ ] Unit test views
+- [ ] Create at least English and French translations for the new item type and its description
+- [ ] Create the item type icon and add SVG code in [item-icons.svg](../../plugin/exo/Resources/public/images/item-icons.svg)
