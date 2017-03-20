@@ -32,6 +32,7 @@ export class Highlight extends Component {
           break
         }
         case 'highlight': {
+          ///////complicated !!!!
           this.checkedElements = []
         }
       }
@@ -106,7 +107,6 @@ export class Highlight extends Component {
   getHtmlLength(solution, displayTrueAnswer, isSolutionValid) {
     let text = this.getFirstSpan(solution, displayTrueAnswer, isSolutionValid)
       + '</span>'
-      + this.getWarningIcon(solution)
 
     if (this.props.showScore) {
       text += this.getFeedback(solution)
@@ -114,6 +114,8 @@ export class Highlight extends Component {
 
     if (this.props.item.mode === 'highlight') {
       text += this.getSelectHighlights(solution)
+    } else {
+      text += this.getWarningIcon(solution)
     }
 
     return text.length
@@ -129,10 +131,11 @@ export class Highlight extends Component {
       text = text.slice(0, solution.begin + idx)
       + this.getFirstSpan(solution, this.props.displayTrueAnswer, isSolutionValid)
       + text.slice(solution.begin + idx, solution.end + idx)
-      + this.getWarningIcon(solution)
 
       if (this.props.item.mode === 'highlight') {
         text += this.getSelectHighlights(solution)
+      } else {
+        text += this.getWarningIcon(solution)
       }
 
       if (this.props.showScore) {
@@ -149,6 +152,7 @@ export class Highlight extends Component {
     return text
   }
 
+  //POPOVER AND HIGHLIGHT MODE CHANGE DETECTION
   componentDidMount() {
     $('[data-toggle="popover"]').popover()
 
@@ -176,6 +180,7 @@ export class Highlight extends Component {
     }
   }
 
+  //REQUIRED FOR HIGHLIGHT MODE ONLY
   updateSelectionInfo(selectionId, answer) {
     let span = `
       <span id="span-answer-${selectionId}-true" class="${this.getSpanClasses(true, true)}">
