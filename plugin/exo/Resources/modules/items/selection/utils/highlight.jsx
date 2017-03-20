@@ -12,8 +12,13 @@ export class Highlight extends Component {
     } else {
       switch (props.item.mode) {
         case 'select': {
-          this.checkedElements = this.props.item.selections
-            .filter(selection => this.props.answer.indexOf(selection.id) > -1)
+          this.checkedElements = this.props.item.selections.filter(selection => this.props.answer.indexOf(selection.id) > -1).map(selection => {
+            const data = cloneDeep(selection)
+            const solution = this.props.item.solutions.find(solution => solution.selectionId === selection.id)
+            data.score = solution.score
+
+            return data
+          })
           break
         }
         case 'find': {
@@ -32,12 +37,21 @@ export class Highlight extends Component {
           break
         }
         case 'highlight': {
-          ///////complicated !!!!
-          this.checkedElements = []
+          this.checkedElements = this.props.answer.map(answer => {
+            const solution = this.props.item.solutions.find(solution => solution.selectionId === answer.selectionId)
+            const data = cloneDeep(solution.answers.find(realAnswer => realAnswer.colorId === answer.colorId))
+            const selection = this.props.item.selections.find(selection => selection.id === solution.selectionId)
+            data.begin = selection.begin
+            data.end = selection.end
+
+            return data
+          })
         }
       }
     }
 
+    //checked elements returns data related to the answer a user checked.
+    //It'll include the score, the feedback, the positions, the colors and whatever is usefull
     this.checkedElements.sort((a, b) => {return a.begin - b.begin})
   }
 
@@ -58,14 +72,12 @@ export class Highlight extends Component {
     const solution = this.getSolutionForAnswer(selection)
 
     return solution && solution.score > 0 ?
-       '<span class="fa fa-check answer-warning-span" aria-hidden="true"></span>' :
-       '<span class="fa fa-times answer-warning-span" aria-hidden="true"></span>'
+      `<span class="fa fa-check answer-warning-span ${this.getSpanClasses(true)}" aria-hidden="true"></span>` :
+      `<span class="fa fa-times answer-warning-span ${this.getSpanClasses(false)}" aria-hidden="true"></span>`
   }
 
   getSolutionScore(solution) {
-
-    if (solution && solution.score) {
-      solution = this.getSolutionForAnswer(solution)
+    if (solution.score) {
       const scoreTranslation = tcex('solution_score', solution.score, {'score': solution.score})
 
       return `<span class="item-score"> ${scoreTranslation} </span>`
@@ -94,14 +106,20 @@ export class Highlight extends Component {
     return `<i role="button" class="feedback-btn fa fa-comments-o" data-content="${feedback}" data-toggle="popover" data-trigger="click" data-html="true"></i>`
   }
 
-  getSpanClasses(displayTrueAnswer, isSolutionValid) {
-    if (isSolutionValid && !displayTrueAnswer) return 'selection-success'
-    if (!isSolutionValid && !displayTrueAnswer) return 'selection-error'
-    if (displayTrueAnswer) return 'selection-info'
+  getSpanClasses(isSolutionValid) {
+    if (isSolutionValid && !this.props.displayTrueAnswer) return 'selection-success'
+    if (!isSolutionValid && !this.props.displayTrueAnswer) return 'selection-error'
+    if (this.props.displayTrueAnswer) return 'selection-info'
   }
 
-  getFirstSpan(selection, displayTrueAnswer, isSolutionValid) {
-    return `<span data-id=${selection.id} class="${this.getSpanClasses(displayTrueAnswer, isSolutionValid)}">`
+  getFirstSpan(element, displayTrueAnswer, isSolutionValid) {
+    if (element.colorId) {
+      const color = this.props.item.colors.find(color => color.id === element.colorId)
+
+      return `<span data-id=${element.selectionId} style="background-color: ${color.code}">`
+    }
+
+    return `<span data-id=${element.id} class="${this.getSpanClasses(isSolutionValid)}">`
   }
 
   getHtmlLength(solution, displayTrueAnswer, isSolutionValid) {
@@ -109,10 +127,10 @@ export class Highlight extends Component {
       + '</span>'
 
     if (this.props.showScore) {
-      text += this.getFeedback(solution)
+      text += this.getSolutionScore(solution) + this.getFeedback(solution)
     }
 
-    if (this.props.item.mode === 'highlight') {
+    if (this.props.item.mode === 'highlight' && this.props.displayTrueAnswer) {
       text += this.getSelectHighlights(solution)
     } else {
       text += this.getWarningIcon(solution)
@@ -131,8 +149,8 @@ export class Highlight extends Component {
       text = text.slice(0, solution.begin + idx)
       + this.getFirstSpan(solution, this.props.displayTrueAnswer, isSolutionValid)
       + text.slice(solution.begin + idx, solution.end + idx)
-
-      if (this.props.item.mode === 'highlight') {
+      text += '</span>'
+      if (this.props.item.mode === 'highlight' && this.props.displayTrueAnswer) {
         text += this.getSelectHighlights(solution)
       } else {
         text += this.getWarningIcon(solution)
@@ -142,9 +160,7 @@ export class Highlight extends Component {
         text += this.getSolutionScore(solution) + this.getFeedback(solution)
       }
 
-
-      text += '</span>'
-      + end
+      text += end
 
       idx += this.getHtmlLength(solution, this.props.displayTrueAnswer, isSolutionValid) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
     })
@@ -155,7 +171,6 @@ export class Highlight extends Component {
   //POPOVER AND HIGHLIGHT MODE CHANGE DETECTION
   componentDidMount() {
     $('[data-toggle="popover"]').popover()
-
 
     if (this.props.item.mode === 'highlight') {
       this.props.item.selections.forEach(el => {
@@ -183,8 +198,9 @@ export class Highlight extends Component {
   //REQUIRED FOR HIGHLIGHT MODE ONLY
   updateSelectionInfo(selectionId, answer) {
     let span = `
-      <span id="span-answer-${selectionId}-true" class="${this.getSpanClasses(true, true)}">
+      <span id="span-answer-${selectionId}-true" class="${this.getSpanClasses(true)}">
         ${this.getWarningIcon(answer)}
+        ${this.getSolutionScore(answer)}
         ${this.getFeedback(answer)}
       </span>
     `

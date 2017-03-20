@@ -122,6 +122,7 @@ class SelectionDefinition extends AbstractDefinition
                case $question::MODE_FIND:
                   break;
                case $question::MODE_SELECT:
+
                   break;
                case $question::MODE_HIGHLIGHT:
                   break;
