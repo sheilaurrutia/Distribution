@@ -7,8 +7,7 @@ import {Textarea} from './../../components/form/textarea.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {actions} from './editor'
-
-/* global jsPlumb */
+import {utils} from './utils/utils'
 
 function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-place-holder-' + id).getBoundingClientRect()
@@ -19,49 +18,13 @@ function getPopoverPosition(connectionClass, id){
   }
 }
 
-function initJsPlumb(jsPlumbInstance) {
-  // defaults parameters for all connections
-  jsPlumbInstance.importDefaults({
-    Anchors: ['RightMiddle', 'LeftMiddle'],
-    ConnectionsDetachable: true,
-    Connector: 'Straight',
-    DropOptions: {tolerance: 'touch'},
-    HoverPaintStyle: {strokeStyle: '#FC0000'},
-    LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
-  })
-
-  jsPlumbInstance.registerConnectionTypes({
-    'valid': {
-      paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'green',   lineWidth: 6 },
-      cssClass: 'association-valid'
-    },
-    'invalid': {
-      paintStyle:      { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'red',     lineWidth: 6 },
-      cssClass: 'association-invalid'
-    },
-    'selected': {
-      paintStyle:      { strokeStyle: '#006DCC', lineWidth: 6 },
-      hoverPaintStyle: { strokeStyle: '#006DCC', lineWidth: 6 },
-      cssClass: 'association-selected'
-    },
-    'default': {
-      paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'orange', lineWidth: 6, cursor: 'pointer'},
-      cssClass: 'association-default'
-    }
-  })
-}
-
 function drawSolutions(solutions, jsPlumbInstance){
 
   for (const solution of solutions) {
     const connection = jsPlumbInstance.connect({
       source: 'source_' + solution.firstId,
       target: 'target_' + solution.secondId,
-      type: solution.score > 0 ? 'valid':'invalid'
+      type: solution.score > 0 ? 'expected':'unexpected'
     })
 
     const connectionClass = 'connection-' + solution.firstId + '-' + solution.secondId
@@ -217,9 +180,8 @@ class Match extends Component {
 
   constructor(props) {
     super(props)
-    this.jsPlumbInstance = jsPlumb.getInstance()
-    initJsPlumb(this.jsPlumbInstance)
 
+    this.jsPlumbInstance = utils.getJsPlumbInstance()
     this.container = null
 
     this.state = {
@@ -376,12 +338,12 @@ class Match extends Component {
     this.setState({popover: {visible: false}})
     const list = this.jsPlumbInstance.getConnections()
     for(const conn of list){
-      let type = 'valid'
+      let type = 'expected'
       const firstId = conn.sourceId.replace('source_', '')
       const secondId = conn.targetId.replace('target_', '')
       const solution = this.props.item.solutions.find(solution => solution.firstId === firstId && solution.secondId === secondId)
       if(undefined !== solution && solution.score <= 0){
-        type = 'invalid'
+        type = 'unexpected'
       }
       conn.setType(type)
     }

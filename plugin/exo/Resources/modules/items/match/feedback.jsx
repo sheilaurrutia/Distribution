@@ -2,8 +2,7 @@ import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 import {tex} from '../../utils/translate'
-
-/* global jsPlumb */
+import {utils} from './utils/utils'
 
 function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-container-' + id).getBoundingClientRect()
@@ -12,37 +11,6 @@ function getPopoverPosition(connectionClass, id){
   return {
     top:  connectionRect.top + connectionRect.height / 2 - containerRect.top
   }
-}
-
-function initJsPlumb(jsPlumbInstance) {
-  // defaults parameters for all connections
-  jsPlumbInstance.importDefaults({
-    Anchors: ['RightMiddle', 'LeftMiddle'],
-    ConnectionsDetachable: false,
-    Connector: 'Straight',
-    HoverPaintStyle: {strokeStyle: '#FC0000'},
-    LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
-  })
-
-  jsPlumbInstance.registerConnectionTypes({
-    'blue': {
-      paintStyle     : { strokeStyle: '#31B0D5', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#31B0D5',   lineWidth: 6 }
-    },
-    'green': {
-      paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#5CB85C',   lineWidth: 6 }
-    },
-    'red': {
-      paintStyle     : { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#D9534F',   lineWidth: 6 }
-    },
-    'default': {
-      paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'grey', lineWidth: 6 }
-    }
-  })
 }
 
 export const MatchLinkPopover = props =>
@@ -89,8 +57,7 @@ export class MatchFeedback extends Component
       showPopover: false
     }
 
-    this.jsPlumbInstance = jsPlumb.getInstance()
-    initJsPlumb(this.jsPlumbInstance)
+    this.jsPlumbInstance = utils.getJsPlumbInstance(false)
     this.container = null
     this.handleWindowResize = this.handleWindowResize.bind(this)
     this.handleConnectionClick = this.handleConnectionClick.bind(this)
@@ -102,8 +69,8 @@ export class MatchFeedback extends Component
       const connection = this.jsPlumbInstance.connect({
         source: 'source_' + answer.firstId,
         target: 'target_' + answer.secondId,
-        type: solution && solution.score > 0 ? 'green' : 'red',
-        deleteEndpointsOnDetach:true
+        type: solution && solution.score > 0 ? 'correct' : 'incorrect',
+        deleteEndpointsOnDetach: true
       })
 
       const connectionClass = 'connection-' + answer.firstId + '-' + answer.secondId

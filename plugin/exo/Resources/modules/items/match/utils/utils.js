@@ -1,4 +1,12 @@
+import {
+  jsPlumbDefaultConfig,
+  jsPlumbEnabledConfig,
+  associationTypes
+} from './../enums'
+
 export const utils = {}
+
+/* global jsPlumb */
 
 /**
  * @var id solution id
@@ -7,4 +15,14 @@ export const utils = {}
  */
 utils.getSolutionData = (id, set) => {
   return set.find(item => item.id === id).data
+}
+
+utils.getJsPlumbInstance = (editEnabled) => {
+  const instance = jsPlumb.getInstance()
+
+  // configure instance
+  instance.importDefaults(editEnabled ? jsPlumbEnabledConfig : jsPlumbDefaultConfig)
+  instance.registerConnectionTypes(associationTypes)
+
+  return instance
 }
