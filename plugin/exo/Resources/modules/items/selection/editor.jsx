@@ -464,7 +464,7 @@ export class Selection extends Component {
               <input
                 id={`item-${this.props.item.id}-tries`}
                 type="number"
-                min={this.props.item.solutions.length}
+                min={this.props.item.solutions ? this.props.item.solutions.filter(solution => solution.score > 0).length: 1}
                 value={this.props.item.tries}
                 className="form-control"
                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}

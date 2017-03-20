@@ -7,9 +7,9 @@ import {SelectionFeedback} from './feedback.jsx'
 function expectAnswer(item) {
   switch (item.mode) {
     case 'select':
-      return item.solutions.filter(s => s.score > 0).map(s => s.id)
+      return item.solutions.filter(s => s.score > 0)
     case 'find':
-      return item.solutions.filter(s => s.score > 0).map(s => { return {begin: s.begin, end: s.end} })
+      return item.solutions.filter(s => s.score > 0)
     case 'highlight':
       return item.solutions.map(solution => solution.answers.reduce((prev, current) => prev.score > current.score ? prev : current))
   }

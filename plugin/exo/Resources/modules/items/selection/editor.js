@@ -212,7 +212,7 @@ export function recomputePositions(item, offsets, oldText) {
 
 function toFindMode(item) {
   const newItem = cloneDeep(item)
-  const solutions = newItem.solutions
+  const solutions = newItem.solutions || []
   //add beging and end to solutions
   solutions.forEach(solution => {
     let selection = item.selections.find(selection => selection.id === solution.selectionId)
@@ -224,7 +224,7 @@ function toFindMode(item) {
   delete newItem.selections
   delete newItem.colors
 
-  return Object.assign({}, newItem, {solutions, tries: solutions.length})
+  return Object.assign({}, newItem, {solutions, tries: solutions.filter(solution => solution.score > 0).length})
 }
 
 function toSelectMode(item) {

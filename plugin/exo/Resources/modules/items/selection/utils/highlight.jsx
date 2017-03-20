@@ -60,11 +60,11 @@ export class Highlight extends Component {
   }
 
   isSolutionValid(selection) {
-    return selection.score ? selection.score: this.getSolutionForAnswer(selection).score
+    return selection.score !== undefined ? selection.score: this.getSolutionForAnswer(selection).score
   }
 
   getSolutionForAnswer(selection) {
-    return selection.score ? selection: this.props.item.solutions.find(solution => solution.selectionId === selection.id)
+    return selection.score !== undefined ? selection: this.props.item.solutions.find(solution => solution.selectionId === selection.id)
   }
 
   //copied from the clozes
