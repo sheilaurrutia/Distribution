@@ -122,6 +122,11 @@ class ItemSerializer extends AbstractSerializer
         // Serialize specific data for the item type
         $questionData = $this->serializeQuestionType($question, $options);
 
+        // property might not be set. But we need it to set question's author(s)
+        if(!property_exists($data, 'meta')) {
+          $data->meta = new \stdClass();
+        }
+
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
             // Adds minimal information
             $this->mapEntityToObject([
@@ -202,6 +207,15 @@ class ItemSerializer extends AbstractSerializer
             if (empty($question)) {
                 // Item not exist
                 $question = new Item();
+            }
+        }
+
+        // Sets the creator of the Item if not set
+        $creator = $question->getCreator();
+        if (empty($creator) || !($creator instanceof User)) {
+            $token = $this->tokenStorage->getToken();
+            if (!empty($token) && $token->getUser() instanceof User) {
+                $question->setCreator($token->getUser());
             }
         }
 
@@ -351,15 +365,6 @@ class ItemSerializer extends AbstractSerializer
     {
         if (isset($metadata->model)) {
             $question->setModel($metadata->model);
-        }
-
-        // Sets the creator of the Item if not set
-        $creator = $question->getCreator();
-        if (empty($creator) || !($creator instanceof User)) {
-            $token = $this->tokenStorage->getToken();
-            if (!empty($token) && $token->getUser() instanceof User) {
-                $question->setCreator($token->getUser());
-            }
         }
 
         if (isset($metadata->category)) {
