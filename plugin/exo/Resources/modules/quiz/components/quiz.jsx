@@ -2,6 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 import {t, tex} from './../../utils/translate'
 import PageHeader from './../../components/layout/page-header.jsx'
+import { ResourceHeader } from '#/main/core/layout/resource/components/resource-header.jsx'
 import PageActions from './../../components/layout/page-actions.jsx'
 import {showModal, fadeModal} from './../../modal/actions'
 import {makeModal} from './../../modal'
@@ -29,13 +30,18 @@ import {
   VIEW_ATTEMPT_END
 } from './../enums'
 
+/*{props.editable &&
+<PageActions actions={viewActions(props.viewMode, props)} />
+}*/
+
 let Quiz = props =>
   <main className="page">
-    <PageHeader title={props.quiz.title}>
-      {props.editable &&
-        <PageActions actions={viewActions(props.viewMode, props)} />
-      }
-    </PageHeader>
+    <ResourceHeader
+      resourceNode={{
+        name: props.quiz.title
+      }}
+      editEnabled={props.editable}
+    />
     {props.modal.type &&
       props.createModal(
         props.modal.type,
