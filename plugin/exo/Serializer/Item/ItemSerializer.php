@@ -122,11 +122,6 @@ class ItemSerializer extends AbstractSerializer
         // Serialize specific data for the item type
         $questionData = $this->serializeQuestionType($question, $options);
 
-        // property might not be set. But we need it to set question's author(s)
-        if(!property_exists($data, 'meta')) {
-          $data->meta = new \stdClass();
-        }
-
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $question->getMimeType())) {
             // Adds minimal information
             $this->mapEntityToObject([
