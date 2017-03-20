@@ -3,7 +3,7 @@ import {SelectionPaper} from './paper.jsx'
 import {SelectionPlayer} from './player.jsx'
 import {SelectionFeedback} from './feedback.jsx'
 
-
+//compute max score
 function expectAnswer(item) {
   switch (item.mode) {
     case 'select':

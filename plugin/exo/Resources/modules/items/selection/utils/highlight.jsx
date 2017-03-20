@@ -62,10 +62,27 @@ export class Highlight extends Component {
   }
 
   getSolutionScore(solution) {
-    solution = this.getSolutionForAnswer(solution)
-    const scoreTranslation = tcex('solution_score', solution.score, {'score': solution.score})
 
-    return `<span class="item-score"> ${scoreTranslation} </span>`
+    if (solution && solution.score) {
+      solution = this.getSolutionForAnswer(solution)
+      const scoreTranslation = tcex('solution_score', solution.score, {'score': solution.score})
+
+      return `<span class="item-score"> ${scoreTranslation} </span>`
+    }
+
+    return ''
+  }
+
+  getSelectHighlights(selection) {
+    const solution = this.getSolutionForAnswer(selection)
+
+    let options = '<option disabled selected value> -- select a color -- </option>'
+    solution.answers.filter(answer => answer.score > 0).forEach(answer => {
+      let color = this.props.item.colors.find(color => color.id === answer.colorId)
+      options += `<option value="${answer.colorId}" style="background-color: ${color.code}"></option>`
+    })
+
+    return `<select data-selection-id="${solution.selectionId}" id="select-highlight-${solution.selectionId}" class="select-highlight">${options}</select><span id="span-answer-${solution.selectionId}-true"></span>`
   }
 
   getFeedback(solution) {
@@ -92,7 +109,11 @@ export class Highlight extends Component {
       + this.getWarningIcon(solution)
 
     if (this.props.showScore) {
-      text += this.getFeedback(solution) +  this.getSolutionScore(solution)
+      text += this.getFeedback(solution)
+    }
+
+    if (this.props.item.mode === 'highlight') {
+      text += this.getSelectHighlights(solution)
     }
 
     return text.length
@@ -110,9 +131,14 @@ export class Highlight extends Component {
       + text.slice(solution.begin + idx, solution.end + idx)
       + this.getWarningIcon(solution)
 
+      if (this.props.item.mode === 'highlight') {
+        text += this.getSelectHighlights(solution)
+      }
+
       if (this.props.showScore) {
         text += this.getSolutionScore(solution) + this.getFeedback(solution)
       }
+
 
       text += '</span>'
       + end
@@ -124,6 +150,45 @@ export class Highlight extends Component {
   }
 
   componentDidMount() {
+    $('[data-toggle="popover"]').popover()
+
+
+    if (this.props.item.mode === 'highlight') {
+      this.props.item.selections.forEach(el => {
+        let htmlElement = document.getElementById(`select-highlight-${el.id}`)
+        if (htmlElement) {
+          //check the class (add or remove)
+          htmlElement.addEventListener(
+            'change',
+            e => {
+              const el = e.target
+              const colorId = el.value
+              const selectionId = el.getAttribute('data-selection-id')
+              const color = this.props.item.colors.find(color => color.id === colorId)
+              // htmlElement.style.backgroundColor = color.code
+              document.getElementById(`select-highlight-${selectionId}`).style.backgroundColor = color.code
+              const answer = this.props.item.solutions.find(solution => solution.selectionId === selectionId).answers.find(answer => answer.colorId === colorId)
+              this.updateSelectionInfo(selectionId, answer)
+            }
+          )
+        }
+      })
+    }
+  }
+
+  updateSelectionInfo(selectionId, answer) {
+    let span = `
+      <span id="span-answer-${selectionId}-true" class="${this.getSpanClasses(true, true)}">
+        ${this.getWarningIcon(answer)}
+        ${this.getFeedback(answer)}
+      </span>
+    `
+
+    var div = document.createElement('div')
+    div.innerHTML = span
+    span = div.firstChild.nextSibling
+    const toReplace = document.getElementById(`span-answer-${selectionId}-true`)
+    toReplace.replaceWith(span)
     $('[data-toggle="popover"]').popover()
   }
 }
