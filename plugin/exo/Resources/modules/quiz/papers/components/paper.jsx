@@ -16,7 +16,7 @@ let Paper = props =>
     </h2>
 
     {props.steps.map((step, idx) =>
-      <div key={idx} className="item-paper">
+      <div key={idx} className="quiz-item item-paper">
         <h3 className="step-title">
           {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
         </h3>
@@ -39,11 +39,10 @@ let Paper = props =>
               )}
 
               {item.feedback &&
-                <hr className="item-content-separator" />
-              }
-
-              {item.feedback &&
-                <div className="item-feedback" dangerouslySetInnerHTML={{__html: item.feedback}} />
+                <div className="item-feedback">
+                  <span className="fa fa-comment" />
+                  <div dangerouslySetInnerHTML={{__html: item.feedback}} />
+                </div>
               }
             </Panel> :
             ''
