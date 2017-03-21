@@ -51,7 +51,8 @@ export class Highlight extends Component {
     }
 
     //checked elements returns data related to the answer a user checked.
-    //It'll include the score, the feedback, the positions, the colors and whatever is usefull
+    //It'll include the score, the feedback, the positions, the colors and whatever is usefull when we're displaying the user answers.
+    //Vanilla datas are enough otherwise
     this.checkedElements.sort((a, b) => {return a.begin - b.begin})
   }
 
@@ -59,8 +60,8 @@ export class Highlight extends Component {
     return (<div dangerouslySetInnerHTML={{__html: this.getHtml()}}/>)
   }
 
-  isSolutionValid(selection) {
-    return selection.score !== undefined ? selection.score: this.getSolutionForAnswer(selection).score
+  isSolutionValid(el) {
+    return el.score !== undefined ? el.score: this.getSolutionForAnswer(el).score
   }
 
   getSolutionForAnswer(selection) {

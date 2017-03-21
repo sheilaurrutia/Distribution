@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
+use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
 
@@ -12,7 +13,7 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
  * @ORM\Entity()
  * @ORM\Table(name="ujm_color_selection")
  */
-class ColorSelection
+class ColorSelection implements AnswerPartInterface
 {
     use ScoreTrait;
 

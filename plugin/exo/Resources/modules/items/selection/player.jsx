@@ -53,7 +53,10 @@ export class SelectionPlayer extends Component {
           answers.positions.push(options.begin)
         }
         //maybe this should be stored in the server
-        answers.tries++
+        if (options.try) {
+          answers.tries++
+        }
+
         break
       }
       case 'highlight': {
@@ -131,12 +134,12 @@ export class SelectionPlayer extends Component {
                     begin: offsets.start,
                     end: offsets.end
                   }))
-                } else {
-                  this.props.onChange(this.onAnswer({
-                    mode: this.props.item.mode
-                  }))
                 }
               })
+              this.props.onChange(this.onAnswer({
+                mode: this.props.item.mode,
+                try: true
+              }))
             }
           }
         )

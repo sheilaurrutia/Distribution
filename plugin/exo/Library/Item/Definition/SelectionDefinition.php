@@ -120,16 +120,76 @@ class SelectionDefinition extends AbstractDefinition
         if (!is_null($answers)) {
             switch ($question->getMode()) {
                case $question::MODE_FIND:
-                  break;
-               case $question::MODE_SELECT:
+                  $foundUuids = [];
 
-                  break;
+                  foreach ($answers->positions as $position) {
+                      foreach ($question->getSelections()->toArray() as $selection) {
+                          if ($position >= $selection->getBegin() && $position <= $selection->getEnd()) {
+                              if ($selection->getScore() > 0) {
+                                  $corrected->addExpected($selection);
+                                  $foundUuids[] = $selection->getUuid();
+                              } else {
+                                  $corrected->addUnexpected($selection);
+                              }
+                          }
+                      }
+                  }
+
+                  $bestAnswers = $this->expectAnswer($question);
+                  $uuids = array_map(function ($selection) {
+                      return $selection->getUuid();
+                  }, $bestAnswers);
+
+                  foreach ($uuids as $uuid) {
+                      if (!in_array($uuid, $foundUuids)) {
+                          $corrected->addMissing($question->getSelection($uuid));
+                      }
+                  }
+
+                  return $corrected;
+
+               case $question::MODE_SELECT:
+                  foreach ($answers as $selectionId) {
+                      $selection = $question->getSelection($selectionId);
+                      $selection->getScore() > 0 ? $corrected->addExpected($selection) : $corrected->addUnexpected($selection);
+                  }
+
+                  $bestAnswers = $this->expectAnswer($question);
+                  $uuids = array_map(function ($selection) {
+                      return $selection->getUuid();
+                  }, $bestAnswers);
+
+                  foreach ($uuids as $uuid) {
+                      if (!in_array($uuid, $answers)) {
+                          $corrected->addMissing($question->getSelection($uuid));
+                      }
+                  }
+
+                  return $corrected;
                case $question::MODE_HIGHLIGHT:
-                  break;
+                  $foundIds = [];
+
+                  foreach ($answers as $highlightAnswer) {
+                      $colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId]);
+                      $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
+                      $foundIds[] = $colorSelection->getId();
+                  }
+
+                  $bestAnswers = $this->expectAnswer($question);
+                  $ids = array_map(function ($colorSelection) {
+                      //id always returns null as of now
+                      return $colorSelection->getId();
+                  }, $bestAnswers);
+
+                  foreach ($ids as $id) {
+                      if (!in_array($id, $foundIds)) {
+                          $corrected->addMissing($question->getColorSelection(['id' => $id]));
+                      }
+                  }
+
+                  return $corrected;
             }
         }
-
-        return $corrected;
     }
 
     /**
