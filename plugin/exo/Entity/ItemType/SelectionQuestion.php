@@ -38,7 +38,7 @@ class SelectionQuestion extends AbstractItem
     private $mode = 'select';
 
     /**
-     * The display size of the hole input.
+     * The max amount of tries for find mode.
      *
      * @ORM\Column(type="integer")
      *

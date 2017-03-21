@@ -140,6 +140,16 @@ class SelectionDefinition extends AbstractDefinition
                       return $selection->getUuid();
                   }, $bestAnswers);
 
+                  if ($question->getPenalty() > 0) {
+                      $penaltyTimes = $answers->tries - count($foundUuids);
+
+                      for ($i = 0; $i < $penaltyTimes; ++$i) {
+                          $unexpected = new Selection();
+                          $unexpected->setScore(-1 * $question->getPenalty());
+                          $corrected->addUnexpected($unexpected);
+                      }
+                  }
+
                   foreach ($uuids as $uuid) {
                       if (!in_array($uuid, $foundUuids)) {
                           $corrected->addMissing($question->getSelection($uuid));

@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Validator\JsonSchema\Item\Type;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
 /**
@@ -26,6 +27,10 @@ class SelectionQuestionValidator extends JsonSchemaValidator
     public function validateAfterSchema($question, array $options = [])
     {
         $errors = [];
+
+        if (in_array(Validation::REQUIRE_SOLUTIONS, $options)) {
+            $errors = $this->validateSolutions($question);
+        }
 
         return $errors;
     }
