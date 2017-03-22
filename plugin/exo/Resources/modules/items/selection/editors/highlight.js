@@ -170,9 +170,6 @@ export function validate(item) {
       })
     }
 
-
-
-
     if (!hasModalValidAnswer) {
       _errors.solutions = tex('selection_must_have_valid_answers_errors')
     }

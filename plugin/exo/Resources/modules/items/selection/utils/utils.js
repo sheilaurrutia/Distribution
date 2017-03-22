@@ -134,3 +134,11 @@ utils.cleanItem = (item) => {
   //that'all for now folks !
   return Object.assign({}, item, {selections, solutions, text})
 }
+
+utils.getSelectionText = (item) => {
+  const selection = item.mode === 'find' ?
+    item.solutions.find(selection => selection._selectionId === item._selectionId):
+    item.selections.find(selection => selection.id === item._selectionId)
+
+  return item.text.substring(selection.begin, selection.end)
+}

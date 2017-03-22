@@ -174,7 +174,7 @@ class SelectionForm extends Component {
         fadeModal={this.closePopover.bind(this)}
         hideModal={this.closePopover.bind(this)}
         show={this.props.item._selectionPopover}
-        title={''}
+        title={utils.getSelectionText(this.props.item)}
       >
         <div className="panel-default">
           <div className="panel-body">
