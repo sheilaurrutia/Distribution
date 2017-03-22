@@ -5,7 +5,6 @@ import {tex} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {ColorPicker} from './../../components/form/color-picker.jsx'
-import Popover from 'react-bootstrap/lib/Popover'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
@@ -13,6 +12,7 @@ import get from 'lodash/get'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {CheckGroup} from './../../components/form/check-group.jsx'
+import {BaseModal} from './../../modal/components/base.jsx'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -143,6 +143,8 @@ class SelectionForm extends Component {
   constructor(props) {
     super(props)
     this.state = {showFeedback: false}
+    this.offsetTop = window.scrollY + window.innerHeight / 2 - (420/2)
+    this.offsetLeft = window.scrollX + window.innerWidth / 2 - (420/2)
   }
 
   getSelection() {
@@ -161,28 +163,20 @@ class SelectionForm extends Component {
     this.props.onChange(actions.closePopover())
   }
 
-  removeAndClose() {
-    this.props.onChange(removeSelection(this.props.item._selectionId, this.props.item.mode))
-    this.closePopover()
-  }
-
   render() {
     return (
-      <Popover
+      <BaseModal
         bsClass="selection-form-content"
         id={this.props.item._selectionId}
         placement="right"
-        positionLeft={window.scrollX + window.innerWidth / 2 - (420/2)}
-        positionTop={document.scrollY + window.innerHeight / 2 - (420/2)}
+        positionLeft={this.offsetLeft}
+        positionTop={this.offsetTop}
+        fadeModal={this.closePopover.bind(this)}
+        hideModal={this.closePopover.bind(this)}
+        show={this.props.item._selectionPopover}
+        title={''}
       >
         <div className="panel-default">
-          <div className="panel-body pull-right close-popover hole-form-row">
-            <i onClick={this.removeAndClose.bind(this)} className="fa fa-trash-o"></i>
-            {'\u00a0'}
-            {!this.props._errors.answers &&
-              <b onClick={this.closePopover.bind(this)}>x</b>
-            }
-          </div>
           <div className="panel-body">
             {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
               <ChoiceItem
@@ -223,7 +217,7 @@ class SelectionForm extends Component {
             </div>
           }
         </div>
-      </Popover>
+      </BaseModal>
     )
   }
 }
@@ -231,6 +225,7 @@ class SelectionForm extends Component {
 SelectionForm.propTypes = {
   item: T.shape({
     _selectionId: T.string,
+    _selectionPopover: T.bool,
     mode: T.string.isRequired,
     id: T.string.isRequired,
     solutions: T.arrayOf(T.shape({
@@ -366,11 +361,10 @@ HighlightAnswer.propTypes = {
 export class Selection extends Component {
   constructor(props) {
     super(props)
-    this.begin = null
-    this.end = null
     this.onSelect = this.onSelect.bind(this)
     this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
+    this.state = {begin: null, end: null}
   }
 
   updateText() {
@@ -379,13 +373,12 @@ export class Selection extends Component {
 
   onSelect(selected, cb, offsets) {
     if (offsets) {
-      this.begin = offsets.trueStart
-      this.end = offsets.trueEnd
+      this.setState({begin: offsets.trueStart, end: offsets.trueEnd})
     }
   }
 
   addSelection() {
-    this.props.onChange(addSelection(this.begin, this.end, this.props.item.mode))
+    this.props.onChange(addSelection(this.state.begin, this.state.end, this.props.item.mode))
   }
 
   onSelectionClick(el) {
@@ -524,6 +517,7 @@ export class Selection extends Component {
           <button
             type="button"
             className="btn btn-default"
+            disabled={this.state.begin === this.state.end}
             onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
             {'\u00a0'}{tex('create_selection_zone')}
           </button>
