@@ -39,7 +39,12 @@ export class Highlight extends Component {
         case 'highlight': {
           this.checkedElements = this.props.answer.map(answer => {
             const solution = this.props.item.solutions.find(solution => solution.selectionId === answer.selectionId)
-            const data = cloneDeep(solution.answers.find(realAnswer => realAnswer.colorId === answer.colorId))
+            let  data = cloneDeep(solution.answers.find(realAnswer => realAnswer.colorId === answer.colorId))
+
+            if (!data) {
+              data = {score: - this.props.item.penalty}
+            }
+
             const selection = this.props.item.selections.find(selection => selection.id === solution.selectionId)
             data.begin = selection.begin
             data.end = selection.end
@@ -228,6 +233,7 @@ Highlight.propTypes = {
   ]),
   showScore: T.bool.isRequired,
   item: T.shape({
+    penalty: T.number,
     text: T.string.isRequired,
     colors: T.arrayOf(T.shape({
       id: T.string.isRequired,

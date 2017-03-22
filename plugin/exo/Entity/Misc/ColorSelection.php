@@ -20,10 +20,8 @@ class ColorSelection implements AnswerPartInterface
     use FeedbackTrait;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;

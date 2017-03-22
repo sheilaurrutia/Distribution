@@ -172,19 +172,25 @@ class SelectionQuestion extends AbstractItem
         }
     }
 
+    public function getColorSelections()
+    {
+        return array_reduce($this->getSelections()->toArray(), function ($acc, $el) {
+            if (!is_array($acc)) {
+                $acc = [];
+            }
+
+            return array_merge($acc, $el->getColorSelections()->toArray());
+        });
+    }
+
     public function getColorSelection(array $options)
     {
         $colorUuid = isset($options['color_uuid']) ? $options['color_uuid'] : null;
         $selectionUuid = isset($options['selection_uuid']) ? $options['selection_uuid'] : null;
-        $id = isset($options['id']) ? $options['id'] : null;
 
-        foreach ($this->selections->toArray() as $selection) {
-            foreach ($selection->getColorSelections()->toArray() as $colorSelection) {
+        foreach ($this->selections as $selection) {
+            foreach ($selection->getColorSelections() as $colorSelection) {
                 if ($colorSelection->getColor()->getUuid() === $colorUuid && $colorSelection->getSelection()->getUuid() === $selectionUuid) {
-                    return $colorSelection;
-                }
-
-                if ($id && $colorSelection->getId() === $id) {
                     return $colorSelection;
                 }
             }

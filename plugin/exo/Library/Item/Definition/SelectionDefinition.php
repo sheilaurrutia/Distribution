@@ -177,23 +177,37 @@ class SelectionDefinition extends AbstractDefinition
 
                   return $corrected;
                case $question::MODE_HIGHLIGHT:
-                  $foundIds = [];
+                  $foundElements = [];
 
                   foreach ($answers as $highlightAnswer) {
-                      $colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId]);
-                      $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
-                      $foundIds[] = $colorSelection->getId();
+                      if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
+                          $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
+                          $foundElements[] = ['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId];
+                      }
                   }
 
                   $bestAnswers = $this->expectAnswer($question);
-                  $ids = array_map(function ($colorSelection) {
+                  $elements = array_map(function ($colorSelection) {
                       //id always returns null as of now
-                      return $colorSelection->getId();
+                      return ['color_uuid' => $colorSelection->getColor()->getUuid(), 'selection_uuid' => $colorSelection->getSelection()->getUuid()];
                   }, $bestAnswers);
 
-                  foreach ($ids as $id) {
-                      if (!in_array($id, $foundIds)) {
-                          $corrected->addMissing($question->getColorSelection(['id' => $id]));
+                  $addedMissing = 0;
+
+                  foreach ($elements as $element) {
+                      if (!in_array($element, $foundElements)) {
+                          ++$addedMissing;
+                          $corrected->addMissing($question->getColorSelection(['color_uuid' => $element['color_uuid'], 'selection_uuid' => $element['selection_uuid']]));
+                      }
+                  }
+
+                  if ($question->getPenalty() > 0) {
+                      $penaltyTimes = count($question->getColorSelections()) - count($foundElements) - $addedMissing;
+
+                      for ($i = 0; $i < $penaltyTimes; ++$i) {
+                          $unexpected = new Selection();
+                          $unexpected->setScore(-1 * $question->getPenalty());
+                          $corrected->addUnexpected($unexpected);
                       }
                   }
 

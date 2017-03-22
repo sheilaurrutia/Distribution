@@ -54,9 +54,8 @@ function getEditButtons(solution) {
 
 function getHighlightButtons(solution, colors) {
   let options = '<option disabled selected value> -- select a color -- </option>'
-  solution._answers.forEach(answer => {
-    let color = colors.find(color => color.id === answer.colorId)
-    options += `<option value="${answer.colorId}" style="background-color: ${color.code}"></option>`
+  colors.forEach(color => {
+    options += `<option value="${color.id}" style="background-color: ${color.code}"></option>`
   })
 
   return `<select data-selection-id="${solution.id}" id="select-highlight-${solution.id}" class="select-highlight">${options}</select>`
