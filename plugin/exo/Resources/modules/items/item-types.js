@@ -11,6 +11,8 @@ import pair from './pair'
 import words from './words'
 import set from './set'
 import grid from './grid'
+import ordering from './ordering'
+import boolean from './boolean'
 
 const typeProperties = [
   'name',
@@ -47,7 +49,7 @@ export function registerItemType(definition) {
 
 export function registerDefaultItemTypes() {
   if (!defaultRegistered) {
-    [choice, match, cloze, graphic, open, pair, words, set, grid].forEach(registerItemType)
+    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, boolean].forEach(registerItemType)
     defaultRegistered = true
   }
 }
