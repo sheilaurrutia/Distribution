@@ -57,6 +57,40 @@ function decorate(item) {
     item = Object.assign({}, item, {solutions})
   }
 
+  if (item.mode === 'find') {
+    const solutions = cloneDeep(item.solutions)
+
+    solutions.forEach(solution => {
+      solution.selectionId = makeId()
+    })
+
+    item = Object.assign({}, item, {solutions})
+  }
+
+  //setting true positions here
+  let toSort = item.mode === 'find' ? item.solutions : item.selections
+
+  if (!toSort) {
+    return item
+  }
+
+  toSort = cloneDeep(toSort)
+  toSort.sort((a, b) => a.begin - b.begin)
+  let idx = 0
+
+  toSort.forEach(element => {
+    //this is where the word really start
+    let begin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
+    let selection = utils.getSelectionText(item, element.selectionId || element.id)
+    element._displayedBegin = begin
+    element._displayedEnd = begin + selection.length
+    idx++
+  })
+
+  const newData = item.mode === 'find' ? {solutions: toSort} : {selections: toSort}
+
+  item = Object.assign({}, item, newData)
+
   return item
 }
 
@@ -191,13 +225,14 @@ export function recomputePositions(item, offsets, oldText) {
 
   toSort.forEach(element => {
     //this is where the word really start
-    element._trueBegin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
+    element._displayedBegin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
     idx++
 
     const amount = item.text.length - oldText.length
 
-    if (offsets.trueStart < element._trueBegin) {
-      element._trueBegin += amount
+    if (offsets.trueStart < element._displayedBegin) {
+      element._displayedBegin += amount
+      element._displayedEnd += amount
       element.begin += amount
       element.end += amount
     }
@@ -218,6 +253,8 @@ function toFindMode(item) {
     let selection = item.selections.find(selection => selection.id === solution.selectionId)
     solution.begin = selection.begin
     solution.end = selection.end
+    solution._displayedBegin = selection._displayedBegin,
+    solution._displayedEnd = selection._displayedEnd
     solution.score = 0
   })
 
@@ -259,7 +296,9 @@ function addSelectionsFromAnswers(item) {
     solutions.forEach(solution => selections.push({
       id: solution.selectionId,
       begin: solution.begin,
-      end: solution.end
+      end: solution.end,
+      _displayedBegin: solution._displayedBegin,
+      _displayedEnd: solution._displayedEnd
     }))
 
     item =  Object.assign({}, item, {selections})

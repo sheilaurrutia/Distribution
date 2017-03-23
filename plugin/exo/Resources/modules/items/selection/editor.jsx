@@ -364,7 +364,7 @@ export class Selection extends Component {
     this.onSelect = this.onSelect.bind(this)
     this.updateText = this.updateText.bind(this)
     this.addSelection = this.addSelection.bind(this)
-    this.state = {begin: null, end: null}
+    this.state = {trueStart: null, trueEnd: null, start: null, end: null}
   }
 
   updateText() {
@@ -373,12 +373,12 @@ export class Selection extends Component {
 
   onSelect(selected, cb, offsets) {
     if (offsets) {
-      this.setState({begin: offsets.trueStart, end: offsets.trueEnd})
+      this.setState({trueStart: offsets.trueStart, trueEnd: offsets.trueEnd, start: offsets.start, end: offsets.end})
     }
   }
 
   addSelection() {
-    this.props.onChange(addSelection(this.state.begin, this.state.end, this.props.item.mode))
+    this.props.onChange(addSelection(this.state.trueStart, this.state.trueEnd, this.props.item.mode))
   }
 
   onSelectionClick(el) {
@@ -389,6 +389,34 @@ export class Selection extends Component {
         this.props.onChange(removeSelection(el.dataset.selectionId, this.props.item.mode))
       }
     }
+  }
+
+  isSelectionCreationAllowed() {
+    //1st: do we actually selected something ? lol
+
+    let allowed = this.state.trueStart !== this.state.trueEnd
+
+    if (!allowed) return false
+
+    const elements = this.props.item.mode === 'find' ? this.props.item.solutions: this.props.item.selections
+
+    //console.log(this.state)
+
+    elements.forEach(element => {
+      //console.log(element)
+      //console.log((this.state.trueStart >= element._displayedBegin && this.state.trueStart <= element._displayedEnd))
+      //console.log((this.state.trueEnd >= element._displayedBegin && this.state.trueEnd <= element._displayedEnd))
+      //console.log((this.state.trueStart <= element._displayedBegin && this.state.trueEnd >= element._displayedEnd))
+      if (
+        (this.state.trueStart >= element._displayedBegin && this.state.trueStart <= element._displayedEnd) ||
+        (this.state.trueEnd >= element._displayedBegin && this.state.trueEnd <= element._displayedEnd) ||
+        (this.state.trueStart <= element._displayedBegin && this.state.trueEnd >= element._displayedEnd)
+      ) {
+        allowed = false
+      }
+    })
+
+    return allowed
   }
 
   render() {
@@ -517,7 +545,7 @@ export class Selection extends Component {
           <button
             type="button"
             className="btn btn-default"
-            disabled={this.state.begin === this.state.end}
+            disabled={!this.isSelectionCreationAllowed()}
             onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
             {'\u00a0'}{tex('create_selection_zone')}
           </button>

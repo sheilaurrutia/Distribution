@@ -24,7 +24,9 @@ export function reduce(item = {}, action) {
         selectionId: id,
         score: 0,
         begin: action.begin - sum,
-        end: action.end - sum
+        end: action.end - sum,
+        _displayedBegin: action.begin,
+        _displayedEnd: action.end
       })
 
       const text = utils.getTextFromDecorated(item._text)

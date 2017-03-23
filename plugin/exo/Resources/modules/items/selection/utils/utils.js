@@ -135,10 +135,12 @@ utils.cleanItem = (item) => {
   return Object.assign({}, item, {selections, solutions, text})
 }
 
-utils.getSelectionText = (item) => {
+utils.getSelectionText = (item, selectionId = null) => {
+  if (!selectionId) selectionId = item._selectionId
+
   const selection = item.mode === 'find' ?
-    item.solutions.find(selection => selection._selectionId === item._selectionId):
-    item.selections.find(selection => selection.id === item._selectionId)
+    item.solutions.find(selection => selection.selectionId === selectionId):
+    item.selections.find(selection => selection.id === selectionId)
 
   return item.text.substring(selection.begin, selection.end)
 }

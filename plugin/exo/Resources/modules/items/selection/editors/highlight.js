@@ -51,7 +51,9 @@ export function reduce(item = {}, action) {
       selections.push({
         id,
         begin: action.begin - sum,
-        end: action.end - sum
+        end: action.end - sum,
+        _displayedBegin: action.begin,
+        _displayedEnd: action.end
       })
 
       solutions.push({
