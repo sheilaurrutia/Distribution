@@ -1,7 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import {PaperTabs} from '../components/paper-tabs.jsx'
-import {Highlight} from './utils/highlight.jsx'
-
+import {SelectionText} from './utils/selection-text.jsx'
+import {getReactAnswerSelections} from './utils/selection-answer.jsx'
 
 export const SelectionPaper = (props) => {
   return (
@@ -10,19 +10,17 @@ export const SelectionPaper = (props) => {
       answer={props.answer}
       id={props.item.id}
       yours={
-        <Highlight
-          item={props.item}
-          answer={props.answer}
-          showScore={true}
-          displayTrueAnswer={false}
+        <SelectionText
+          anchorPrefix="selection-element-yours"
+          text={props.item.text}
+          selections={getReactAnswerSelections(props.item, props.answer, true, false)}
         />
       }
       expected={
-        <Highlight
-          item={props.item}
-          answer={props.answer}
-          showScore={true}
-          displayTrueAnswer={true}
+        <SelectionText
+          anchorPrefix="selection-element-expected"
+          text={props.item.text}
+          selections={getReactAnswerSelections(props.item, props.answer, true, true)}
         />
       }
     />
@@ -31,10 +29,13 @@ export const SelectionPaper = (props) => {
 
 SelectionPaper.propTypes = {
   item: T.shape({
+    text: T.string.isRequired,
+    mode: T.string.isRequired,
+    selections: T.arrayOf(T.shape({})),
     id: T.string.isRequired,
     title: T.string.isRequired,
     description: T.string.isRequired,
-    solutions: T.arrayOf(T.object)
+    solutions: T.arrayOf(T.shape({}))
   }).isRequired,
   answer: T.oneOfType([
     T.array,

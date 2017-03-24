@@ -18,6 +18,7 @@ export function getOffsets(element, selection = null) {
   priorRange.setEnd(range.startContainer, range.startOffset)
   let start = priorRange.toString().length
   let end = start + range.toString().length
+  //let string = selection.toString()
 
   const offsets = {
     start, end
@@ -55,6 +56,8 @@ export function getOffsets(element, selection = null) {
 
   //now we can compute the "real" offsets
   offsets.trueStart = toAdd + offsets.start
+
+  //fuck this shit, we have to take into account html stuff here aswell. We can't just use offset.end here
   offsets.trueEnd = toAdd + offsets.end
 
   return offsets

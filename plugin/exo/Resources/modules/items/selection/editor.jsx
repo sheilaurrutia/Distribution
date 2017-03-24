@@ -400,13 +400,7 @@ export class Selection extends Component {
 
     const elements = this.props.item.mode === 'find' ? this.props.item.solutions: this.props.item.selections
 
-    //console.log(this.state)
-
     elements.forEach(element => {
-      //console.log(element)
-      //console.log((this.state.trueStart >= element._displayedBegin && this.state.trueStart <= element._displayedEnd))
-      //console.log((this.state.trueEnd >= element._displayedBegin && this.state.trueEnd <= element._displayedEnd))
-      //console.log((this.state.trueStart <= element._displayedBegin && this.state.trueEnd >= element._displayedEnd))
       if (
         (this.state.trueStart >= element._displayedBegin && this.state.trueStart <= element._displayedEnd) ||
         (this.state.trueEnd >= element._displayedBegin && this.state.trueEnd <= element._displayedEnd) ||
