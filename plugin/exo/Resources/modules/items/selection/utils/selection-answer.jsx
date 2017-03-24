@@ -214,12 +214,8 @@ class DisplayHighlightAnswer extends Component {
         Object.assign({}, this.props.answer, {score: -this.props.penalty })}
   }
 
-  componentDidMount() {
-
-  }
-
-  changeSolution(solution) {
-    this.setState({solution})
+  changeSolution(colorId) {
+    this.setState({solution: this.props.solutions.find(solution => solution.colorId === colorId)})
   }
 
   render() {
@@ -231,7 +227,7 @@ class DisplayHighlightAnswer extends Component {
             <span style={{backgroundColor: this.props.colors.find(color => color.id === this.state.solution.colorId).code}}>
               {this.props.text}
             </span>
-            <select className="select-highlight">
+            <select value={this.state.solution.colorId} className="select-highlight" onChange={(e) => this.changeSolution(e.target.value) }>
               {this.props.solutions.filter(solution => solution.score > 0).map(solution => {
                 return (
                   <option key={Math.random()} value={solution.colorId} style={{backgroundColor: this.props.colors.find(color => color.id === solution.colorId).code}}>
