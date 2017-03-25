@@ -73,7 +73,7 @@ function getSelectInput(hole, solution) {
     input += correctAnswer.text
     input += '</option>'
   })
-  input += `</optgroup>`
+  input += '</optgroup>'
 
   const incorrectAnswers = solution.answers.filter(answer => 0 >= answer.score)
   if (0 !== incorrectAnswers.length) {
@@ -83,7 +83,7 @@ function getSelectInput(hole, solution) {
       input += incorrectAnswer.text
       input += '</option>'
     })
-    input += `</optgroup>`
+    input += '</optgroup>'
   }
 
   input += '</select>'
