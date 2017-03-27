@@ -2,179 +2,108 @@ import React, {Component, PropTypes as T} from 'react'
 import {utils} from './utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {getOffsets} from '../../components/form/selection/selection'
-import classes from 'classnames'
 import {tex} from './../../utils/translate'
+import {getReactAnswerInputs} from './utils/selection-input.jsx'
+import {SelectionText} from './utils/selection-text.jsx'
 
 export class SelectionPlayer extends Component {
   constructor(props) {
     super(props)
-    this.elements = this.props.item.mode === 'find' ? this.props.item.solutions : this.props.item.selections
-    this.checkedElements = []
-    const answers = cloneDeep(this.props.answer)
-    this.answers = answers || this.props.item.mode === 'find' ? {positions:[], tries:0}: []
   }
 
-  getHtml() {
-    const elements = cloneDeep(this.elements)
+  onFindAnswer(begin = null, addTry = null) {
+    const answers = cloneDeep(this.props.answer) || {positions:[], tries:0}
 
-    if (this.props.item.mode === 'highlight') {
-      elements.forEach(element => {
-        element._answers = this.props.item.solutions.find(solution => solution.selectionId === element.id).answers
-      })
+    if (begin) {
+      answers.positions.push(begin)
+    }
+    //maybe this should be stored in the server
+    if (addTry) {
+      answers.tries++
     }
 
-    return this.props.item.mode !== 'find' ?
-      utils.makeTextHtml(this.props.item.text, elements, this.props.item.mode, this.props.item.colors ? this.props.item.colors: []):
-      utils.makeTextHtml(
-        this.props.item.text,
-        this.elements.filter(element => this.answers.positions.find(ans => ans >= element.begin && ans <= element.end)),
-        'select'
-      )
+    this.props.onChange(answers)
   }
 
-  onAnswer(options = {}) {
-    this.answers = cloneDeep(this.answers)
-    const answers = this.answers
+  onHighlightAnswer(selectionId, colorId) {
+    const answers = cloneDeep(this.props.answer) || []
+    const answer = answers.find(answer => answer.selectionId === selectionId)
+    answer ? answer.colorId === colorId: answers.push({colorId,  selectionId})
 
-    switch (options.mode) {
-      case 'select': {
-        let selectionId = options.selectionId
-        let checked = options.checked
-        if (checked) {
-          answers.push(selectionId)
-        } else {
-          const index = answers.indexOf(selectionId)
-          if (index > -1) answers.splice(index, 1)
-        }
-        break
-      }
-      case 'find': {
-        if (options.begin) {
-          answers.positions.push(options.begin)
-        }
-        //maybe this should be stored in the server
-        if (options.try) {
-          answers.tries++
-        }
+    this.props.onChange(answers)
+  }
 
-        break
-      }
-      case 'highlight': {
-        const answer = answers.find(answer => answer.selectionId === options.selectionId)
-        if (answer) {
-          answer.colorId = options.colorId
-        } else {
-          answers.push({
-            colorId: options.colorId,
-            selectionId: options.selectionId
-          })
-        }
-        break
-      }
+  onSelectAnswer(selectionId, checked) {
+    const answers = cloneDeep(this.props.answer) || []
+
+    if (checked) {
+      answers.push(selectionId)
+    } else {
+      const index = answers.indexOf(selectionId)
+      if (index > -1) answers.splice(index, 1)
     }
 
-    return answers
+    this.props.onChange(answers)
+  }
+
+  getOnAnswer() {
+    switch (this.props.item.mode) {
+      case 'select': return this.onSelectAnswer.bind(this)
+      case 'highlight': return this.onHighlightAnswer.bind(this)
+    }
   }
 
   render() {
     const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
-    return <div>
-      {this.props.item.mode === 'find' && leftTries > 0 &&
-        <div style={{textAlign:'center'}} className='select-tries'>{tex('left_tries')}: {leftTries}</div>
-      }
-      {this.props.item.mode === 'find' && leftTries <= 0 &&
-        <div style={{textAlign:'center'}} className='selection-error'>{tex('no_try_left')}</div>
-      }
-      <div
-        id="selection-text-box"
-        className={classes({'pointer-hand': this.props.item.mode === 'find'})}
-        dangerouslySetInnerHTML={{__html: this.getHtml()}}
-      />
-    </div>
+
+    return (
+      <div>
+        {this.props.item.mode === 'find' && leftTries > 0 &&
+          <div style={{textAlign:'center'}} className='select-tries'>{tex('left_tries')}: {leftTries}</div>
+        }
+        {this.props.item.mode === 'find' && leftTries <= 0 &&
+          <div style={{textAlign:'center'}} className='selection-error'>{tex('no_try_left')}</div>
+        }
+        {this.props.item.mode !== 'find' &&
+          <SelectionText
+            id="selection-text-box"
+            anchorPrefix="selection-element-yours"
+            text={this.props.item.text}
+            selections={getReactAnswerInputs(this.props.item, this.getOnAnswer(), this.answers)}
+          />
+        }
+        {this.props.item.mode === 'find' &&
+          <div id="selection-text-box" className="pointer" dangerouslySetInnerHTML={{__html: utils.makeFindHtml(
+            this.props.item.text,
+            this.props.answer && this.props.answer.positions ?
+              this.props.item.solutions.filter(solution => this.props.answer.positions.find(ans => ans >= solution.begin && ans <= solution.end)): []
+            )}}
+          />
+        }
+      </div>
+    )
   }
 
   componentDidMount() {
-    switch (this.props.item.mode) {
-      case 'select': {
-        this.elements.forEach(el => {
-          let htmlElement = document.getElementById('selection-' + el.id)
-          if (htmlElement) {
-            //check the class (add or remove)
-            htmlElement.addEventListener(
-              'click',
-              e => {
-                const el = e.target
-                const check = !el.classList.contains('checked-selection')
-                const selectionId = el.getAttribute('data-selection-id')
-
-                check ? el.classList.add('checked-selection'): el.classList.remove('checked-selection')
-                this.props.onChange(this.onAnswer({
-                  mode: this.props.item.mode,
-                  selectionId,
-                  checked: check
-                }))
+    if (this.props.item.mode === 'find') {
+      document.getElementById('selection-text-box').addEventListener(
+        'click',
+        () => {
+          let offsets = getOffsets(document.getElementById('selection-text-box'))
+          const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
+          if (leftTries > 0) {
+            this.props.item.solutions.forEach(element => {
+              if (offsets.start >= element.begin && offsets.end <= element.end) {
+                this.onFindAnswer(offsets.start)
               }
-            )
+            })
+            this.onFindAnswer(null, true)
           }
-        })
-        break
-      }
-      case 'find': {
-        document.getElementById('selection-text-box').addEventListener(
-          'click',
-          () => {
-            let offsets = getOffsets(document.getElementById('selection-text-box'))
-            const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
-            if (leftTries > 0) {
-              this.elements.forEach(element => {
-                if (offsets.start >= element.begin && offsets.end <= element.end) {
-                  this.props.onChange(this.onAnswer({
-                    mode: this.props.item.mode,
-                    selectionId: element.selectionId,
-                    begin: offsets.start,
-                    end: offsets.end
-                  }))
-                }
-              })
-              this.props.onChange(this.onAnswer({
-                mode: this.props.item.mode,
-                try: true
-              }))
-            }
-          }
-        )
-        break
-      }
-      case 'highlight': {
-        this.elements.forEach(el => {
-          let htmlElement = document.getElementById(`select-highlight-${el.id}`)
-          if (htmlElement) {
-            //check the class (add or remove)
-            htmlElement.addEventListener(
-              'change',
-              e => {
-                const el = e.target
-                const colorId = el.value
-                const selectionId = el.getAttribute('data-selection-id')
-                const color = this.props.item.colors.find(color => color.id === colorId)
-                // htmlElement.style.backgroundColor = color.code
-                document.getElementById(`selection-${selectionId}`).style.backgroundColor = color.code
-
-                this.props.onChange(this.onAnswer({
-                  mode: this.props.item.mode,
-                  selectionId,
-                  colorId
-                }))
-              }
-            )
-          }
-        })
-        break
-      }
+        }
+      )
     }
   }
 }
-
 
 SelectionPlayer.propTypes = {
   item: T.object,

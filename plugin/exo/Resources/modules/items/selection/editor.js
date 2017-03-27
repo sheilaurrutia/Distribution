@@ -40,7 +40,7 @@ export default {
 
 function decorate(item) {
   item = Object.assign({}, item, {
-    _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections, 'editor')
+    _text: utils.makeTextHtml(item.text, item.mode === 'find' ? item.solutions : item.selections)
   })
 
   if (item.mode === 'highlight') {
@@ -80,7 +80,7 @@ function decorate(item) {
 
   toSort.forEach(element => {
     //this is where the word really start
-    let begin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
+    let begin = utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan(element).length
     let selection = utils.getSelectionText(item, element.selectionId || element.id)
     element._displayedBegin = begin
     element._displayedEnd = begin + selection.length
@@ -225,7 +225,7 @@ export function recomputePositions(item, offsets, oldText) {
 
   toSort.forEach(element => {
     //this is where the word really start
-    element._displayedBegin = utils.getHtmlLength(element, 'editor') * idx + element.begin + utils.getFirstSpan(element, 'editor').length
+    element._displayedBegin = utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan(element).length
     idx++
 
     const amount = item.text.length - oldText.length
@@ -284,7 +284,7 @@ function toHighlightMode(item) {
 
   return Object.assign({}, item, {colors: [{
     id: makeId(),
-    code: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
+    code: '#'+(Math.random()*0xFFFFFF<<0).toString(16) //rainbow surfing robot unicorns were born here
   }], solutions})
 }
 

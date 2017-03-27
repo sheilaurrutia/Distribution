@@ -17,7 +17,7 @@ export function reduce(item = {}, action) {
   switch (action.type) {
     case FIND_ADD_ANSWER: {
       const solutions = item.solutions ? cloneDeep(item.solutions): []
-      const sum = utils.getRealOffsetFromBegin(solutions, action.begin, 'editor')
+      const sum = utils.getRealOffsetFromBegin(solutions, action.begin)
       const id = makeId()
 
       solutions.push({
@@ -36,7 +36,7 @@ export function reduce(item = {}, action) {
         _selectionId: id,
         solutions,
         text,
-        _text: utils.makeTextHtml(text, solutions, 'editor')
+        _text: utils.makeTextHtml(text, solutions)
       })
 
       return utils.cleanItem(newItem)

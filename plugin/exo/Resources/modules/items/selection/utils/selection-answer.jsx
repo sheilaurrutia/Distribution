@@ -9,13 +9,13 @@ import cloneDeep from 'lodash/cloneDeep'
  * utility method for building the selection array
  */
 export function getReactAnswerSelections(item, answer, showScore, displayTrueAnswer = false) {
-  return item.mode === 'find' ?
-    item.solutions:
-    cloneDeep(item.selections).map(selection => {
-      selection.selectionId = selection.id
+  const elements = item.mode === 'find' ? item.solutions: item.selections
 
-      return selection
-    }).sort((a, b) => a.begin - b.begin)
+  return cloneDeep(elements).map(selection => {
+    selection.selectionId = selection.id || selection.selectionId
+
+    return selection
+  }).sort((a, b) => a.begin - b.begin)
     .map(element => {
       let elId = element.selectionId
       let userAnswer = null
@@ -67,7 +67,7 @@ export class SelectionAnswer extends Component {
       case 'find': {
         return (<DisplayFindAnswer
           solution={this.props.solution}
-          id={this.props.solution.selectionId}
+          id={this.props.id}
           text={this.props.text}
           showScore={this.props.showScore}
           displayTrueAnswer={this.props.displayTrueAnswer}
@@ -143,7 +143,6 @@ AnswerWarningIcon.propTypes = {
 }
 
 const DisplayFindAnswer = props => {
-
   const cssClasses = {
     'selection-success': props.solution.score > 0 && props.answer,
     'selection-error': props.solution.score <= 0 && props.answer,

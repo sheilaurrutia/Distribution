@@ -3,41 +3,52 @@ import cloneDeep from 'lodash/cloneDeep'
 
 export const utils = {}
 
-utils.makeTextHtml = (text, elements, mode, colors = []) => {
+utils.makeTextHtml = (text, elements) => {
   elements = cloneDeep(elements)
   let idx = 0
   elements.sort((a, b) => {return a.begin - b.begin})
 
   elements.forEach(solution => {
-    let end = text.slice(solution.end + idx)
     text = text.slice(0, solution.begin + idx)
-    + utils.getFirstSpan(solution, mode)
+    + utils.getFirstSpan(solution)
     + text.slice(solution.begin + idx, solution.end + idx)
     + '</span>'
-    if (mode === 'editor') text += getEditButtons(solution)
-    if (mode === 'highlight') text += getHighlightButtons(solution, colors)
-    text += end
+    + getEditButtons(solution)
+    + text.slice(solution.end + idx)
 
-    idx += utils.getHtmlLength(solution, mode, colors) //+ 1 //+1 is wtf, maybe an error is lurking somewhere but the positions seems to be good
+    idx += utils.getHtmlLength(solution)
   })
 
   return text
 }
 
-utils.getFirstSpan = (item, mode) => {
-  const id = item.selectionId ? item.selectionId: item.id
+utils.makeFindHtml = (text, solutions) => {
+  solutions = cloneDeep(solutions)
+  let idx = 0
+  solutions.sort((a, b) => {return a.begin - b.begin})
 
-  if (mode === 'highlight') {
-    return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection-highlight">`
-  }
+  solutions.forEach(solution => {
+    text = text.slice(0, solution.begin + idx)
+    + '<span class="checked-selection">'
+    + text.slice(solution.begin + idx, solution.end + idx)
+    + '</span>'
+    + text.slice(solution.end + idx)
+
+    idx += '<span class="checked-selection"></span>'.length
+  })
+
+  return text
+}
+
+
+utils.getFirstSpan = (item) => {
+  const id = item.selectionId ? item.selectionId: item.id
 
   return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection">`
 }
 
-utils.getHtmlLength = (solution, mode, colors) => {
-  let html = utils.getFirstSpan(solution, mode) + '</span>'
-  if (mode === 'editor') html += getEditButtons(solution)
-  if (mode === 'highlight') html += getHighlightButtons(solution, colors)
+utils.getHtmlLength = (solution) => {
+  let html = utils.getFirstSpan(solution) + '</span>' + getEditButtons(solution)
 
   return html.length
 }
@@ -50,15 +61,6 @@ function getEditButtons(solution) {
   //Positions can't be computed that way because he recursively adds it everywhere like a retard
   //DO NOT ADD EXTRA SPACES HERE EITHER. Or it'll brake tinymce again. This is a scared line and must not be changed !
   return `<span class="selection-buttons"><em class="fa fa-pencil edit-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em><em class="fa fa-trash delete-selection-btn selection-button" data-selection-id="${id}">&nbsp;</em></span>`
-}
-
-function getHighlightButtons(solution, colors) {
-  let options = '<option disabled selected value> -- select a color -- </option>'
-  colors.forEach(color => {
-    options += `<option value="${color.id}" style="background-color: ${color.code}"></option>`
-  })
-
-  return `<select data-selection-id="${solution.id}" id="select-highlight-${solution.id}" class="select-highlight">${options}</select>`
 }
 
 //This function allows us to remove our decorations class to get to proper text.

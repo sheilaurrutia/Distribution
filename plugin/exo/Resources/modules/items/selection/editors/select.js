@@ -18,7 +18,7 @@ export function reduce(item = {}, action) {
     case SELECT_ADD_SELECTION: {
       const selections = item.selections ? cloneDeep(item.selections): []
       const solutions = item.solutions ? cloneDeep(item.solutions): []
-      const sum = utils.getRealOffsetFromBegin(selections, action.begin, 'editor')
+      const sum = utils.getRealOffsetFromBegin(selections, action.begin)
       const id = makeId()
 
       selections.push({
@@ -42,7 +42,7 @@ export function reduce(item = {}, action) {
         _selectionId: id,
         solutions,
         text,
-        _text: utils.makeTextHtml(text, selections, 'editor')
+        _text: utils.makeTextHtml(text, selections)
       })
 
       return utils.cleanItem(newItem)
@@ -60,7 +60,7 @@ export function reduce(item = {}, action) {
         {
           selections,
           solutions,
-          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections, 'editor')
+          _text: utils.makeTextHtml(item.text, item.mode === 'find' ? solutions : selections)
         }
       )
 
