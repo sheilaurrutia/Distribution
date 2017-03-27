@@ -77,15 +77,15 @@ utils.getTextFromDecorated = (_text) => {
   return tmp.innerHTML
 }
 
-utils.getRealOffsetFromBegin = (toSort, begin, mode) => {
+utils.getRealOffsetFromBegin = (toSort, begin) => {
   let idx = -1
 
   toSort = toSort.filter(element => {
     idx++
-    return utils.getHtmlLength(element, mode) * idx + element.begin + utils.getFirstSpan(element, mode).length < begin
+    return utils.getHtmlLength(element) * idx + element.begin + utils.getFirstSpan(element).length < begin
   }).sort((a, b) => a.begin - b.begin)
 
-  return toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val, mode)}, 0)
+  return toSort.reduce((acc, val) => { return acc + utils.getHtmlLength(val)}, 0)
 }
 
 utils.cleanItem = (item) => {
@@ -141,7 +141,7 @@ utils.getSelectionText = (item, selectionId = null) => {
   if (!selectionId) selectionId = item._selectionId
 
   const selection = item.mode === 'find' ?
-    item.solutions.find(selection => selection.selectionId === selectionId):
+    item.solutions.find(solution => solution.selectionId === selectionId):
     item.selections.find(selection => selection.id === selectionId)
 
   return item.text.substring(selection.begin, selection.end)

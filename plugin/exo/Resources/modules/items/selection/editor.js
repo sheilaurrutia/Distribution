@@ -57,16 +57,6 @@ function decorate(item) {
     item = Object.assign({}, item, {solutions})
   }
 
-  if (item.mode === 'find') {
-    const solutions = cloneDeep(item.solutions)
-
-    solutions.forEach(solution => {
-      solution.selectionId = makeId()
-    })
-
-    item = Object.assign({}, item, {solutions})
-  }
-
   //setting true positions here
   let toSort = item.mode === 'find' ? item.solutions : item.selections
 
@@ -140,7 +130,7 @@ function reduce(item = {}, action) {
       if (action.parameter === 'text') {
         //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
         item = recomputePositions(item, action.offsets, oldText)
-        item = Object.assign({}, item, {text: action.value, _text: action.value})
+        item = Object.assign({}, item, {text: utils.getTextFromDecorated(action.value), _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors
       if (action.parameter === 'mode') {
