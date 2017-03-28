@@ -46,6 +46,47 @@ class SelectionQuestionValidator extends JsonSchemaValidator
     {
         $errors = [];
 
+        if ($question->mode === 'highlight' || $question->mode === 'select') {
+            // check solution IDs are consistent with selectionId IDs
+            $selectionIds = array_map(function (\stdClass $selection) {
+                return $selection->id;
+            }, $question->selections);
+
+            if (count($question->selections) !== count($question->solutions)) {
+                $errors[] = [
+                    'path' => '/solutions',
+                    'message' => 'there must be the same number of solutions and selections',
+                ];
+            }
+
+            foreach ($question->solutions as $index => $solution) {
+                if (!in_array($solution->selectionId, $selectionIds)) {
+                    $errors[] = [
+                        'path' => "/solutions[{$index}]",
+                        'message' => "id {$solution->selectionId} doesn't match any selection id",
+                    ];
+                }
+            }
+        }
+
+        if ($question->mode === 'highlight') {
+            // check solution IDs are consistent with selectionId IDs
+            $colorIds = array_map(function (\stdClass $color) {
+                return $color->id;
+            }, $question->colors);
+
+            foreach ($question->solutions as $index => $solution) {
+                foreach ($solution->answers as $ianswer => $answer) {
+                    if (!in_array($answer->colorId, $colorIds)) {
+                        $errors[] = [
+                            'path' => "/solutions[{$index}]/answers[$ianswer]",
+                            'message' => "id {$answer->colorId} doesn't match any color id",
+                        ];
+                    }
+                }
+            }
+        }
+
         return $errors;
     }
 }
