@@ -10,3 +10,9 @@ plugin:
           class: 'fa fa-cog'
           is_displayable_in_workspace: true
           is_displayable_in_desktop: false
+
+    resources:
+        - class: UJM\LtiBundle\Entity\LtiResource
+          name: ujm_lti_resource
+          is_browsable: false
+          icon: lti.png
