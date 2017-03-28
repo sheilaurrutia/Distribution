@@ -241,13 +241,14 @@ function toFindMode(item) {
   const newItem = cloneDeep(item)
   const solutions = newItem.solutions || []
   //add beging and end to solutions
+
   solutions.forEach(solution => {
     let selection = item.selections.find(selection => selection.id === solution.selectionId)
     solution.begin = selection.begin
     solution.end = selection.end
     solution._displayedBegin = selection._displayedBegin,
     solution._displayedEnd = selection._displayedEnd
-    solution.score = 0
+    solution.score = solution.score || 0
   })
 
   delete newItem.selections
