@@ -182,10 +182,12 @@ class SelectionForm extends Component {
 
     switch (this.props.item.mode) {
       case 'select':
-        top += 90
+        top += 89
         break
       case 'highlight':
-        top += 265
+        top += 244
+
+        this.props.item.colors.forEach(() => top += 19)
         break
       case 'find':
         top += 235
@@ -194,6 +196,7 @@ class SelectionForm extends Component {
 
     if (this.props.item.score.type === SCORE_FIXED) {
       top += 147
+
       if (this.props.item.mode !== 'select')  {
         top -= 75
       }
