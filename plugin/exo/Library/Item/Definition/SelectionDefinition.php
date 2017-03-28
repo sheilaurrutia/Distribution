@@ -126,8 +126,10 @@ class SelectionDefinition extends AbstractDefinition
                       foreach ($question->getSelections()->toArray() as $selection) {
                           if ($position >= $selection->getBegin() && $position <= $selection->getEnd()) {
                               if ($selection->getScore() > 0) {
-                                  $corrected->addExpected($selection);
-                                  $foundUuids[] = $selection->getUuid();
+                                  if (!in_array($selection->getUuid(), $foundUuids)) {
+                                      $foundUuids[] = $selection->getUuid();
+                                      $corrected->addExpected($selection);
+                                  }
                               } else {
                                   $corrected->addUnexpected($selection);
                               }
