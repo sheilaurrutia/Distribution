@@ -618,5 +618,6 @@
     "tries_number": "Nombre d'essais",
     "left_tries": "Nombre d'essais restant",
     "no_try_left": "Aucun essai restant",
-    "correct_answer": "Réponse correcte"
+    "correct_answer": "Réponse correcte",
+    "selection_missing_penalty": "Pénalité par mauvaise réponse"
 }

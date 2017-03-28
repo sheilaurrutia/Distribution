@@ -9,10 +9,20 @@ import {SelectionText} from './utils/selection-text.jsx'
 export class SelectionPlayer extends Component {
   constructor(props) {
     super(props)
+
+    //initialize the answers array
+    if (!this.props.answer) {
+      let answers = []
+      if (this.props.item.mode === 'find') {
+        answers = {positions:[], tries:0}
+      }
+
+      this.props.onChange(answers)
+    }
   }
 
   onFindAnswer(begin = null, addTry = null) {
-    const answers = cloneDeep(this.props.answer) || {positions:[], tries:0}
+    const answers = cloneDeep(this.props.answer)
 
     if (begin) {
       answers.positions.push(begin)
@@ -26,7 +36,7 @@ export class SelectionPlayer extends Component {
   }
 
   onHighlightAnswer(selectionId, colorId) {
-    const answers = cloneDeep(this.props.answer) || []
+    const answers = cloneDeep(this.props.answer)
     const answer = answers.find(answer => answer.selectionId === selectionId)
     answer ? answer.colorId === colorId: answers.push({colorId,  selectionId})
 
@@ -34,7 +44,7 @@ export class SelectionPlayer extends Component {
   }
 
   onSelectAnswer(selectionId, checked) {
-    const answers = cloneDeep(this.props.answer) || []
+    const answers = cloneDeep(this.props.answer)
 
     if (checked) {
       answers.push(selectionId)
@@ -59,13 +69,22 @@ export class SelectionPlayer extends Component {
     return (
       <div>
         {this.props.item.mode === 'find' && leftTries > 0 &&
-          <div style={{textAlign:'center'}} className='select-tries'>{tex('left_tries')}: {leftTries}</div>
+          <div className='select-tries'>
+              <span className="btn btn-danger" style={{ cursor: 'default'}}>
+                {tex('selection_missing_penalty')} <span className="badge">{this.props.item.penalty}</span>
+              </span>
+              {'\u00a0'}
+              <span className="btn btn-primary" style={{ cursor: 'default'}}>
+                {tex('left_tries')} <span className="badge">{leftTries}</span>
+              </span>
+          </div>
         }
         {this.props.item.mode === 'find' && leftTries <= 0 &&
           <div style={{textAlign:'center'}} className='selection-error'>{tex('no_try_left')}</div>
         }
         {this.props.item.mode !== 'find' &&
           <SelectionText
+            className="panel-body"
             id="selection-text-box"
             anchorPrefix="selection-element-yours"
             text={this.props.item.text}
@@ -73,7 +92,7 @@ export class SelectionPlayer extends Component {
           />
         }
         {this.props.item.mode === 'find' &&
-          <div id="selection-text-box" className="pointer" dangerouslySetInnerHTML={{__html: utils.makeFindHtml(
+          <div id="selection-text-box" className="pointer panel-body" dangerouslySetInnerHTML={{__html: utils.makeFindHtml(
             this.props.item.text,
             this.props.answer && this.props.answer.positions ?
               this.props.item.solutions.filter(solution => this.props.answer.positions.find(ans => ans >= solution.begin && ans <= solution.end)): []
@@ -118,3 +137,7 @@ SelectionPlayer.propTypes = {
   ]),
   onChange: T.func.isRequired
 }
+/*
+SelectionPlayer.defaultProps = {
+  answer: []
+}*/
