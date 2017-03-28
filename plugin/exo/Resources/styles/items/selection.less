@@ -1,19 +1,35 @@
-.selection-form-content {
-  position: absolute;
-  width: 400px;
-  top: 0;
-  left: 0;
-  z-index: 1060;
-  display: none;
-  padding: 1px;
-  text-align: left;
-  white-space: normal;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, .2);
-  border-radius: 6px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+.selection-editor {
+  position: relative; // contain hole popovers
+
+  .footer {
+    text-align: center;
+  }
+
+  .selection-button {
+    .form-control {
+      cursor: pointer; // don't know why it's not done by default
+      border-radius: @answer-item-border-radius 0 0 @answer-item-border-radius;
+    }
+    .btn {
+      padding: 4px;
+    }
+  }
+
+  .popover {
+    min-width: 360px; // grow popover
+
+    .popover-title {
+      > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .btn {
+          padding: 0 4px; // horizontal : same as feedback and delete item btns
+        }
+      }
+    }
+  }
 }
 
 .span-selection {

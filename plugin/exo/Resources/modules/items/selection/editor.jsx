@@ -12,7 +12,7 @@ import get from 'lodash/get'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {CheckGroup} from './../../components/form/check-group.jsx'
-import {BaseModal} from './../../modal/components/base.jsx'
+import Popover from 'react-bootstrap/lib/Popover'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -71,34 +71,33 @@ class ChoiceItem extends Component {
           {'negative-score': this.props.score <= 0}
         )
       }>
-        <div className='row'>
-          <div className="col-xs-4">
-            {this.props.item.score.type === SCORE_SUM &&
-              <input
-                className="form-control choice-form"
-                type="number"
-                value={this.props.score}
-                onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
-              />
-            }
-            {this.props.item.score.type === SCORE_FIXED &&
-              <CheckGroup
-                label={tex('correct_answer')}
-                checkId={'selection-chk-' + this.selectionId}
-                checked={this.props.score > 0}
-                onChange={checked => this.props.onChange(updateAnswer(checked ? 1 : 0, 'score', this.selectionId, this.props.item.mode))}
-              />
-            }
-         </div>
-          <div className="col-xs-3">
-            <TooltipButton
-              id={`choice-${this.selectionId}-feedback-toggle`}
-              className="fa fa-comments-o"
-              title={tex('choice_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          {this.props.item.score.type === SCORE_SUM &&
+            <input
+              className="form-control choice-form"
+              type="number"
+              value={this.props.score}
+              onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
             />
-          </div>
-        </div>
+          }
+          {this.props.item.score.type === SCORE_FIXED &&
+            <span>
+              <input
+                type="checkbox"
+                id={'selection-chk-' + this.selectionId}
+                checked={this.props.score > 0}
+                onChange={e => this.props.onChange(updateAnswer(e.target.checked ? 1 : 0, 'score', this.selectionId, this.props.item.mode))}
+              />
+              <span>
+                {tex('correct_answer')}
+              </span>
+            </span>
+          }
+          <TooltipButton
+            id={`choice-${this.selectionId}-feedback-toggle`}
+            className="fa fa-comments-o"
+            title={tex('choice_feedback_info')}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
@@ -108,7 +107,7 @@ class ChoiceItem extends Component {
               content={this.props.solution.feedback}
             />
           </div>
-          }
+        }
       </div>
     )
   }
@@ -143,8 +142,6 @@ class SelectionForm extends Component {
   constructor(props) {
     super(props)
     this.state = {showFeedback: false}
-    this.offsetTop = window.scrollY + window.innerHeight / 2 - (420/2)
-    this.offsetLeft = window.scrollX + window.innerWidth / 2 - (420/2)
   }
 
   getSelection() {
@@ -163,61 +160,105 @@ class SelectionForm extends Component {
     this.props.onChange(actions.closePopover())
   }
 
+  removeAndClose() {
+    this.props.onChange(actions.closePopover())
+    this.props.onChange(actions.removeSelection(this.props.item._selectionId, this.props.item.mode))
+  }
+
   render() {
+    // Let's calculate the popover position
+    // It will be positioned just under the edit button
+    const btnElement = document.querySelector(`.edit-selection-btn[data-selection-id="${this.props.item._selectionId}"]`)
+
+    let left = btnElement.offsetLeft
+    let top  = btnElement.offsetTop
+
+    left += btnElement.offsetWidth / 2 // center popover and edit btn
+    top  += btnElement.offsetHeight // position popover below edit btn
+
+    left -= 180 // half size of the popover
+
+    switch (this.props.item.mode) {
+      case 'select':
+        top += 90
+        break
+      case 'highlight':
+        top += 265
+        break
+      case 'find':
+        top += 235
+        break
+    }
+     // take into account the form group label
+
     return (
-      <BaseModal
-        bsClass="selection-form-content"
+      <Popover
         id={this.props.item._selectionId}
-        placement="right"
-        positionLeft={this.offsetLeft}
-        positionTop={this.offsetTop}
-        fadeModal={this.closePopover.bind(this)}
-        hideModal={this.closePopover.bind(this)}
-        show={this.props.item._selectionPopover}
-        title={utils.getSelectionText(this.props.item)}
-      >
-        <div className="panel-default">
-          <div className="panel-body">
-            {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
-              <ChoiceItem
-                score={this.getSolution().score}
-                selection={this.getSelection()}
-                solution={this.getSolution()}
-                item={this.props.item}
-                onChange={this.props.onChange}
+        positionLeft={left}
+        positionTop={top}
+        placement="bottom"
+        title={
+          <div>
+            {utils.getSelectionText(this.props.item)}
+
+            <div className="popover-actions">
+              <TooltipButton
+                id={`selection-${this.props.item._selectionId}-delete`}
+                title={tex('delete')}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-trash-o" />}
+                onClick={this.removeAndClose.bind(this)}
               />
-            }
-            {this.props.item.mode === 'highlight' &&
-              this.getSolution().answers.map((answer, key) => {
-                return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
-              })
-            }
-            {this.props.item.mode === 'highlight' &&
-              <button
-                className="btn btn-default"
-                onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
-                type="button"
-                disabled={this.getSolution().answers.length >= this.props.item.colors.length }
-              >
-                <i className="fa fa-plus"/>
-                {tex('color')}
-              </button>
-            }
-          </div>
-          {get(this.props, '_errors.solutions') &&
-            <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
-          }
-          {this.state.showFeedback &&
-            <div className="feedback-container selection-form-row">
-              <Textarea
-                id={`choice-${this.props.item._selectionId}-feedback`}
-                title={tex('feedback')}
-                onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
+              <TooltipButton
+                id={`selection-${this.props.item._selectionId}-close`}
+                title={tex('close')}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-times" />}
+                onClick={this.closePopover.bind(this)}
               />
             </div>
-          }
+          </div>
+        }
+      >
+        {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
+          <ChoiceItem
+            score={this.getSolution().score}
+            selection={this.getSelection()}
+            solution={this.getSolution()}
+            item={this.props.item}
+            onChange={this.props.onChange}
+          />
+        }
+        {this.props.item.mode === 'highlight' &&
+          this.getSolution().answers.map((answer, key) => {
+            return <HighlightAnswer key={key} answer={answer} item={this.props.item} onChange={this.props.onChange}></HighlightAnswer>
+          })
+        }
+        {this.props.item.mode === 'highlight' &&
+          <button
+            className="btn btn-default"
+            onClick={() => this.props.onChange(actions.highlightAddAnswer(this.props.item._selectionId))}
+            type="button"
+            disabled={this.getSolution().answers.length >= this.props.item.colors.length }
+          >
+            <i className="fa fa-plus"/>
+            {tex('color')}
+          </button>
+        }
+
+      {get(this.props, '_errors.solutions') &&
+        <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
+      }
+      {this.state.showFeedback &&
+        <div className="feedback-container selection-form-row">
+          <Textarea
+            id={`choice-${this.props.item._selectionId}-feedback`}
+            title={tex('feedback')}
+            onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
+          />
         </div>
-      </BaseModal>
+      }
+      </Popover>
     )
   }
 }
@@ -415,146 +456,142 @@ export class Selection extends Component {
 
   render() {
     return(
-      <div>
-        <div>
-          <CheckGroup
-            checkId={`item-${this.props.item.id}-fixedScore`}
-            checked={this.props.item.score.type === SCORE_FIXED}
-            label={tex('fixed_score')}
-            onChange={checked => this.props.onChange(actions.updateQuestion(checked ? SCORE_FIXED : SCORE_SUM, 'score.type', {}))}
-          />
-          {this.props.item.score.type === SCORE_FIXED &&
-            <div>
-              <FormGroup
-                controlId={`item-${this.props.item.id}-fixedSuccess`}
-                label={tex('fixed_score_on_success')}
-                warnOnly={!this.props.validating}
-              >
-                <input
-                  id={`item-${this.props.item.id}-fixedSuccess`}
-                  type="number"
-                  min="0"
-                  value={this.props.item.score.success}
-                  className="form-control"
-                  onChange={e => this.props.onChange(
-                    actions.updateQuestion(parseInt(e.target.value), 'score.success', {})
-                  )}
-                />
-              </FormGroup>
-              <FormGroup
-                controlId={`item-${this.props.item.id}-fixedFailure`}
-                label={tex('fixed_score_on_failure')}
-                warnOnly={!this.props.validating}
-              >
-                <input
-                  id={`item-${this.props.item.id}-fixedFailure`}
-                  type="number"
-                  value={this.props.item.score.failure}
-                  className="form-control"
-                  onChange={e => this.props.onChange(
-                    actions.updateQuestion(parseInt(e.target.value), 'score.failure', {})
-                  )}
-                />
-              </FormGroup>
-            </div>
-          }
-          <Radios
-            groupName="mode-group"
-            options={[
-              {value: 'select', label: tex('select')},
-              {value: 'find', label: tex('find')},
-              {value: 'highlight', label: tex('highlight')}
-            ]}
-            checkedValue={this.props.item.mode}
-            inline={true}
-            onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
-          >
-          </Radios>
-          {this.props.item.mode === 'find' &&
+      <fieldset className="selection-editor">
+        <CheckGroup
+          checkId={`item-${this.props.item.id}-fixedScore`}
+          checked={this.props.item.score.type === SCORE_FIXED}
+          label={tex('fixed_score')}
+          onChange={checked => this.props.onChange(actions.updateQuestion(checked ? SCORE_FIXED : SCORE_SUM, 'score.type', {}))}
+        />
+        {this.props.item.score.type === SCORE_FIXED &&
+          <div>
             <FormGroup
-              controlId={`item-${this.props.item.id}-tries`}
-              label={tex('tries_number')}
+              controlId={`item-${this.props.item.id}-fixedSuccess`}
+              label={tex('fixed_score_on_success')}
               warnOnly={!this.props.validating}
             >
               <input
-                id={`item-${this.props.item.id}-tries`}
+                id={`item-${this.props.item.id}-fixedSuccess`}
                 type="number"
-                min={this.props.item.solutions ? this.props.item.solutions.filter(solution => solution.score > 0).length: 1}
-                value={this.props.item.tries}
+                min="0"
+                value={this.props.item.score.success}
                 className="form-control"
-                onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
+                onChange={e => this.props.onChange(
+                  actions.updateQuestion(parseInt(e.target.value), 'score.success', {})
+                )}
               />
             </FormGroup>
-          }
-          {this.props.item.score.type === SCORE_SUM && (this.props.item.mode === 'highlight' || this.props.item.mode === 'find') &&
             <FormGroup
-              controlId="selection-default-penalty"
-              label={tex('global_penalty')}
+              controlId={`item-${this.props.item.id}-fixedFailure`}
+              label={tex('fixed_score_on_failure')}
               warnOnly={!this.props.validating}
             >
               <input
-                 className="form-control"
-                 type="number"
-                 min="0"
-                 onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
-                 value={this.props.item.penalty}
-               />
-            </FormGroup>
-          }
-          {this.props.item.mode === 'highlight' &&
-            <div className="panel-body">
-              <div>{tex('possible_color_choices')}</div>
-              {
-                this.props.item.colors.map((color, index) => {
-                  return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
-                })
-              }
-                {get(this.props.item, '_errors.colors') &&
-                  <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
-                }
-                <button
-                  type="button"
-                  className="btn btn-default"
-                  onClick={() => this.props.onChange(actions.highlightAddColor())}
-                >
-                  <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
-                </button>
-            </div>
-          }
-          <FormGroup
-            error={get(this.props.item, '_errors.text')}
-            warnOnly={!this.props.validating}
-            controlId="selection-text-box"
-            label=""
-          >
-          <Textarea
-            id={this.props.item.id}
-            onSelect={this.onSelect}
-            onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
-            onClick={this.onSelectionClick.bind(this)}
-            content={this.props.item._text}
-            updateText={this.updateText}
-          />
-        </FormGroup>
-          <button
-            type="button"
-            className="btn btn-default"
-            disabled={!this.isSelectionCreationAllowed()}
-            onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
-            {'\u00a0'}{tex('create_selection_zone')}
-          </button>
-          {this.props.item._selectionPopover &&
-            <div>
-              <SelectionForm
-                item={this.props.item}
-                onChange={this.props.onChange}
-                validating={this.props.validating}
-                _errors={this.props.item._errors}
+                id={`item-${this.props.item.id}-fixedFailure`}
+                type="number"
+                value={this.props.item.score.failure}
+                className="form-control"
+                onChange={e => this.props.onChange(
+                  actions.updateQuestion(parseInt(e.target.value), 'score.failure', {})
+                )}
               />
-            </div>
-          }
-        </div>
-      </div>
+            </FormGroup>
+          </div>
+        }
+        <Radios
+          groupName="mode-group"
+          options={[
+            {value: 'select', label: tex('select')},
+            {value: 'find', label: tex('find')},
+            {value: 'highlight', label: tex('highlight')}
+          ]}
+          checkedValue={this.props.item.mode}
+          inline={true}
+          onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
+        >
+        </Radios>
+        {this.props.item.mode === 'find' &&
+          <FormGroup
+            controlId={`item-${this.props.item.id}-tries`}
+            label={tex('tries_number')}
+            warnOnly={!this.props.validating}
+          >
+            <input
+              id={`item-${this.props.item.id}-tries`}
+              type="number"
+              min={this.props.item.solutions ? this.props.item.solutions.filter(solution => solution.score > 0).length: 1}
+              value={this.props.item.tries}
+              className="form-control"
+              onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'tries', {}))}
+            />
+          </FormGroup>
+        }
+        {this.props.item.score.type === SCORE_SUM && (this.props.item.mode === 'highlight' || this.props.item.mode === 'find') &&
+          <FormGroup
+            controlId="selection-default-penalty"
+            label={tex('global_penalty')}
+            warnOnly={!this.props.validating}
+          >
+            <input
+               className="form-control"
+               type="number"
+               min="0"
+               onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+               value={this.props.item.penalty}
+             />
+          </FormGroup>
+        }
+        {this.props.item.mode === 'highlight' &&
+          <div className="panel-body">
+            <div>{tex('possible_color_choices')}</div>
+            {
+              this.props.item.colors.map((color, index) => {
+                return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange}/>)
+              })
+            }
+              {get(this.props.item, '_errors.colors') &&
+                <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+              }
+              <button
+                type="button"
+                className="btn btn-default"
+                onClick={() => this.props.onChange(actions.highlightAddColor())}
+              >
+                <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
+              </button>
+          </div>
+        }
+        <FormGroup
+          error={get(this.props.item, '_errors.text')}
+          warnOnly={!this.props.validating}
+          controlId="selection-text-box"
+          label=""
+        >
+        <Textarea
+          id={this.props.item.id}
+          onSelect={this.onSelect}
+          onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
+          onClick={this.onSelectionClick.bind(this)}
+          content={this.props.item._text}
+          updateText={this.updateText}
+        />
+      </FormGroup>
+        <button
+          type="button"
+          className="btn btn-default"
+          disabled={!this.isSelectionCreationAllowed()}
+          onClick={() => this.props.onChange(this.addSelection())}><i className="fa fa-plus"/>
+          {'\u00a0'}{tex('create_selection_zone')}
+        </button>
+        {this.props.item._selectionPopover &&
+          <SelectionForm
+            item={this.props.item}
+            onChange={this.props.onChange}
+            validating={this.props.validating}
+            _errors={this.props.item._errors}
+          />
+        }
+      </fieldset>
     )
   }
 }
