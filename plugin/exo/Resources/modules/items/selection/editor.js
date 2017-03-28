@@ -202,9 +202,9 @@ function validate(item) {
   return _errors
 }
 
-export function recomputePositions(item, offsets, oldText) {
+function recomputePositions(item, offsets, oldText) {
   if (oldText === item._text) return item
-  
+
   let toSort = item.mode === 'find' ? item.solutions : item.selections
 
   if (!toSort) {

@@ -76,7 +76,8 @@ class ChoiceItem extends Component {
               className="selection-score form-control"
               type="number"
               value={this.props.score}
-              onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
+              step="0.5"
+              onChange={e => this.props.onChange(updateAnswer(Number(e.target.value), 'score', this.selectionId, this.props.item.mode))}
             />
           }
           {this.props.item.score.type === SCORE_FIXED &&
@@ -333,7 +334,7 @@ class HighlightAnswer extends Component {
       <div>
         <div className='row'>
           <div className="col-xs-4">
-            <select
+            <select className="color-select"
               style={{ backgroundColor: color.code }}
               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
               value={this.props.answer.colorId}
@@ -354,6 +355,7 @@ class HighlightAnswer extends Component {
             {this.props.item.score.type === SCORE_SUM &&
               <input
                  type="number"
+                 step="0.5"
                  onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', Number(e.target.value), this.props.answer._answerId))}
                  value={this.props.answer.score}
                  className="form-control keyword-score"
@@ -488,6 +490,7 @@ export class Selection extends Component {
                 id={`item-${this.props.item.id}-fixedSuccess`}
                 type="number"
                 min="0"
+                step="0.5"
                 value={this.props.item.score.success}
                 className="form-control"
                 onChange={e => this.props.onChange(
@@ -503,10 +506,11 @@ export class Selection extends Component {
               <input
                 id={`item-${this.props.item.id}-fixedFailure`}
                 type="number"
+                step="0.5"
                 value={this.props.item.score.failure}
                 className="form-control"
                 onChange={e => this.props.onChange(
-                  actions.updateQuestion(parseInt(e.target.value), 'score.failure', {})
+                  actions.updateQuestion(Number(e.target.value), 'score.failure', {})
                 )}
               />
             </FormGroup>
@@ -550,7 +554,8 @@ export class Selection extends Component {
              className="form-control"
              type="number"
              min="0"
-             onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+             step="0.5"
+             onChange={e => this.props.onChange(actions.updateQuestion(Number(e.target.value), 'penalty', {}))}
              value={this.props.item.penalty}
            />
           </FormGroup>
