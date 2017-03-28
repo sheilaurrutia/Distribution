@@ -189,6 +189,10 @@ class SelectionForm extends Component {
         top += 235
         break
     }
+
+    if (this.props.item.score.type === SCORE_FIXED) {
+      top += 147
+    }
      // take into account the form group label
 
     return (
@@ -267,6 +271,9 @@ SelectionForm.propTypes = {
   item: T.shape({
     _selectionId: T.string,
     _selectionPopover: T.bool,
+    score: T.shape({
+      type: T.string.isRequired
+    }),
     mode: T.string.isRequired,
     id: T.string.isRequired,
     solutions: T.arrayOf(T.shape({
