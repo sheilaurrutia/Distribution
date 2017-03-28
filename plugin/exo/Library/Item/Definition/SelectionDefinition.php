@@ -182,6 +182,7 @@ class SelectionDefinition extends AbstractDefinition
                   foreach ($answers as $highlightAnswer) {
                       if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
                           $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
+
                           $foundElements[] = ['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId];
                       }
                   }
@@ -202,7 +203,7 @@ class SelectionDefinition extends AbstractDefinition
                   }
 
                   if ($question->getPenalty() > 0) {
-                      $penaltyTimes = count($question->getColorSelections()) - count($foundElements) - $addedMissing;
+                      $penaltyTimes = count($question->getSelections()) - count($foundElements);
 
                       for ($i = 0; $i < $penaltyTimes; ++$i) {
                           $unexpected = new Selection();
