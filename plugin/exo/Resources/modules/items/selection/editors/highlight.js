@@ -59,7 +59,7 @@ export function reduce(item = {}, action) {
       solutions.push({
         selectionId: id,
         answers: [{
-          score: 0,
+          score: 1,
           colorId: item.colors[0].id,
           _answerId: makeId()
         }]
