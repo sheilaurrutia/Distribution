@@ -73,7 +73,7 @@ class ChoiceItem extends Component {
       }>
           {this.props.item.score.type === SCORE_SUM &&
             <input
-              className="form-control choice-form"
+              className="selection-score form-control"
               type="number"
               value={this.props.score}
               onChange={e => this.props.onChange(updateAnswer(parseInt(e.target.value), 'score', this.selectionId, this.props.item.mode))}
@@ -92,12 +92,14 @@ class ChoiceItem extends Component {
               </span>
             </span>
           }
-          <TooltipButton
-            id={`choice-${this.selectionId}-feedback-toggle`}
-            className="fa fa-comments-o"
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          <span>
+            <TooltipButton
+              id={`choice-${this.selectionId}-feedback-toggle`}
+              className="fa fa-comments-o pull-right"
+              title={tex('choice_feedback_info')}
+              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+            />
+        </span>
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
@@ -192,8 +194,10 @@ class SelectionForm extends Component {
 
     if (this.props.item.score.type === SCORE_FIXED) {
       top += 147
+      if (this.props.item.mode !== 'select')  {
+        top -= 75
+      }
     }
-     // take into account the form group label
 
     return (
       <Popover
@@ -347,9 +351,9 @@ class HighlightAnswer extends Component {
             {this.props.item.score.type === SCORE_SUM &&
               <input
                  type="number"
-                 onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', parseInt(e.target.value), this.props.answer._answerId))}
+                 onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', Number(e.target.value), this.props.answer._answerId))}
                  value={this.props.answer.score}
-                 className="form-control choice-form"
+                 className="form-control keyword-score"
               />
             }
             {this.props.item.score.type === SCORE_FIXED &&
@@ -484,7 +488,7 @@ export class Selection extends Component {
                 value={this.props.item.score.success}
                 className="form-control"
                 onChange={e => this.props.onChange(
-                  actions.updateQuestion(parseInt(e.target.value), 'score.success', {})
+                  actions.updateQuestion(Number(e.target.value), 'score.success', {})
                 )}
               />
             </FormGroup>
@@ -539,13 +543,13 @@ export class Selection extends Component {
             label={tex('global_penalty')}
             warnOnly={!this.props.validating}
           >
-            <input
-               className="form-control"
-               type="number"
-               min="0"
-               onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
-               value={this.props.item.penalty}
-             />
+          <input
+             className="form-control"
+             type="number"
+             min="0"
+             onChange={e => this.props.onChange(actions.updateQuestion(parseInt(e.target.value), 'penalty', {}))}
+             value={this.props.item.penalty}
+           />
           </FormGroup>
         }
         {this.props.item.mode === 'highlight' &&

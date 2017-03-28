@@ -616,5 +616,6 @@
     "selection_solution_missing_colors_error": "Les sélections doivent au moins contenir une couleur",
     "tries_number": "Nombre d'essais",
     "left_tries": "Nombre d'essais restant",
-    "no_try_left": "Aucun essai restant"
+    "no_try_left": "Aucun essai restant",
+    "correct_answer": "Réponse correcte"
 }
