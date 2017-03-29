@@ -141,6 +141,8 @@ class ClacoFormManager
 
         $clacoForm->setDisplayMetadata('none');
 
+        $clacoForm->setLockedFields('user');
+
         $clacoForm->setDisplayCategories(false);
         $clacoForm->setOpenCategories(false);
 
@@ -321,6 +323,8 @@ class ClacoFormManager
         $type,
         $required = true,
         $isMetadata = false,
+        $locked = false,
+        $lockedEditionOnly = false,
         array $choices = []
     ) {
         $this->om->startFlushSuite();
@@ -330,6 +334,8 @@ class ClacoFormManager
         $field->setType($type);
         $field->setRequired($required);
         $field->setIsMetadata($isMetadata);
+        $field->setLocked($locked);
+        $field->setLockedEditionOnly($lockedEditionOnly);
         $fieldFacet = $this->facetManager->createField($name, $required, $type, $clacoForm->getResourceNode());
 
         if ($this->facetManager->isTypeWithChoices($type)) {
@@ -356,6 +362,8 @@ class ClacoFormManager
         $type,
         $required = true,
         $isMetadata = false,
+        $locked = false,
+        $lockedEditionOnly = false,
         array $oldChoices = [],
         array $newChoices = []
     ) {
@@ -364,6 +372,8 @@ class ClacoFormManager
         $field->setType($type);
         $field->setRequired($required);
         $field->setIsMetadata($isMetadata);
+        $field->setLocked($locked);
+        $field->setLockedEditionOnly($lockedEditionOnly);
         $fieldFacet = $field->getFieldFacet();
         $this->facetManager->editField($fieldFacet, $name, $required, $type);
 

@@ -23,7 +23,6 @@ export default class EntryCreationCtrl {
     this.config = ClacoFormService.getResourceDetails()
     this.template = ClacoFormService.getTemplate()
     this.fields = FieldService.getFields()
-    this.tinymceOptions = ClacoFormService.getTinymceConfiguration()
     this.mode = 'creation'
     this.keywordssChoices = []
     this.keywords = []
@@ -128,6 +127,10 @@ export default class EntryCreationCtrl {
     if (index > -1) {
       this.keywords.splice(index, 1)
     }
+  }
+
+  isFieldDisabled(field) {
+    return !this.canEdit() && field['locked'] && !field['lockedEditionOnly']
   }
 
   submit() {

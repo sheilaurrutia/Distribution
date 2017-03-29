@@ -185,12 +185,18 @@ class ClacoFormController extends Controller
         }
         $required = is_bool($fieldData['required']) ? $fieldData['required'] : $fieldData['required'] === 'true';
         $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : $fieldData['isMetadata'] === 'true';
+        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : $fieldData['locked'] === 'true';
+        $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
+            $fieldData['lockedEditionOnly'] :
+            $fieldData['lockedEditionOnly'] === 'true';
         $field = $this->clacoFormManager->createField(
             $clacoForm,
             $fieldData['name'],
             $fieldData['type'],
             $required,
             $isMetadata,
+            $locked,
+            $lockedEditionOnly,
             $choices
         );
         $serializedField = $this->serializer->serialize(
@@ -236,12 +242,18 @@ class ClacoFormController extends Controller
         }
         $required = is_bool($fieldData['required']) ? $fieldData['required'] : $fieldData['required'] === 'true';
         $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : $fieldData['isMetadata'] === 'true';
+        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : $fieldData['locked'] === 'true';
+        $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
+            $fieldData['lockedEditionOnly'] :
+            $fieldData['lockedEditionOnly'] === 'true';
         $this->clacoFormManager->editField(
             $field,
             $fieldData['name'],
             $fieldData['type'],
             $required,
             $isMetadata,
+            $locked,
+            $lockedEditionOnly,
             $oldChoices,
             $newChoices
         );
