@@ -29,7 +29,6 @@ export class Quiz {
     registerModalType(MODAL_CONTENT, ContentModal)
     const quizData = decorate(normalize(rawQuizData), getDecorators(), rawQuizData.meta.editable)
     const md = new MobileDetect(window.navigator.userAgent)
-    console.log('mobile detect', md, md.mobile())
     this.store = createStore(Object.assign({noServer: noServer}, quizData))
     this.dndQuiz = null === md.mobile() ? DragDropContext(HTML5Backend)(QuizComponent) : DragDropContext(TouchBackend)(QuizComponent)
     makeRouter(this.store.dispatch.bind(this.store))
