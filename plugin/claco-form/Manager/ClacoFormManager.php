@@ -141,7 +141,7 @@ class ClacoFormManager
 
         $clacoForm->setDisplayMetadata('none');
 
-        $clacoForm->setLockedFields('user');
+        $clacoForm->setLockedFieldsFor('user');
 
         $clacoForm->setDisplayCategories(false);
         $clacoForm->setOpenCategories(false);
