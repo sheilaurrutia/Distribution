@@ -1,4 +1,4 @@
-import setupTouchDNDCustomEvents from 'touch-dnd-custom-events'
+import setupTouchDNDCustomEvents from './touch-dnd-custom-events/index'
 
 function addEventListeners(target) {
   this.addCustomEventListeners(target)
