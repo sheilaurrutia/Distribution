@@ -2,6 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {SelectionText} from './utils/selection-text.jsx'
 import {getReactAnswerSelections} from './utils/selection-answer.jsx'
+import {tex} from './../../utils/translate'
 
 export const SelectionPaper = (props) => {
   return (
@@ -10,11 +11,24 @@ export const SelectionPaper = (props) => {
       answer={props.answer}
       id={props.item.id}
       yours={
-        <SelectionText
-          anchorPrefix="selection-element-yours"
-          text={props.item.text}
-          selections={getReactAnswerSelections(props.item, props.answer, true, false)}
-        />
+        (<div>
+          {props.item.mode === 'find' &&
+            <div className="panel-body">
+              <span className="btn btn-danger" style={{ cursor: 'default'}}>
+                {tex('selection_missing_penalty')} <span className="badge">{props.item.penalty}</span>
+              </span>
+              {'\u00a0'}
+              <span className="btn btn-primary" style={{ cursor: 'default'}}>
+                {tex('try_used')} <span className="badge"> {props.answer.tries} </span>
+              </span>
+            </div>
+          }
+          <SelectionText
+            anchorPrefix="selection-element-yours"
+            text={props.item.text}
+            selections={getReactAnswerSelections(props.item, props.answer, true, false)}
+          />
+        </div>)
       }
       expected={
         <SelectionText
@@ -35,7 +49,8 @@ SelectionPaper.propTypes = {
     id: T.string.isRequired,
     title: T.string.isRequired,
     description: T.string.isRequired,
-    solutions: T.arrayOf(T.shape({}))
+    solutions: T.arrayOf(T.shape({})),
+    penalty: T.number
   }).isRequired,
   answer: T.oneOfType([
     T.array,
