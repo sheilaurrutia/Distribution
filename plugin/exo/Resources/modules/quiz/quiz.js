@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {DragDropContext} from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
+import { default as TouchBackend } from 'react-dnd-touch-backend'
 import {Quiz as QuizComponent} from './components/quiz.jsx'
 import {normalize} from './normalizer'
 import {decorate} from './decorators'
@@ -27,7 +28,7 @@ export class Quiz {
     registerModalType(MODAL_CONTENT, ContentModal)
     const quizData = decorate(normalize(rawQuizData), getDecorators(), rawQuizData.meta.editable)
     this.store = createStore(Object.assign({noServer: noServer}, quizData))
-    this.dndQuiz = DragDropContext(HTML5Backend)(QuizComponent)
+    this.dndQuiz = DragDropContext(TouchBackend({ enableMouseEvents: true }))(QuizComponent)
     makeRouter(this.store.dispatch.bind(this.store))
     makeSaveGuard(this.store.getState.bind(this.store))
   }
