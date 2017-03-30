@@ -46,9 +46,9 @@ class SelectionQuestion extends AbstractItem
     private $tries = 0;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      *
-     * @var int
+     * @var float
      */
     private $penalty = null;
 

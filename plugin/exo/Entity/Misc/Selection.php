@@ -37,7 +37,7 @@ class Selection implements AnswerPartInterface
     /**
      * The starting position.
      *
-     * @var bool
+     * @var int
      *
      * @ORM\Column(type="integer")
      */
@@ -46,7 +46,7 @@ class Selection implements AnswerPartInterface
     /**
      * The ending position.
      *
-     * @var bool
+     * @var int
      *
      * @ORM\Column(type="integer")
      */

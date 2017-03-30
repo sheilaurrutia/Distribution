@@ -47,7 +47,7 @@ class ColorSelection implements AnswerPartInterface
     }
 
     /**
-     * @return SelectionQuestion
+     * @return Selection
      */
     public function getSelection()
     {
@@ -55,7 +55,7 @@ class ColorSelection implements AnswerPartInterface
     }
 
     /**
-     * @param SelectionQuestion $interactionSelection
+     * @param Selection $selection
      */
     public function setSelection(Selection $selection)
     {

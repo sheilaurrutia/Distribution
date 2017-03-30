@@ -28,7 +28,7 @@ class Color
     /**
      * The color code.
      *
-     * @var bool
+     * @var string
      *
      * @ORM\Column(type="string")
      */
