@@ -137,7 +137,3 @@ SelectionPlayer.propTypes = {
   ]),
   onChange: T.func.isRequired
 }
-/*
-SelectionPlayer.defaultProps = {
-  answer: []
-}*/

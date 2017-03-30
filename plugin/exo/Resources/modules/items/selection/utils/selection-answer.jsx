@@ -19,6 +19,7 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
     .map(element => {
       let elId = element.selectionId
       let userAnswer = null
+
       switch(item.mode) {
         case 'find': {
           userAnswer = answer.positions.find(a => a >= element.begin && a <= element.end)
@@ -40,6 +41,7 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
         id: elId,
         begin: element.begin,
         end: element.end,
+        solution,
         component: (
           <SelectionAnswer
             id={elId}
@@ -54,6 +56,14 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
           />
         )
       }
+    }).filter(data => {
+      if (!displayTrueAnswer) return true
+
+      const solution = data.solution
+      //find and select
+      if (solution.score !== undefined) return solution.score > 0
+
+      return solution.answers.filter(answer => answer.score > 0).length > 0
     })
 }
 
@@ -80,7 +90,6 @@ export class SelectionAnswer extends Component {
         return (<DisplaySelectAnswer
           solution={this.props.solution}
           text={this.props.text}
-          className={this.props.className}
           showScore={this.props.showScore}
           displayTrueAnswer={this.props.displayTrueAnswer}
           answer={this.props.answer}
@@ -91,7 +100,6 @@ export class SelectionAnswer extends Component {
         return (<DisplayHighlightAnswer
           solutions={this.props.solution.answers}
           text={this.props.text}
-          className={this.props.className}
           showScore={this.props.showScore}
           displayTrueAnswer={this.props.displayTrueAnswer}
           answer={this.props.answer}
@@ -152,20 +160,20 @@ const DisplayFindAnswer = props => {
   return (
     <span className={classes(props.className, cssClasses)}>
 
-      <span>{props.text}</span>
+      <span className='selection-text'>{props.text}</span>
 
       {(props.showScore && props.answer)  &&
         <AnswerWarningIcon valid={!!props.solution.score } />
       }
 
-      {props.solution && props.solution.feedback &&
+      {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
         <Feedback
           id={`${props.id}-feedback`}
           feedback={props.solution.feedback}
         />
       }
 
-      {props.showScore && props.answer &&
+      {props.showScore && (props.answer || props.displayTrueAnswer) &&
         <SolutionScore score={props.solution ? props.solution.score : 0} />
       }
     </span>
@@ -182,13 +190,13 @@ const DisplaySelectAnswer = props => {
 
   return (
     <span className={classes(props.className, cssClasses)}>
-      <span>{props.text}</span>
+      <span className='selection-text'>{props.text}</span>
 
-      {props.showScore && props.answer &&
+      {props.showScore && props.answer && !props.displayTrueAnswer &&
         <AnswerWarningIcon valid={!!props.solution.score} />
       }
 
-      {props.solution && props.solution.feedback &&
+      {(props.solution && props.solution.feedback) && ((props.answer && props.showScore) || props.displayTrueAnswer) &&
         <Feedback
           id={`${props.id}-feedback`}
           feedback={props.solution.feedback}
@@ -209,8 +217,9 @@ class DisplayHighlightAnswer extends Component {
     this.state = this.props.displayTrueAnswer ?
       {solution: this.props.solutions.filter(solution => solution.score > 0)[0]}:
       {solution:
-        this.props.solutions.find(solution => solution.colorId === this.props.answer.colorId) ||
-        Object.assign({}, this.props.answer, {score: -this.props.penalty })}
+        this.props.solutions.find(solution => this.props.answer ? solution.colorId === this.props.answer.colorId: false) ||
+        Object.assign({}, this.props.answer || null, {score: -this.props.penalty })
+      }
   }
 
   changeSolution(colorId) {
@@ -218,19 +227,27 @@ class DisplayHighlightAnswer extends Component {
   }
 
   render() {
+    const cssClasses = {
+      'selection-info-color': this.props.displayTrueAnswer,
+      'selection-success-color': this.state.solution.score > 0 && !this.props.displayTrueAnswer,
+      'selection-error-color': this.state.solution.score <= 0
+    }
+
     return (
       <span className={classes(this.props.className)}>
 
         {this.props.displayTrueAnswer &&
           <span>
-            <span style={{backgroundColor: this.props.colors.find(color => color.id === this.state.solution.colorId).code}}>
+            <span className='selection-answer'
+              style={{backgroundColor: this.props.colors.find(color => color.id === this.state.solution.colorId).code}}
+            >
               {this.props.text}
             </span>
             <select value={this.state.solution.colorId} className="select-highlight" onChange={(e) => this.changeSolution(e.target.value) }>
               {this.props.solutions.filter(solution => solution.score > 0).map(solution => {
                 return (
-                  <option key={Math.random()} value={solution.colorId} style={{backgroundColor: this.props.colors.find(color => color.id === solution.colorId).code}}>
-                   {'\u00a0'}{'\u00a0'}{'\u00a0'}
+                  <option key={Math.random()} value={solution.colorId} style={{backgroundColor: this.props.colors.find(color => color.id === solution.colorId).code || 'white'}}>
+                   {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
                   </option>
                  )
               })}
@@ -239,24 +256,30 @@ class DisplayHighlightAnswer extends Component {
         }
 
         {!this.props.displayTrueAnswer &&
-          <span style={{backgroundColor: this.props.colors.find(color => color.id === this.state.solution.colorId).code}}>
+          <span
+            className='selection-answer'
+            style={{backgroundColor: this.state.solution.colorId ? this.props.colors.find(color => color.id === this.state.solution.colorId).code: 'white' }}>
             {this.props.text}
           </span>
         }
 
-        {this.props.showScore && this.props.answer &&
-          <AnswerWarningIcon valid={!!this.state.solution.score} />
+        {this.props.showScore && this.props.answer && !this.props.displayTrueAnswer &&
+          <span className={classes(cssClasses)}>
+            <AnswerWarningIcon valid={this.state.solution.score > 0} />
+          </span>
         }
 
         {this.state.solution.feedback &&
-          <Feedback
+          <Feedback className={classes(cssClasses)}
             id={`${this.props.id}-feedback`}
             feedback={this.state.solution.feedback}
           />
         }
 
-        {this.props.showScore && this.props.answer &&
-          <SolutionScore score={this.state.solution ? this.state.solution.score : this.props.penalty} />
+        {this.props.showScore && (this.props.answer || this.props.displayTrueAnswer) &&
+          <span className={classes(cssClasses)}>
+            <SolutionScore score={this.state.solution ? this.state.solution.score : this.props.penalty} />
+          </span>
         }
       </span>
     )
