@@ -14,6 +14,7 @@ export function getReactAnswerInputs(item, onAnswer) {
   }).sort((a, b) => a.begin - b.begin)
     .map(element => {
       let elId = element.selectionId
+
       return {
         id: elId,
         begin: element.begin,
@@ -25,7 +26,7 @@ export function getReactAnswerInputs(item, onAnswer) {
             mode={item.mode}
             colors={item.colors}
             onAnswer={onAnswer}
-            className={element.className | ''}
+            className={element.className || ''}
           />
         )
       }

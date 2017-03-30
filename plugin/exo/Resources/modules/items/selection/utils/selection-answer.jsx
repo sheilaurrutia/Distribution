@@ -4,6 +4,7 @@ import {utils} from './utils'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'
 import cloneDeep from 'lodash/cloneDeep'
+import {SCORE_SUM} from './../../../quiz/enums'
 
 /**
  * utility method for building the selection array
@@ -53,6 +54,7 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
             mode={item.mode}
             colors={item.colors}
             penalty={item.penalty || 0}
+            scoreType={item.score.type}
           />
         )
       }
@@ -84,6 +86,7 @@ export class SelectionAnswer extends Component {
           answer={this.props.answer}
           className={this.props.className}
           penalty={this.props.penalty}
+          scoreType={this.props.scoreType}
         />)
       }
       case 'select': {
@@ -94,6 +97,7 @@ export class SelectionAnswer extends Component {
           displayTrueAnswer={this.props.displayTrueAnswer}
           answer={this.props.answer}
           id={this.props.solution.selectionId}
+          scoreType={this.props.scoreType}
         />)
       }
       case 'highlight': {
@@ -106,6 +110,7 @@ export class SelectionAnswer extends Component {
           colors={this.props.colors}
           id={this.props.solution.selectionId}
           penalty={this.props.penalty}
+          scoreType={this.props.scoreType}
         />)
       }
     }
@@ -119,6 +124,7 @@ SelectionAnswer.propTypes = {
   mode: T.string.isRequired,
   className: T.string,
   showScore: T.bool.isRequired,
+  scoreType: T.string.isRequired,
   penalty: T.number,
   displayTrueAnswer: T.bool.isRequired,
   colors: T.arrayOf(T.shape({
@@ -173,7 +179,7 @@ const DisplayFindAnswer = props => {
         />
       }
 
-      {props.showScore && (props.answer || props.displayTrueAnswer) &&
+      {props.showScore && (props.answer || props.displayTrueAnswer) && props.scoreType === SCORE_SUM &&
         <SolutionScore score={props.solution ? props.solution.score : 0} />
       }
     </span>
@@ -203,7 +209,7 @@ const DisplaySelectAnswer = props => {
         />
       }
 
-      {props.showScore && props.answer &&
+      {props.showScore && props.answer && props.scoreType === SCORE_SUM &&
         <SolutionScore score={props.solution ? props.solution.score : 0} />
       }
     </span>
@@ -276,7 +282,7 @@ class DisplayHighlightAnswer extends Component {
           />
         }
 
-        {this.props.showScore && (this.props.answer || this.props.displayTrueAnswer) &&
+        {this.props.showScore && (this.props.answer || this.props.displayTrueAnswer) && this.props.scoreType === SCORE_SUM &&
           <span className={classes(cssClasses)}>
             <SolutionScore score={this.state.solution ? this.state.solution.score : this.props.penalty} />
           </span>
@@ -292,6 +298,7 @@ DisplaySelectAnswer.propTypes = {
   answer: T.string,
   className: T.string,
   showScore: T.bool.isRequired,
+  scoreType: T.string.isRequired,
   displayTrueAnswer: T.bool.isRequired,
   solution: T.shape({
     score: T.number.isRequired,
@@ -305,6 +312,7 @@ DisplayFindAnswer.propTypes = {
   answer: T.number,
   className: T.string,
   showScore: T.bool.isRequired,
+  scoreType: T.string.isRequired,
   displayTrueAnswer: T.bool.isRequired,
   solution: T.shape({
     score: T.number.isRequired,
@@ -322,6 +330,7 @@ DisplayHighlightAnswer.propTypes = {
   }),
   className: T.string,
   showScore: T.bool.isRequired,
+  scoreType: T.string.isRequired,
   displayTrueAnswer: T.bool.isRequired,
   colors: T.arrayOf(T.shape({
     id: T.string.isRequired,
