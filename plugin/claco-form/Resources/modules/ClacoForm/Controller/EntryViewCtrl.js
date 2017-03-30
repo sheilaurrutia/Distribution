@@ -21,6 +21,7 @@ export default class EntryViewCtrl {
     this.CommentService = CommentService
     this.entryId = parseInt($stateParams.entryId)
     this.entry = {}
+    this.entryNotification = null
     this.userId = ClacoFormService.getUserId()
     this.title= ClacoFormService.getResourceNodeName()
     this.config = ClacoFormService.getResourceDetails()
@@ -96,6 +97,10 @@ export default class EntryViewCtrl {
       this.initializeTemplate()
     }
     this.CommentService.initializeComments(this.entryId)
+
+    if (this.userId) {
+      this.EntryService.getEntryNotification(this.entryId).then(d => this.entryNotification = d)
+    }
   }
 
   initializeTemplate() {
@@ -274,5 +279,32 @@ export default class EntryViewCtrl {
 
   getCountryName(code) {
     return this.FieldService.getCountryNameFromCode(code)
+  }
+
+  isEntryNotificationEnabled() {
+    return this.entryNotification['notify_edition'] ||
+      (this.config['display_comments'] && this.entryNotification['notify_comment']) ||
+      (this.config['display_categories'] && this.entryNotification['notify_category'])
+  }
+
+  switchEntryNotification() {
+    const enabled = !this.isEntryNotificationEnabled()
+    this.entryNotification['notify_edition'] = enabled
+    this.entryNotification['notify_comment'] = enabled
+    this.entryNotification['notify_category'] = enabled
+    this.saveEntryNotification()
+  }
+
+  notificationOptionClick($event) {
+    $event.stopPropagation()
+  }
+
+  saveEntryNotification() {
+    this.EntryService.saveEntryNotification(this.entryId, this.entryNotification)
+  }
+
+  switchNotification(type) {
+    this.entryNotification[type] = !this.entryNotification[type]
+    this.saveEntryNotification()
   }
 }

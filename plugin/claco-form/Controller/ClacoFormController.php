@@ -18,6 +18,7 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -904,5 +905,62 @@ class ClacoFormController extends Controller
         );
 
         return new JsonResponse($serializedComment, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/entry/{entry}/notification/retrieve",
+     *     name="claro_claco_form_entry_notification_retrieve",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Retrieves an entry notification options for current user
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entryNotificationRetrieveAction(User $user, Entry $entry)
+    {
+        $this->clacoFormManager->checkEntryAccess($entry);
+        $entryNotification = $this->clacoFormManager->getEntryNotification($entry, $user);
+        $serializedEntryNotification = $this->serializer->serialize(
+            $entryNotification,
+            'json',
+            SerializationContext::create()->setGroups(['api_claco_form'])
+        );
+
+        return new JsonResponse($serializedEntryNotification, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/entry/{entry}/notification/save",
+     *     name="claro_claco_form_entry_notification_save",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Saves entry notification options for current user
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entryNotificationSaveAction(User $user, Entry $entry)
+    {
+        $this->clacoFormManager->checkEntryAccess($entry);
+        $entryNotification = $this->clacoFormManager->getEntryNotification($entry, $user);
+        $entryNotificationData = $this->request->request->get('entryNotificationData', false);
+
+        if (isset($entryNotificationData['notify_edition'])) {
+            $entryNotification->setNotifyEdition($entryNotificationData['notify_edition']);
+        }
+        if (isset($entryNotificationData['notify_comment'])) {
+            $entryNotification->setNotifyComment($entryNotificationData['notify_comment']);
+        }
+        if (isset($entryNotificationData['notify_category'])) {
+            $entryNotification->setNotifyCategory($entryNotificationData['notify_category']);
+        }
+        $this->clacoFormManager->persistEntryNotification($entryNotification);
+
+        return new JsonResponse('success', 200);
     }
 }

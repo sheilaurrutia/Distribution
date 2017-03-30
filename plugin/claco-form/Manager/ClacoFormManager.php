@@ -16,6 +16,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\EntryNotification;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
@@ -74,6 +75,7 @@ class ClacoFormManager
     private $categoryRepo;
     private $commentRepo;
     private $entryRepo;
+    private $entryNotificationRepo;
     private $fieldChoiceCategoryRepo;
     private $fieldRepo;
     private $fieldValueRepo;
@@ -114,6 +116,7 @@ class ClacoFormManager
         $this->clacoFormWidgetConfigRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoFormWidgetConfig');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
         $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
+        $this->entryNotificationRepo = $om->getRepository('ClarolineClacoFormBundle:EntryNotification');
         $this->fieldChoiceCategoryRepo = $om->getRepository('ClarolineClacoFormBundle:FieldChoiceCategory');
         $this->fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
         $this->fieldValueRepo = $om->getRepository('ClarolineClacoFormBundle:FieldValue');
@@ -661,6 +664,10 @@ class ClacoFormManager
             }
         }
         $this->persistEntry($entry);
+
+        if (!is_null($user)) {
+            $this->createEntryNotification($entry, $user, true, true, true);
+        }
         $event = new LogEntryCreateEvent($entry);
         $this->eventDispatcher->dispatch('log', $event);
         $this->om->endFlushSuite();
@@ -1142,6 +1149,42 @@ class ClacoFormManager
         }
 
         return $entries;
+    }
+
+    public function createEntryNotification(
+        Entry $entry,
+        User $user,
+        $notifyEdition = false,
+        $notifyComment = false,
+        $notifyCategory = false
+    ) {
+        $entryNotification = new EntryNotification();
+        $entryNotification->setEntry($entry);
+        $entryNotification->setUser($user);
+        $entryNotification->setNotifyEdition($notifyEdition);
+        $entryNotification->setNotifyComment($notifyComment);
+        $entryNotification->setNotifyCategory($notifyCategory);
+        $this->om->persist($entryNotification);
+        $this->om->flush();
+
+        return $entryNotification;
+    }
+
+    public function getEntryNotification(Entry $entry, User $user)
+    {
+        $entryNotification = $this->entryNotificationRepo->findOneBy(['entry' => $entry, 'user' => $user]);
+
+        if (empty($entryNotification)) {
+            $entryNotification = $this->createEntryNotification($entry, $user);
+        }
+
+        return $entryNotification;
+    }
+
+    public function persistEntryNotification(EntryNotification $entryNotification)
+    {
+        $this->om->persist($entryNotification);
+        $this->om->flush();
     }
 
     /*****************************************
