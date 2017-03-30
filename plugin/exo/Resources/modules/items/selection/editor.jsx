@@ -66,9 +66,9 @@ class ChoiceItem extends Component {
   render() {
     return (
       <div className={classes(
-          'choice-item-selection',
-          {'positive-score': this.props.score > 0},
-          {'negative-score': this.props.score <= 0}
+          'answer-item keyword-item',
+          {'expected-answer': this.props.score > 0},
+          {'unexpected-answer': this.props.score <= 0}
         )
       }>
           {this.props.item.score.type === SCORE_SUM &&
@@ -331,9 +331,14 @@ class HighlightAnswer extends Component {
     const color = this.props.item.colors.find(color => color.id === this.props.answer.colorId)
 
     return (
-      <div>
+      <div className={classes(
+          'answer-item keyword-item',
+          {'expected-answer': this.props.answer.score > 0},
+          {'unexpected-answer': this.props.answer.score <= 0}
+        )
+      }>
         <div className='row'>
-          <div className="col-xs-4">
+          <div className="col-xs-3">
             <select className="color-select"
               style={{ backgroundColor: color.code }}
               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
@@ -351,7 +356,7 @@ class HighlightAnswer extends Component {
             })}
             </select>
           </div>
-          <div className="col-xs-3">
+          <div className="col-xs-4">
             {this.props.item.score.type === SCORE_SUM &&
               <input
                  type="number"
