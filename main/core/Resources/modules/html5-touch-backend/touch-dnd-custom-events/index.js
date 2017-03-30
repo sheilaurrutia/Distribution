@@ -1,4 +1,4 @@
-import {removeDragPreview, updateDragPreview} from './dragPreview'
+import {default as preview} from './dragPreview'
 import {default as DataTransfer} from './DataTransfer'
 import {default as simulateEvent} from './simulateEvent'
 
@@ -14,8 +14,6 @@ const touchDndCustomEvents = {
 
 function handleTouchStart(event) {
   const target = event.target
-  console.log('handleTouchStart')
-  console.log('target.hasAttribute(draggable)', target.hasAttribute('draggable'))
   if (target.hasAttribute('draggable')) {
     event.preventDefault()
 
@@ -32,13 +30,11 @@ function handleTouchStart(event) {
     simulateEvent('touchdragstart', event, dataTransfer, target)
 
     const dragPreview = store.dragPreviewElement
-    updateDragPreview(dragPreview, x, y)
+    preview.updateDragPreview(dragPreview, x, y)
   }
 }
 
 function handleTouchMove(event) {
-  console.log('handleTouchMove')
-  console.log('touchDndCustomEvents.draggedItem ? ', touchDndCustomEvents.draggedItem)
   if (touchDndCustomEvents.draggedItem) {
     event.preventDefault()
 
@@ -47,7 +43,7 @@ function handleTouchMove(event) {
     const dataTransfer = touchDndCustomEvents.dataTransfer
     const draggedItem = touchDndCustomEvents.draggedItem
     const dragPreview = touchDndCustomEvents.store.dragPreviewElement
-    const previewContainer = updateDragPreview(dragPreview, x, y)
+    const previewContainer = preview.updateDragPreview(dragPreview, x, y)
 
     touchDndCustomEvents.store.mode = 'readwrite'
     simulateEvent('touchdrag', event, dataTransfer, draggedItem)
@@ -79,8 +75,6 @@ function handleTouchMove(event) {
 }
 
 function handleTouchEnd(event) {
-  console.log('handleTouchEnd')
-  console.log('touchDndCustomEvents.draggedItem ? ', touchDndCustomEvents.draggedItem)
   if (touchDndCustomEvents.draggedItem) {
     event.preventDefault()
 
@@ -104,7 +98,7 @@ function handleTouchEnd(event) {
     touchDndCustomEvents.lastDraggedOver = null
     touchDndCustomEvents.draggedItem = null
 
-    removeDragPreview()
+    preview.removeDragPreview()
   }
 }
 

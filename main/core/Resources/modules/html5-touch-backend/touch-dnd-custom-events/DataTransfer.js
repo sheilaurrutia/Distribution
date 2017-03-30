@@ -1,5 +1,5 @@
 import FileList from './FileList'
-import parseTextUriList from './parseTextUriList'
+import {default as parseTextUriList} from './parseTextUriList'
 
 // DataTransfer objects expose the drag data store
 // https://html.spec.whatwg.org/multipage/interaction.html#datatransferitem
