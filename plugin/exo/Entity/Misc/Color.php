@@ -9,7 +9,7 @@ use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
- * Choice.
+ * Color.
  *
  * @ORM\Entity()
  * @ORM\Table(name="ujm_color")
@@ -38,7 +38,7 @@ class Color
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="colors")
-     * @ORM\JoinColumn(name="interaction_qcm_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="interaction_selection_id", referencedColumnName="id")
      */
     private $interactionSelection;
 

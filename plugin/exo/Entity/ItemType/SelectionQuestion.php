@@ -20,9 +20,9 @@ class SelectionQuestion extends AbstractItem
     const MODE_SELECT = 'select';
 
     /**
-     * The HTML text with empty holes.
+     * The HTML text.
      *
-     * @ORM\Column(name="htmlWithoutValue", type="text")
+     * @ORM\Column(name="text", type="text")
      *
      * @var string
      */
@@ -35,8 +35,7 @@ class SelectionQuestion extends AbstractItem
      *
      * @var string
      */
-    private $mode = 'select';
-
+    private $mode = self::MODE_SELECT;
     /**
      * The max amount of tries for find mode.
      *
@@ -54,7 +53,7 @@ class SelectionQuestion extends AbstractItem
     private $penalty = null;
 
     /**
-     * The list of holes present in the text.
+     * The list of selections present in the text.
      *
      * @ORM\OneToMany(
      *     targetEntity="UJM\ExoBundle\Entity\Misc\Selection",
@@ -175,12 +174,8 @@ class SelectionQuestion extends AbstractItem
     public function getColorSelections()
     {
         return array_reduce($this->getSelections()->toArray(), function ($acc, $el) {
-            if (!is_array($acc)) {
-                $acc = [];
-            }
-
             return array_merge($acc, $el->getColorSelections()->toArray());
-        });
+        }, []);
     }
 
     public function getColorSelection(array $options)
@@ -241,15 +236,11 @@ class SelectionQuestion extends AbstractItem
      */
     public function getColor($uuid)
     {
-        $found = null;
         foreach ($this->colors as $color) {
             if ($color->getUuid() === $uuid) {
-                $found = $color;
-                break;
+                return $color;
             }
         }
-
-        return $found;
     }
 
     /**

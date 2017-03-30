@@ -8,7 +8,7 @@ use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
 
 /**
- * Choice.
+ * ColorSelection.
  *
  * @ORM\Entity()
  * @ORM\Table(name="ujm_color_selection")

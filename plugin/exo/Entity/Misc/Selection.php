@@ -12,7 +12,7 @@ use UJM\ExoBundle\Library\Model\ScoreTrait;
 use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
- * Choice.
+ * Selection.
  *
  * @ORM\Entity()
  * @ORM\Table(name="ujm_selection")
@@ -54,7 +54,7 @@ class Selection implements AnswerPartInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\SelectionQuestion", inversedBy="selections")
-     * @ORM\JoinColumn(name="interaction_qcm_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="interation_selection_id", referencedColumnName="id")
      */
     private $interactionSelection;
 
@@ -83,7 +83,7 @@ class Selection implements AnswerPartInterface
     }
 
     /**
-     * @return ChoiceQuestion
+     * @return SelectionQuestion
      */
     public function getInteractionSelection()
     {
@@ -91,7 +91,7 @@ class Selection implements AnswerPartInterface
     }
 
     /**
-     * @param ChoiceQuestion $interactionQCM
+     * @param SelectionQuestion $interactionSelection
      */
     public function setInteractionSelection(SelectionQuestion $interactionSelection)
     {
