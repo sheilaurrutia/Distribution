@@ -12,7 +12,9 @@ export function makeSortable(component, type) {
     beginDrag(props) {
       return {
         id: props.id,
-        index: props.index
+        index: props.index,
+        title: props.title,
+        data: props.data
       }
     }
   }

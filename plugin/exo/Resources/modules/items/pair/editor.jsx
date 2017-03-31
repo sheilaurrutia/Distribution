@@ -342,7 +342,7 @@ OddList.propTypes = {
 }
 
 let Item = props => {
-  return props.connectDragPreview (
+  return (
     <div className="answer-item item">
       <div className="text-fields">
         <Textarea
@@ -394,7 +394,6 @@ let Item = props => {
 Item.propTypes = {
   onChange: T.func.isRequired,
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   item: T.object.isRequired
 }
 
