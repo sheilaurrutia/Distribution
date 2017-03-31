@@ -164,8 +164,8 @@ class SelectionForm extends Component {
   }
 
   removeAndClose() {
+    this.props.onChange(removeSelection(this.props.item._selectionId, this.props.item.mode))
     this.props.onChange(actions.closePopover())
-    this.props.onChange(actions.removeSelection(this.props.item._selectionId, this.props.item.mode))
   }
 
   render() {

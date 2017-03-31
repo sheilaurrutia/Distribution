@@ -77,7 +77,7 @@ export class DisplayHighlightInput extends Component {
     return (
       <span className={classes(this.props.className)}>
         <span>
-          <span style={spanCss}>
+          <span style={spanCss} className="selection-answer">
             {this.props.text}
           </span>
           <select

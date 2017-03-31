@@ -12,8 +12,8 @@ utils.makeTextHtml = (text, elements) => {
     text = text.slice(0, solution.begin + idx)
     + utils.getFirstSpan(solution)
     + text.slice(solution.begin + idx, solution.end + idx)
-    + '</span>'
     + getEditButtons(solution)
+    + '</span>'
     + text.slice(solution.end + idx)
 
     idx += utils.getHtmlLength(solution)
@@ -44,7 +44,7 @@ utils.makeFindHtml = (text, solutions) => {
 utils.getFirstSpan = (item) => {
   const id = item.selectionId ? item.selectionId: item.id
 
-  return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection">`
+  return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection cloze-hole answer-item">`
 }
 
 utils.getHtmlLength = (solution) => {

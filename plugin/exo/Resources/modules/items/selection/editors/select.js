@@ -31,7 +31,7 @@ export function reduce(item = {}, action) {
 
       solutions.push({
         selectionId: id,
-        score: 0
+        score: 1
       })
 
       const text = utils.getTextFromDecorated(item._text)

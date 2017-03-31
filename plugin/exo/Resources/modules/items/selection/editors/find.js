@@ -22,7 +22,7 @@ export function reduce(item = {}, action) {
 
       solutions.push({
         selectionId: id,
-        score: 0,
+        score: 1,
         begin: action.begin - sum,
         end: action.end - sum,
         _displayedBegin: action.begin,
