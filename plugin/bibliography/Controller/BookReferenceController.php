@@ -4,6 +4,7 @@ namespace Icap\BibliographyBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Icap\BibliographyBundle\Entity\BookReference;
+use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
 use Icap\BibliographyBundle\Form\BookReferenceConfigurationType;
 use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class BookReferenceController extends Controller
@@ -95,14 +97,15 @@ class BookReferenceController extends Controller
 
     /**
      * @EXT\Route("/update/configuration/{id}", name="icap_bibliography_config_save")
-     * @EXT\ParamConverter("config", class="BibliographyBundle:BookReferenceConfiguration")
+     * @EXT\ParamConverter("config", class="IcapBibliographyBundle:BookReferenceConfiguration")
      * @EXT\Method("POST")
      */
     public function updateConfigurationAction(BookReferenceConfiguration $config, Request $request)
     {
-        $postData = $request->request->get('audio_recorder_configuration');
+        $postData = $request->request->get('icap_bibliography_configuration');
+        $this->manager->updateConfiguration($config, $postData);
+
         if (isset($postData['max_try']) && isset($postData['max_recording_time'])) {
-            $this->manager->updateConfiguration($config, $postData);
             $msg = $this->get('translator')->trans('config_update_success', [], 'tools');
             $this->get('session')->getFlashBag()->set('success', $msg);
         } else {
@@ -110,6 +113,6 @@ class BookReferenceController extends Controller
             $this->get('session')->getFlashBag()->set('error', $msg);
         }
 
-        return $this->redirectToRoute('audio_recorder_config_form');
+        return $this->redirectToRoute('icap_bibliography_config_form');
     }
 }

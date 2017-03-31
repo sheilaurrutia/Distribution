@@ -13,4 +13,13 @@ cover_url: URL de la couverture
 api_search: Rechercher
 icap_book_reference_config: Configuration de l'éditeur de références bibliographiques
 fetch_from_api: Depuis l'API
-manual_entry: À la main
+manual_entry: Manuellement
+add_more_info: Ajouter les informations supplémentaires :
+save_book_reference: Sauvegarder la fiche ?
+icap_bibliography_api_unavailable: L'API n'est pas disponible. Vous pouvez toutefois compléter la fiche manuellement.
+use_at_least_one_field: Remplissez au minimum un champ pour pouvoir lancer une recherche.
+api_key: Clé privée de l'API ISBNDB
+new_window: Ouvrir les références bibliographiques dans un nouvel onglet
+submit_config_label: Sauvegarder la configuration
+icap_bibliography_api_book_unavailable: Les détails de cet ouvrage ne sont pas disponibles. Vous pouvez toutefois compléter la fiche manuellement.
+get_details: Choisir

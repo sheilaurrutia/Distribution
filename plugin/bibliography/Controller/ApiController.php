@@ -2,15 +2,12 @@
 
 namespace Icap\BibliographyBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
-use Icap\BibliographyBundle\Exception\CurlException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @NamePrefix("icap_bibliography_api_")
@@ -20,10 +17,7 @@ class ApiController extends FOSRestController
     /**
      * Search in ISBNDB.
      *
-     * @param Workspace    $workspace
-     * @param ParamFetcher $paramFetcher
-     *
-     * @Get("{workspace}/books/search", name="book_search", options = { "expose" = true })
+     * @Get("books/search", options = { "expose" = true })
      *
      * @QueryParam(name="query", description="Searched query")
      * @QueryParam(name="index", description="Index of the database used to search for the query", default="title")
@@ -34,7 +28,7 @@ class ApiController extends FOSRestController
      * @throws HttpException
      * @throws \Exception
      */
-    public function bookSearchAction(Workspace $workspace, ParamFetcher $paramFetcher)
+    public function bookSearchAction(ParamFetcher $paramFetcher)
     {
         $api_key = $this->getApiKey();
 
@@ -58,14 +52,13 @@ class ApiController extends FOSRestController
     /**
      * Get book details from ISBNDB.
      *
-     * @param Workspace    $workspace
      * @param ParamFetcher $paramFetcher
      *
-     * @Get("{workspace}/book/details", name="book_details", options = { "expose" = true })
+     * @Get("book/details", options = { "expose" = true })
      *
      * @QueryParam(name="bookId", description="ISBN, Title or ISBNDB Id of the book")
      */
-    public function bookDetailsAction(Workspace $workspace, ParamFetcher $paramFetcher)
+    public function bookDetailsAction(ParamFetcher $paramFetcher)
     {
         $api_key = $this->getApiKey();
 
@@ -104,13 +97,17 @@ class ApiController extends FOSRestController
 
     private function sendRequest($url)
     {
+
         // Request
-        try {
-            $result = $this->curlRequest($url);
-        } catch (NotFoundHttpException $e) {
-            throw new HttpException(404, 'Unable to contact API');
-        } catch (CurlException $e) {
-            throw new HttpException(400, $e->getMessage());
+        $result = $this->curlRequest($url);
+
+        if (array_key_exists('error', $result)) {
+            if ($result['keystats']['member_use_requests'] >= ($result['keystats']['free_use_limit'] + $result['keystats']['daily_max_pay_uses'])) {
+                // Too Many Requests
+                throw new HttpException(429);
+            } else {
+                throw new HttpException(404, $result['error']);
+            }
         }
 
         return $result;
@@ -121,7 +118,6 @@ class ApiController extends FOSRestController
      *
      * @return mixed
      *
-     * @throws CurlException
      * @throws NotFoundHttpException
      */
     private function curlRequest($url)
@@ -131,24 +127,13 @@ class ApiController extends FOSRestController
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_COOKIESESSION, true);
         $data = curl_exec($curl);
-        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $info = curl_getinfo($curl);
         curl_close($curl);
 
-        if ($http_code !== 200) {
-            // Gérer les cas d'erreur
-
-            // Le serveur ne répond pas
-            throw new NotFoundHttpException();
+        if ($info['http_code'] !== 200) {
+            throw new HttpException($info['http_code']);
         }
 
-        $result = json_decode($data, true);
-
-        if (array_key_exists('error', $result)) {
-            // Gérer les autres erreurs
-            // La limite de requêtes a été atteinte
-            throw new CurlException($result['error']);
-        }
-
-        return $result;
+        return json_decode($data, true);
     }
 }

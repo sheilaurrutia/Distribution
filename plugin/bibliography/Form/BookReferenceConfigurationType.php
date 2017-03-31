@@ -5,7 +5,6 @@ namespace Icap\BibliographyBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class BookReferenceConfigurationType extends AbstractType
 {
@@ -15,15 +14,23 @@ class BookReferenceConfigurationType extends AbstractType
             'api_key',
             'text',
             [
-                'required' => true,
+                'required' => false,
                 'label' => 'api_key',
-                'constraints' => new Assert\NotBlank(),
                 'attr' => [
                     'autofocus' => true,
                 ],
-            ]
-        );
-        $builder->add();
+            ])
+            ->add('new_window', 'checkbox', [
+                'label' => 'new_window',
+                'required' => false,
+            ])
+            ->add('submit', 'submit', [
+                'label' => 'submit_config_label',
+                'translation_domain' => 'icap_bibliography',
+                'attr' => [
+                    'class' => 'btn btn-primary pull-right',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -43,6 +50,6 @@ class BookReferenceConfigurationType extends AbstractType
 
     public function getName()
     {
-        return 'bibliography_configuration';
+        return 'icap_bibliography_configuration';
     }
 }

@@ -22,7 +22,7 @@ class BookReferenceConfiguration
 
     /**
      * @var bool
-     * @ORM\Column(name="new_window", type="boolean", nullable=false)
+     * @ORM\Column(name="new_window", type="boolean", nullable=true)
      */
     protected $newWindow = false;
 

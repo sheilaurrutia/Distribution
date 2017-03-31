@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'innova_audio_recorder_config' | trans({}, 'innova_audio_recorder') | striptags | raw }}
+    {{ parent() ~ ' - ' ~ 'icap_bibliography_config' | trans({}, 'icap_bibliography') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -31,7 +31,7 @@
     </div>
 
     <div class="panel-body">
-        {{ form_start(form, {'action': path('bibliography_config_save', {'id':id }) , 'method': 'POST'}) }}
+        {{ form_start(form, {'action': path('icap_bibliography_config_save', {'id':id }) , 'method': 'POST'}) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
     </div>

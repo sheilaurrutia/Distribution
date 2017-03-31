@@ -10,6 +10,16 @@ language: Language
 page_count: Page count
 url: URL
 cover_url: Cover URL
+api_search: Search
 icap_book_reference_config: Book reference editor configuration
-fetch_from_api: Fetch from API
-manual_entry: Enter data manually
+fetch_from_api: From API
+manual_entry: Manually
+add_more_info: Add more data:
+save_book_reference: Save book reference?
+icap_bibliography_api_unavailable: Book reference API is unavailable. You can enter additional information manually.
+use_at_least_one_field: You can search for additional data trhough the API if at least one field is filled
+api_key: Private ISBNDB API key
+new_window: Open book references in a new window
+submit_config_label: Save configuration
+icap_bibliography_api_book_unavailable: Book details are not available. You can enter additional information manually.
+get_details: Get details
