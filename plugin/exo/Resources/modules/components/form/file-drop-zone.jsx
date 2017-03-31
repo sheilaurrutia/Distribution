@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'react'
-import {NativeTypes} from 'react-dnd-html5-backend'
 import {DropTarget} from 'react-dnd'
+import {FILE} from './../../quiz/enums'
 
 const fileTarget = {
   drop(props, monitor) {
@@ -17,7 +17,7 @@ FileDropZone.propTypes = {
   children: T.element.isRequired
 }
 
-FileDropZone = DropTarget(NativeTypes.FILE, fileTarget, (connect, monitor) => ({
+FileDropZone = DropTarget(FILE, fileTarget, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   canDrop: monitor.canDrop()

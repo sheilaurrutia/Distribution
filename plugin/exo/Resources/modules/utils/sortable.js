@@ -14,7 +14,8 @@ export function makeSortable(component, type) {
         id: props.id,
         index: props.index,
         title: props.title,
-        data: props.data
+        data: props.data,
+        item: props.item
       }
     }
   }

@@ -144,7 +144,7 @@ OrderingItem.propTypes = {
 }
 
 
-OrderingItem = makeSortable(OrderingItem, 'ORDERINGITEM')
+OrderingItem = makeSortable(OrderingItem, 'ORDERING_ITEM')
 
 const OrderingOdd = props => {
   return (

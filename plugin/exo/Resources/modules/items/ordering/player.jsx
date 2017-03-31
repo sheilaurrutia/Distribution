@@ -69,7 +69,7 @@ SortableItem.propTypes = {
   index: T.number.isRequired
 }
 
-SortableItem = makeSortable(SortableItem, 'ORDERING_PLAYER_SORTABLE_ITEM')
+SortableItem = makeSortable(SortableItem, 'ORDERING_ITEM')
 
 let DraggableItem = props => {
   return props.connectDragPreview (

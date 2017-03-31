@@ -35,7 +35,7 @@ function getItemStyles(props) {
   }
 }
 
-class CustomDragLayer extends Component{
+class CustomDragLayerComponent extends Component{
   renderItem(type, item) {
     switch (type) {
       case 'ITEM':
@@ -49,13 +49,20 @@ class CustomDragLayer extends Component{
         return (
         <div>{item.title}</div>
       )
-      case 'ORDERINGITEM':
+      case 'ORDERING_ITEM':
         return (
           item.data ?
           <div dangerouslySetInnerHTML={{__html: item.data}}></div>
           :
           <div>DRAGGING</div>
       )
+      case 'STEP_ITEM':
+        return(
+          item.title ?
+            <div>{item.title}</div>
+            :
+            <div>DRAGGING</div>
+        )
     }
   }
 
@@ -75,7 +82,7 @@ class CustomDragLayer extends Component{
   }
 }
 
-CustomDragLayer.propTypes = {
+CustomDragLayerComponent.propTypes = {
   item: T.object,
   itemType: T.string,
   currentOffset: T.shape({
@@ -94,6 +101,6 @@ function collect(monitor) {
   }
 }
 
-CustomDragLayer = DragLayer(collect)(CustomDragLayer)
+const CustomDragLayer = DragLayer(collect)(CustomDragLayerComponent)
 
 export {CustomDragLayer}
