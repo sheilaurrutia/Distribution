@@ -12,12 +12,11 @@ export class SelectionPlayer extends Component {
 
     //initialize the answers array
     if (!this.props.answer) {
-      let answers = []
-      if (this.props.item.mode === 'find') {
-        answers = {positions:[], tries:0}
+      switch (this.props.item.mode) {
+        case 'find': this.props.onChange({positions:[], tries:0, mode: 'find'}); break;
+        case 'select': this.props.onChange({mode: 'select', selections: []}); break;
+        case 'highlight': this.props.onChange({mode: 'highlight', highlights: []}); break;
       }
-
-      this.props.onChange(answers)
     }
   }
 
@@ -37,20 +36,22 @@ export class SelectionPlayer extends Component {
 
   onHighlightAnswer(selectionId, colorId) {
     const answers = cloneDeep(this.props.answer)
-    const answer = answers.find(answer => answer.selectionId === selectionId)
-    answer ? answer.colorId === colorId: answers.push({colorId,  selectionId})
+    const highlights = answers.highlights
+    const answer = highlights.find(highlight => highlight.selectionId === selectionId)
+    answer ? answer.colorId = colorId: highlights.push({colorId,  selectionId})
 
     this.props.onChange(answers)
   }
 
   onSelectAnswer(selectionId, checked) {
     const answers = cloneDeep(this.props.answer)
+    const selections = answers.selections
 
     if (checked) {
-      answers.push(selectionId)
+      selections.push(selectionId)
     } else {
-      const index = answers.indexOf(selectionId)
-      if (index > -1) answers.splice(index, 1)
+      const index = selections.indexOf(selectionId)
+      if (index > -1) selections.splice(index, 1)
     }
 
     this.props.onChange(answers)
@@ -126,14 +127,6 @@ export class SelectionPlayer extends Component {
 
 SelectionPlayer.propTypes = {
   item: T.object,
-  answer: T.oneOfType([
-    T.array,
-    T.shape({
-      tries: T.number.isRequired,
-      positions: T.arrayOf(
-        T.number
-      )
-    })
-  ]),
+  answer: T.object,
   onChange: T.func.isRequired
 }

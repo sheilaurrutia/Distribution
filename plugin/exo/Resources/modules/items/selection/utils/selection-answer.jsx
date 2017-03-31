@@ -27,11 +27,11 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
           break
         }
         case 'select': {
-          userAnswer = answer.indexOf(element.selectionId) >= 0 ? elId: null
+          userAnswer = answer.selections.indexOf(element.selectionId) >= 0 ? elId: null
           break
         }
         case 'highlight': {
-          userAnswer = answer.find(answer => answer.selectionId === elId) || null
+          userAnswer = answer.highlights.find(answer => answer.selectionId === elId) || null
           break
         }
       }

@@ -161,7 +161,7 @@ class SelectionDefinition extends AbstractDefinition
                   return $corrected;
 
                case $question::MODE_SELECT:
-                  foreach ($answers as $selectionId) {
+                  foreach ($answers->selections as $selectionId) {
                       $selection = $question->getSelection($selectionId);
                       $selection->getScore() > 0 ? $corrected->addExpected($selection) : $corrected->addUnexpected($selection);
                   }
@@ -181,7 +181,7 @@ class SelectionDefinition extends AbstractDefinition
                case $question::MODE_HIGHLIGHT:
                   $foundElements = [];
 
-                  foreach ($answers as $highlightAnswer) {
+                  foreach ($answers->highlights as $highlightAnswer) {
                       if ($colorSelection = $question->getColorSelection(['color_uuid' => $highlightAnswer->colorId, 'selection_uuid' => $highlightAnswer->selectionId])) {
                           $colorSelection->getScore() > 0 ? $corrected->addExpected($colorSelection) : $corrected->addUnexpected($colorSelection);
 

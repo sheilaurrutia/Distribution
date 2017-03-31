@@ -53,16 +53,27 @@ SelectionPaper.propTypes = {
     penalty: T.number
   }).isRequired,
   answer: T.oneOfType([
-    T.array,
+    T.shape({
+      selections: T.arrayOf(
+        T.string
+      ),
+      mode: T.string.isRequired
+    }),
+    T.shape({
+      highlights: T.arrayOf(
+        T.shape({
+          selectionId: T.string.isRequired,
+          colorId: T.string.isRequired
+        })
+      ),
+      mode: T.string.isRequired
+    }),
     T.shape({
       tries: T.number.isRequired,
       positions: T.arrayOf(
         T.number
-      )
+      ),
+      mode: T.string.isRequired
     })
   ]).isRequired
-}
-
-SelectionPaper.defaultProps = {
-  answer: []
 }

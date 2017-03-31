@@ -22,9 +22,28 @@ SelectionFeedback.propTypes = {
     solutions: T.arrayOf(T.object),
     selections: T.arrayOf(T.object)
   }).isRequired,
-  answer: T.array.isRequired
-}
-
-SelectionFeedback.defaultProps = {
-  answer: []
+  answer: T.oneOfType([
+    T.shape({
+      selections: T.arrayOf(
+        T.string
+      ),
+      mode: T.string.isRequired
+    }),
+    T.shape({
+      highlights: T.arrayOf(
+        T.shape({
+          selectionId: T.string.isRequired,
+          colorId: T.string.isRequired
+        })
+      ),
+      mode: T.string.isRequired
+    }),
+    T.shape({
+      tries: T.number.isRequired,
+      positions: T.arrayOf(
+        T.number
+      ),
+      mode: T.string.isRequired
+    })
+  ]).isRequired
 }

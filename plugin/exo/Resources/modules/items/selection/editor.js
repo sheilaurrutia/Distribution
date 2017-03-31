@@ -127,9 +127,10 @@ function reduce(item = {}, action) {
       }
 
       //set the dislayed text here
-      if (action.parameter === 'text') {
+      if (action.parameter === 'text' && action.parameter !== item.text) {
         //then we need to update the positions here because if we add text BEFORE our marks, then everything is screwed up
         item = recomputePositions(item, action.offsets, oldText)
+        //  console.log('recompute', utils.getTextFromDecorated(action.value))
         item = Object.assign({}, item, {text: utils.getTextFromDecorated(action.value), _text: action.value})
       }
       //if we set the mode to highlight, we also initialize the colors

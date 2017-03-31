@@ -42,7 +42,7 @@ export class SelectionText extends Component {
     })
 
     return (
-      <div className={classes('selection-text', this.props.className)} dangerouslySetInnerHTML={{__html: parsedHtml}} />
+      <div className={classes(this.props.className)} dangerouslySetInnerHTML={{__html: parsedHtml}} />
     )
   }
 }
