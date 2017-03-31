@@ -15,7 +15,7 @@ export const SelectionPaper = (props) => {
           {props.item.mode === 'find' &&
             <div className="panel-body">
               <span className="btn btn-danger" style={{ cursor: 'default'}}>
-                {tex('selection_missing_penalty')} <span className="badge">{props.item.penalty}</span>
+                {tex('selection_missing_click')} <span className="badge">{props.item.penalty}</span>
               </span>
               {'\u00a0'}
               <span className="btn btn-primary" style={{ cursor: 'default'}}>

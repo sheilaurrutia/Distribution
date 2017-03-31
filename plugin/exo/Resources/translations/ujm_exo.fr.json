@@ -620,5 +620,6 @@
     "no_try_left": "Aucun essai restant",
     "correct_answer": "Réponse correcte",
     "selection_missing_penalty": "Pénalité par mauvaise réponse non définie",
-    "try_used": "Essais utilisés"
+    "try_used": "Essais utilisés",
+    "selection_missing_click": "Pénalité par mauvaise click",
 }

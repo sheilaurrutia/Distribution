@@ -71,7 +71,7 @@ export class SelectionPlayer extends Component {
         {this.props.item.mode === 'find' && leftTries > 0 &&
           <div className='select-tries'>
               <span className="btn btn-danger" style={{ cursor: 'default'}}>
-                {tex('selection_missing_penalty')} <span className="badge">{this.props.item.penalty}</span>
+                {tex('selection_missing_click')} <span className="badge">{this.props.item.penalty}</span>
               </span>
               {'\u00a0'}
               <span className="btn btn-primary" style={{ cursor: 'default'}}>

@@ -44,7 +44,7 @@ utils.makeFindHtml = (text, solutions) => {
 utils.getFirstSpan = (item) => {
   const id = item.selectionId ? item.selectionId: item.id
 
-  return `<span data-selection-id="${id}" id="selection-${id}" class="span-selection cloze-hole answer-item">`
+  return `<span data-selection-id="${id}" id="selection-${id}" class="cloze-hole answer-item">`
 }
 
 utils.getHtmlLength = (solution) => {
