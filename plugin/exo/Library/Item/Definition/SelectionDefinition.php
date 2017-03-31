@@ -172,7 +172,7 @@ class SelectionDefinition extends AbstractDefinition
                   }, $bestAnswers);
 
                   foreach ($uuids as $uuid) {
-                      if (!in_array($uuid, $answers)) {
+                      if (!in_array($uuid, $answers->selections)) {
                           $corrected->addMissing($question->getSelection($uuid));
                       }
                   }
