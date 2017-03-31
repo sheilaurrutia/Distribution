@@ -1,11 +1,12 @@
 import {Cloze as component} from './editor.jsx'
 import {makeActionCreator, makeId} from './../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
+
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {utils} from './utils/utils'
 import {notBlank} from './../../utils/validate'
-import set from 'lodash/set'
-import get from 'lodash/get'
+import {keywords as keywordsUtils} from './../../utils/keywords'
 import invariant from 'invariant'
 import {tex} from './../../utils/translate'
 
@@ -28,20 +29,18 @@ export const actions = {
   addAnswer: makeActionCreator(ADD_ANSWER, 'holeId'),
   saveHole: makeActionCreator(SAVE_HOLE),
   removeHole: makeActionCreator(REMOVE_HOLE, 'holeId'),
-  removeAnswer: makeActionCreator(REMOVE_ANSWER, 'text', 'caseSensitive'),
+  removeAnswer: makeActionCreator(REMOVE_ANSWER, 'holeId', 'keyword'),
   closePopover: makeActionCreator(CLOSE_POPOVER),
-  updateAnswer: (holeId, parameter, oldText, caseSensitive, value) => {
+  updateAnswer: (holeId, keyword, parameter, value) => {
     invariant(
       ['text', 'caseSensitive', 'feedback', 'score'].indexOf(parameter) > -1,
       'answer attribute is not valid'
     )
     invariant(holeId !== undefined, 'holeId is required')
-    invariant(oldText !== undefined, 'oldText is required')
-    invariant(caseSensitive !== undefined, 'caseSensitive is required')
 
     return {
       type: UPDATE_ANSWER,
-      holeId, parameter, oldText, caseSensitive, value
+      holeId, keyword, parameter, value
     }
   }
 }
@@ -55,7 +54,15 @@ export default {
 
 function decorate(item) {
   return Object.assign({}, item, {
-    _text: utils.setEditorHtml(item.text, item.solutions)
+    _text: utils.setEditorHtml(item.text, item.solutions),
+    solutions: item.solutions.map(solution => {
+        return Object.assign({}, solution, {
+          answers: solution.answers.map(keyword => Object.assign({}, keyword, {
+            _deletable: solution.answers.length > 1
+          }))
+        })
+      }
+    )
   })
 }
 
@@ -107,10 +114,10 @@ function reduce(item = {}, action) {
     }
     case UPDATE_ANSWER: {
       const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, newItem._holeId)
+      const hole = getHoleFromId(newItem, action.holeId)
       const solution = getSolutionFromHole(newItem, hole)
       const answer = solution.answers.find(
-        answer => answer.text === action.oldText && answer.caseSensitive === action.caseSensitive
+        answer => answer.text === action.keyword.text && answer.caseSensitive === action.keyword.caseSensitive
       )
 
       answer[action.parameter] = action.value
@@ -121,14 +128,15 @@ function reduce(item = {}, action) {
     }
     case ADD_ANSWER: {
       const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, newItem._holeId)
+      const hole = getHoleFromId(newItem, action.holeId)
       const solution = getSolutionFromHole(newItem, hole)
 
       solution.answers.push({
         text: '',
         caseSensitive: false,
         feedback: '',
-        score: 1
+        score: 1,
+        _deletable: solution.answers.length > 0
       })
 
       updateHoleChoices(hole, solution)
@@ -167,7 +175,8 @@ function reduce(item = {}, action) {
           text: action.word,
           caseSensitive: false,
           feedback: '',
-          score: 1
+          score: 1,
+          _deletable: false
         }]
       }
 
@@ -198,12 +207,14 @@ function reduce(item = {}, action) {
     }
     case REMOVE_ANSWER: {
       const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, item._holeId)
+      const hole = getHoleFromId(newItem, action.holeId)
       const solution = getSolutionFromHole(newItem, hole)
       const answers = solution.answers
-      answers.splice(answers.findIndex(answer => answer.text === action.text && answer.caseSensitive === action.caseSensitive), 1)
+      answers.splice(answers.findIndex(answer => answer.text === action.keyword.text && answer.caseSensitive === action.keyword.caseSensitive), 1)
 
       updateHoleChoices(hole, solution)
+
+      answers.forEach(keyword => keyword._deletable = answers.length > 1)
 
       return newItem
     }
@@ -236,70 +247,31 @@ function getSolutionFromHole(item, hole)
 function validate(item) {
   const _errors = {}
 
-  item.holes.forEach(hole => {
-    const solution = getSolutionFromHole(item, hole)
-    let hasPositiveValue = false
-
-    solution.answers.forEach((answer) => {
-      if (notBlank(answer.text, true)) {
-        set(_errors, 'answers.text', tex('cloze_empty_word_error'))
-      }
-
-      if (notBlank(answer.score, true) && answer.score !== 0) {
-        set(_errors, 'answers.score', tex('cloze_empty_score_error'))
-      }
-
-      if (answer.score > 0) hasPositiveValue = true
-    })
-
-    if (hasDuplicates(solution.answers)) {
-      set(_errors, 'answers.duplicate', tex('cloze_duplicate_answers'))
-    }
-
-    if (!hasPositiveValue) {
-      set(_errors, 'answers.value', tex('cloze_solutions_requires_positive_answer'))
-    }
-
-    if (hole._multiple && solution.answers.length < 2) {
-      set(_errors, 'answers.multiple', tex('cloze_multiple_answers_required'))
-    }
-
-    if (notBlank(hole.size, true)) {
-      set(_errors, 'answers.size', tex('cloze_empty_size_error'))
-    }
-
-    if (!_errors.text) {
-      const answerErrors = get(_errors, 'answers.answer')
-      if (answerErrors && answerErrors.length > 0) {
-        _errors.text = tex('cloze_holes_errors')
-      }
-    }
-  })
-
   if (notBlank(item.text, true)) {
     _errors.text = tex('cloze_empty_text_error')
-  }
-
-  if (!_errors.text) {
+  } else {
     if (item.holes.length === 0) {
       _errors.text = tex('cloze_must_contains_clozes_error')
     }
   }
 
-  return _errors
-}
+  item.holes.forEach(hole => {
+    const holeErrors = {}
+    const solution = getSolutionFromHole(item, hole)
 
-function hasDuplicates(answers) {
-  let hasDuplicates = false
-  answers.forEach(answer => {
-    let count = 0
-    answers.forEach(check => {
-      if (answer.text === check.text && answer.caseSensitive === check.caseSensitive) {
-        count++
-      }
-    })
-    if (count > 1) hasDuplicates = true
+    if (notBlank(hole.size, true)) {
+      holeErrors.size = tex('cloze_empty_size_error')
+    }
+
+    const keywordsErrors = keywordsUtils.validate(solution.answers, true, hole._multiple ? 2 : 1)
+    if (!isEmpty(keywordsErrors)) {
+      holeErrors.keywords = keywordsErrors
+    }
+
+    if (!isEmpty(holeErrors)) {
+      _errors[hole.id] = holeErrors
+    }
   })
 
-  return hasDuplicates
+  return _errors
 }
