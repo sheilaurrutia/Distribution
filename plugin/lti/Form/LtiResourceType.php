@@ -7,9 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AppResourceType  extends AbstractType
+class LtiResourceType  extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('LtiApp', 'entity', array(
@@ -20,7 +19,14 @@ class AppResourceType  extends AbstractType
             },
             'choice_label' => 'title',
         ));
-
+        $builder->add(
+            'name',
+            'text',
+            array(
+                'label' => 'name',
+                'attr' => array('autofocus' => true),
+            )
+        );
     }
 
     public function getName()
@@ -32,6 +38,4 @@ class AppResourceType  extends AbstractType
     {
         $resolver->setDefaults(['translation_domain' => 'lti']);
     }
-    
-    
 }

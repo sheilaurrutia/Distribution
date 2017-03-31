@@ -12,28 +12,33 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use UJM\LtiBundle\Form\AppResourceType;
+use UJM\LtiBundle\Entity\LtiResource;
+use UJM\LtiBundle\Form\LtiResourceType;
 
 /**
  * @Service()
  */
 class LtiListener
 {
+    private $formFactory;
     private $request;
     private $httpKernel;
     private $container;
 
     /**
      * @InjectParams({
+     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "request"    = @Inject("request_stack"),
      *     "httpKernel" = @Inject("http_kernel"),
      *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(RequestStack $request, HttpKernelInterface $httpKernel, ContainerInterface $container)
+    public function __construct(FormFactory $formFactory, RequestStack $request, HttpKernelInterface $httpKernel, ContainerInterface $container)
     {
+        $this->formFactory = $formFactory;
         $this->request = $request->getMasterRequest();
         $this->httpKernel = $httpKernel;
         $this->container = $container;
@@ -86,11 +91,11 @@ class LtiListener
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new AppResourceType());
+        $form = $this->container->get('form.factory')->create(new LtiResourceType());
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', [
-                'resourceType' => 'ujm_lti',
+                'resourceType' => 'ujm_lti_resource',
                 'form' => $form->createView(),
             ]
         );
@@ -108,24 +113,28 @@ class LtiListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new AppResourceType());
-        $request = $this->container->get('request');
+        $form = $this->formFactory->create(new LtiResourceType(), new LtiResource());
+        $form->handleRequest($this->request);
 
-        $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->container->get('doctrine.orm.entity_manager');
-        } else {
-            $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig', [
-                    'resourceType' => 'ujm_lti',
-                    'form' => $form->createView(),
-                ]
-            );
+            $ltiResource = $form->getData();
+            $em->persist($ltiResource);
+            $event->setPublished(true);
+            $event->setResources([$ltiResource]);
 
-            $event->setErrorFormContent($content);
+            /*$event->setResources([$form->getData()]);
+            $event->stopPropagation();*/
+
+            return;
         }
-
+        $content = $this->container->get('templating')->render(
+               'ClarolineCoreBundle:Resource:createForm.html.twig', [
+                   'resourceType' => 'ujm_lti',
+                   'form' => $form->createView(),
+               ]
+        );
+        $event->setErrorFormContent($content);
         $event->stopPropagation();
     }
 }

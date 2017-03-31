@@ -8,31 +8,28 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="UJM\LtiBundle\Repository\LtiResourceRepository")
  * @ORM\Table(name="ujm_lti_resource")
-*/
-
+ */
 class LtiResource  extends AbstractResource
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="LtiApp")
      * @ORM\JoinColumn(nullable=false)
      */
-
-    private $app;
+    private $ltiApp;
 
     /**
-     * @param LtiApp $app
+     * @param LtiApp $ltiApp
      */
-    public function setApp($app)
+    public function setLtiApp($ltiApp)
     {
-        $this->app = $app;
+        $this->ltiApp = $ltiApp;
     }
 
     /**
      * @return LtiApp
      */
-    public function getApp()
+    public function getLtiApp()
     {
-        return $this->appS;
+        return $this->ltiApp;
     }
 }
