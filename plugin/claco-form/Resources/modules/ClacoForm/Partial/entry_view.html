@@ -99,7 +99,7 @@
                     <h3 ng-class="cfc.entry['status'] === 1 ? '' : 'unpublished-entry-row'">
                         {{ cfc.entry['title'] }}
                         <span class="pull-right">
-                            <div class="btn-group" role="group" uib-dropdown ng-if="cfc.entryNotification">
+                            <div class="btn-group" role="group" uib-dropdown ng-if="cfc.entryUser">
                                 <button class="btn btn-default btn-sm" ng-click="cfc.switchEntryNotification()">
                                     <i class="fa fa-bell-o"
                                        data-toggle="tooltip"
@@ -119,45 +119,34 @@
                                 <button type="button"
                                         class="btn btn-default btn-sm"
                                         uib-dropdown-toggle
-                                        ng-if="cfc.config['display_categories'] || cfc.config['display_comments']"
+                                        ng-if="cfc.config['display_comments']"
                                 >
                                     <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right"
                                     uib-dropdown-menu
                                     role="menu"
-                                    ng-if="cfc.config['display_categories'] || cfc.config['display_comments']"
+                                    ng-if="cfc.config['display_comments']"
                                 >
                                     <li ng-click="cfc.notificationOptionClick($event)">
                                         <input type="checkbox"
                                                class="notification-checkbox"
-                                               ng-model="cfc.entryNotification['notify_edition']"
+                                               ng-model="cfc.entryUser['notifyEdition']"
                                                ng-value="true"
-                                               ng-click="cfc.saveEntryNotification()"
+                                               ng-click="cfc.saveEntryUser()"
                                         />
-                                        <span class="pointer-hand" ng-click="cfc.switchNotification('notify_edition')">
+                                        <span class="pointer-hand" ng-click="cfc.switchNotification('notifyEdition')">
                                             {{ 'editions'|trans:{}:'clacoform' }}
-                                        </span>
-                                    </li>
-                                    <li ng-click="cfc.notificationOptionClick($event)" ng-if="cfc.config['display_categories']">
-                                        <input type="checkbox"
-                                               class="notification-checkbox"
-                                               ng-model="cfc.entryNotification['notify_category']"
-                                               ng-value="true"
-                                               ng-click="cfc.saveEntryNotification()"
-                                        />
-                                        <span class="pointer-hand" ng-click="cfc.switchNotification('notify_category')">
-                                            {{ 'categories'|trans:{}:'clacoform' }}
                                         </span>
                                     </li>
                                     <li ng-click="cfc.notificationOptionClick($event)" ng-if="cfc.config['display_comments']">
                                         <input type="checkbox"
                                                class="notification-checkbox"
-                                               ng-model="cfc.entryNotification['notify_comment']"
+                                               ng-model="cfc.entryUser['notifyComment']"
                                                ng-value="true"
-                                               ng-click="cfc.saveEntryNotification()"
+                                               ng-click="cfc.saveEntryUser()"
                                         />
-                                        <span class="pointer-hand" ng-click="cfc.switchNotification('notify_comment')">
+                                        <span class="pointer-hand" ng-click="cfc.switchNotification('notifyComment')">
                                             {{ 'comments'|trans:{}:'clacoform' }}
                                         </span>
                                     </li>

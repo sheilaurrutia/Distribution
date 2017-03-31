@@ -21,7 +21,7 @@ export default class EntryViewCtrl {
     this.CommentService = CommentService
     this.entryId = parseInt($stateParams.entryId)
     this.entry = {}
-    this.entryNotification = null
+    this.entryUser = null
     this.userId = ClacoFormService.getUserId()
     this.title= ClacoFormService.getResourceNodeName()
     this.config = ClacoFormService.getResourceDetails()
@@ -99,7 +99,7 @@ export default class EntryViewCtrl {
     this.CommentService.initializeComments(this.entryId)
 
     if (this.userId) {
-      this.EntryService.getEntryNotification(this.entryId).then(d => this.entryNotification = d)
+      this.EntryService.getEntryUser(this.entryId).then(d => this.entryUser = d)
     }
   }
 
@@ -282,29 +282,26 @@ export default class EntryViewCtrl {
   }
 
   isEntryNotificationEnabled() {
-    return this.entryNotification['notify_edition'] ||
-      (this.config['display_comments'] && this.entryNotification['notify_comment']) ||
-      (this.config['display_categories'] && this.entryNotification['notify_category'])
+    return this.entryUser['notifyEdition'] || (this.config['display_comments'] && this.entryUser['notifyComment'])
   }
 
   switchEntryNotification() {
     const enabled = !this.isEntryNotificationEnabled()
-    this.entryNotification['notify_edition'] = enabled
-    this.entryNotification['notify_comment'] = enabled
-    this.entryNotification['notify_category'] = enabled
-    this.saveEntryNotification()
+    this.entryUser['notifyEdition'] = enabled
+    this.entryUser['notifyComment'] = enabled
+    this.saveEntryUser()
   }
 
   notificationOptionClick($event) {
     $event.stopPropagation()
   }
 
-  saveEntryNotification() {
-    this.EntryService.saveEntryNotification(this.entryId, this.entryNotification)
+  saveEntryUser() {
+    this.EntryService.saveEntryUser(this.entryId, this.entryUser)
   }
 
   switchNotification(type) {
-    this.entryNotification[type] = !this.entryNotification[type]
-    this.saveEntryNotification()
+    this.entryUser[type] = !this.entryUser[type]
+    this.saveEntryUser()
   }
 }

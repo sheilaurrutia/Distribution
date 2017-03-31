@@ -10,16 +10,16 @@ use JMS\Serializer\Annotation\SerializedName;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="claro_clacoformbundle_entry_notification",
+ *     name="claro_clacoformbundle_entry_user",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="clacoform_notification_unique_entry_user",
+ *             name="clacoform_unique_entry_user",
  *             columns={"entry_id", "user_id"}
  *         )
  *     }
  * )
  */
-class EntryNotification
+class EntryUser
 {
     /**
      * @ORM\Id
@@ -31,7 +31,10 @@ class EntryNotification
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\ClacoFormBundle\Entity\Entry")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
+     *     inversedBy="entryUsers"
+     * )
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      */
     protected $entry;
@@ -43,11 +46,32 @@ class EntryNotification
     protected $user;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(name="shared", type="boolean")
      * @Groups({"api_claco_form"})
-     * @SerializedName("details")
+     * @SerializedName("shared")
      */
-    protected $details;
+    protected $shared = false;
+
+    /**
+     * @ORM\Column(name="notify_edition", type="boolean")
+     * @Groups({"api_claco_form"})
+     * @SerializedName("notifyEdition")
+     */
+    protected $notifyEdition = false;
+
+    /**
+     * @ORM\Column(name="notify_comment", type="boolean")
+     * @Groups({"api_claco_form"})
+     * @SerializedName("notifyComment")
+     */
+    protected $notifyComment = false;
+
+    /**
+     * @ORM\Column(name="notify_vote", type="boolean")
+     * @Groups({"api_claco_form"})
+     * @SerializedName("notifyVote")
+     */
+    protected $notifyVote = false;
 
     public function getId()
     {
@@ -79,52 +103,43 @@ class EntryNotification
         $this->user = $user;
     }
 
-    public function getDetails()
+    public function isShared()
     {
-        return $this->details;
+        return $this->shared;
     }
 
-    public function setDetails($details)
+    public function setShared($shared)
     {
-        $this->details = $details;
+        $this->shared = $shared;
     }
 
     public function getNotifyEdition()
     {
-        return !is_null($this->details) && isset($this->details['notify_edition']) ? $this->details['notify_edition'] : false;
+        return $this->notifyEdition;
     }
 
     public function setNotifyEdition($notifyEdition)
     {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['notify_edition'] = $notifyEdition;
+        $this->notifyEdition = $notifyEdition;
     }
 
     public function getNotifyComment()
     {
-        return !is_null($this->details) && isset($this->details['notify_comment']) ? $this->details['notify_comment'] : false;
+        return $this->notifyComment;
     }
 
     public function setNotifyComment($notifyComment)
     {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['notify_comment'] = $notifyComment;
+        $this->notifyComment = $notifyComment;
     }
 
-    public function getNotifyCategory()
+    public function getNotifyVote()
     {
-        return !is_null($this->details) && isset($this->details['notify_category']) ? $this->details['notify_category'] : false;
+        return $this->notifyVote;
     }
 
-    public function setNotifyCategory($notifyCategory)
+    public function setNotifyVote($notifyVote)
     {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['notify_category'] = $notifyCategory;
+        $this->notifyVote = $notifyVote;
     }
 }

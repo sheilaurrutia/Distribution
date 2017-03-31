@@ -26,6 +26,7 @@ class Updater100000 extends Updater
     public function postUpdate()
     {
         $this->updateClacoFormConfigs();
+        $this->updateCategories();
     }
 
     private function updateClacoFormConfigs()
@@ -39,6 +40,22 @@ class Updater100000 extends Updater
             if ($clacoForm->getLockedFieldsFor() === 'user') {
                 $clacoForm->setLockedFieldsFor('user');
                 $this->om->persist($clacoForm);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    private function updateCategories()
+    {
+        $this->log('Updating category option for notification of pending comments...');
+        $categoryRepo = $this->om->getRepository('Claroline\ClacoFormBundle\Entity\Category');
+        $categories = $categoryRepo->findAll();
+        $this->om->startFlushSuite();
+
+        foreach ($categories as $category) {
+            if ($category->getNotifyPendingComment()) {
+                $category->setNotifyPendingComment(true);
+                $this->om->persist($category);
             }
         }
         $this->om->endFlushSuite();

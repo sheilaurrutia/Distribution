@@ -8,33 +8,36 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2017/03/29 03:33:42
+ * Generation date: 2017/03/31 10:07:37
  */
-class Version20170329153340 extends AbstractMigration
+class Version20170331100735 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
-            CREATE TABLE claro_clacoformbundle_entry_notification (
+        $this->addSql('
+            CREATE TABLE claro_clacoformbundle_entry_user (
                 id INT AUTO_INCREMENT NOT NULL, 
                 entry_id INT DEFAULT NULL, 
                 user_id INT DEFAULT NULL, 
-                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
-                INDEX IDX_1D094190BA364942 (entry_id), 
-                INDEX IDX_1D094190A76ED395 (user_id), 
-                UNIQUE INDEX clacoform_notification_unique_entry_user (entry_id, user_id), 
+                shared TINYINT(1) NOT NULL, 
+                notify_edition TINYINT(1) NOT NULL, 
+                notify_comment TINYINT(1) NOT NULL, 
+                notify_vote TINYINT(1) NOT NULL, 
+                INDEX IDX_7036190CBA364942 (entry_id), 
+                INDEX IDX_7036190CA76ED395 (user_id), 
+                UNIQUE INDEX clacoform_unique_entry_user (entry_id, user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
+        ');
         $this->addSql('
-            ALTER TABLE claro_clacoformbundle_entry_notification 
-            ADD CONSTRAINT FK_1D094190BA364942 FOREIGN KEY (entry_id) 
+            ALTER TABLE claro_clacoformbundle_entry_user 
+            ADD CONSTRAINT FK_7036190CBA364942 FOREIGN KEY (entry_id) 
             REFERENCES claro_clacoformbundle_entry (id) 
             ON DELETE CASCADE
         ');
         $this->addSql('
-            ALTER TABLE claro_clacoformbundle_entry_notification 
-            ADD CONSTRAINT FK_1D094190A76ED395 FOREIGN KEY (user_id) 
+            ALTER TABLE claro_clacoformbundle_entry_user 
+            ADD CONSTRAINT FK_7036190CA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ');
@@ -48,7 +51,7 @@ class Version20170329153340 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql('
-            DROP TABLE claro_clacoformbundle_entry_notification
+            DROP TABLE claro_clacoformbundle_entry_user
         ');
         $this->addSql('
             ALTER TABLE claro_clacoformbundle_field 

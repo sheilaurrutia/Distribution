@@ -91,6 +91,22 @@
                 </label>
             </div>
         </div>
+        <div class="form-group row">
+            <label class="control-label col-md-3">
+                {{ 'category_notify_pending_comment'|trans:{}:'clacoform' }}
+            </label>
+            <div class="col-md-9">
+                <label>
+                    <input type="radio" ng-model="cfc.category['notifyPendingComment']" ng-value="true"/>
+                    {{ 'yes'|trans:{}:'platform' }}
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>
+                    <input type="radio" ng-model="cfc.category['notifyPendingComment']" ng-value="false"/>
+                    {{ 'no'|trans:{}:'platform' }}
+                </label>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-default" data-dismiss="modal" ng-click="$close()">

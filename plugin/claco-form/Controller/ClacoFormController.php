@@ -369,6 +369,9 @@ class ClacoFormController extends Controller
         $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
             $categoryData['notifyRemoval'] :
             $categoryData['notifyRemoval'] === 'true';
+        $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
+            $categoryData['notifyPendingComment'] :
+            $categoryData['notifyPendingComment'] === 'true';
         $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
             $this->userManager->getUsersByIds($categoryData['managers']) :
             [];
@@ -379,7 +382,8 @@ class ClacoFormController extends Controller
             $categoryData['color'],
             $notifyAddition,
             $notifyEdition,
-            $notifyRemoval
+            $notifyRemoval,
+            $notifyPendingComment
         );
         $serializedCategory = $this->serializer->serialize(
             $category,
@@ -416,6 +420,9 @@ class ClacoFormController extends Controller
         $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
             $categoryData['notifyRemoval'] :
             $categoryData['notifyRemoval'] === 'true';
+        $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
+            $categoryData['notifyPendingComment'] :
+            $categoryData['notifyPendingComment'] === 'true';
         $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
             $this->userManager->getUsersByIds($categoryData['managers']) :
             [];
@@ -426,7 +433,8 @@ class ClacoFormController extends Controller
             $categoryData['color'],
             $notifyAddition,
             $notifyEdition,
-            $notifyRemoval
+            $notifyRemoval,
+            $notifyPendingComment
         );
         $serializedCategory = $this->serializer->serialize(
             $category,
@@ -909,57 +917,60 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/entry/{entry}/notification/retrieve",
-     *     name="claro_claco_form_entry_notification_retrieve",
+     *     "/claco/form/entry/{entry}/user/retrieve",
+     *     name="claro_claco_form_entry_user_retrieve",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * Retrieves an entry notification options for current user
+     * Retrieves an entry options for current user
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function entryNotificationRetrieveAction(User $user, Entry $entry)
+    public function entryUserRetrieveAction(User $user, Entry $entry)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
-        $entryNotification = $this->clacoFormManager->getEntryNotification($entry, $user);
-        $serializedEntryNotification = $this->serializer->serialize(
-            $entryNotification,
+        $entryUser = $this->clacoFormManager->getEntryUser($entry, $user);
+        $serializedEntryUser = $this->serializer->serialize(
+            $entryUser,
             'json',
             SerializationContext::create()->setGroups(['api_claco_form'])
         );
 
-        return new JsonResponse($serializedEntryNotification, 200);
+        return new JsonResponse($serializedEntryUser, 200);
     }
 
     /**
      * @EXT\Route(
-     *     "/claco/form/entry/{entry}/notification/save",
-     *     name="claro_claco_form_entry_notification_save",
+     *     "/claco/form/entry/{entry}/user/save",
+     *     name="claro_claco_form_entry_user_save",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * Saves entry notification options for current user
+     * Saves entry options for current user
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function entryNotificationSaveAction(User $user, Entry $entry)
+    public function entryUserSaveAction(User $user, Entry $entry)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
-        $entryNotification = $this->clacoFormManager->getEntryNotification($entry, $user);
-        $entryNotificationData = $this->request->request->get('entryNotificationData', false);
+        $entryUser = $this->clacoFormManager->getEntryUser($entry, $user);
+        $entryUserData = $this->request->request->get('entryUserData', false);
 
-        if (isset($entryNotificationData['notify_edition'])) {
-            $entryNotification->setNotifyEdition($entryNotificationData['notify_edition']);
+        if (isset($entryUserData['shared'])) {
+            $entryUser->setShared($entryUserData['shared']);
         }
-        if (isset($entryNotificationData['notify_comment'])) {
-            $entryNotification->setNotifyComment($entryNotificationData['notify_comment']);
+        if (isset($entryUserData['notifyEdition'])) {
+            $entryUser->setNotifyEdition($entryUserData['notifyEdition']);
         }
-        if (isset($entryNotificationData['notify_category'])) {
-            $entryNotification->setNotifyCategory($entryNotificationData['notify_category']);
+        if (isset($entryUserData['notifyComment'])) {
+            $entryUser->setNotifyComment($entryUserData['notifyComment']);
         }
-        $this->clacoFormManager->persistEntryNotification($entryNotification);
+        if (isset($entryUserData['notifyVote'])) {
+            $entryUser->setNotifyVote($entryUserData['notifyVote']);
+        }
+        $this->clacoFormManager->persistEntryUser($entryUser);
 
         return new JsonResponse('success', 200);
     }

@@ -76,6 +76,10 @@
                             <i class="fa fa-check text-success" ng-if="category['details']['notify_removal']"></i>
                             <i class="fa fa-times text-danger" ng-if="!category['details']['notify_removal']"></i>
                         </td>
+                        <td class="text-center" data-title="'category_notify_pending_comment'|trans:{}:'clacoform'" sortable="'details.notify_pending_comment'">
+                            <i class="fa fa-check text-success" ng-if="category['details']['notify_pending_comment']"></i>
+                            <i class="fa fa-times text-danger" ng-if="!category['details']['notify_pending_comment']"></i>
+                        </td>
                         <td class="text-center" data-title="'actions'|trans:{}:'platform'">
                             <button class="btn btn-default btn-sm" ng-click="cfc.editCategory(category)">
                                 <i class="fa fa-pencil"></i>

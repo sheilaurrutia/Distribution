@@ -276,21 +276,19 @@ export default class EntryService {
     this.keywordFilter = filter
   }
 
-  getEntryNotification(entryId) {
-    const url = Routing.generate('claro_claco_form_entry_notification_retrieve', {entry: entryId})
+  getEntryUser(entryId) {
+    const url = Routing.generate('claro_claco_form_entry_user_retrieve', {entry: entryId})
 
     return this.$http.get(url).then(d => {
       if (d['status'] === 200) {
-        const entryNotification = JSON.parse(d['data'])
-
-        return entryNotification['details']
+        return JSON.parse(d['data'])
       }
     })
   }
 
-  saveEntryNotification(entryId, entryNotification) {
-    const url = Routing.generate('claro_claco_form_entry_notification_save', {entry: entryId})
-    this.$http.put(url, {entryNotificationData: entryNotification})
+  saveEntryUser(entryId, entryUser) {
+    const url = Routing.generate('claro_claco_form_entry_user_save', {entry: entryId})
+    this.$http.put(url, {entryUserData: entryUser})
   }
 
   static _getGlobal(name) {
