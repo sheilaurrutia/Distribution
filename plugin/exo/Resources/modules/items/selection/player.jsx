@@ -13,9 +13,9 @@ export class SelectionPlayer extends Component {
     //initialize the answers array
     if (!this.props.answer) {
       switch (this.props.item.mode) {
-        case 'find': this.props.onChange({positions:[], tries:0, mode: 'find'}); break;
-        case 'select': this.props.onChange({mode: 'select', selections: []}); break;
-        case 'highlight': this.props.onChange({mode: 'highlight', highlights: []}); break;
+        case 'find': this.props.onChange({positions:[], tries:0, mode: 'find'}); break
+        case 'select': this.props.onChange({mode: 'select', selections: []}); break
+        case 'highlight': this.props.onChange({mode: 'highlight', highlights: []}); break
       }
     }
   }

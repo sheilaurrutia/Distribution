@@ -44,7 +44,7 @@ utils.makeFindHtml = (text, solutions) => {
 utils.getFirstSpan = (item) => {
   const id = item.selectionId ? item.selectionId: item.id
 
-  return `<span data-selection-id="${id}" id="selection-${id}" class="cloze-hole answer-item">`
+  return `<span data-selection-id="${id}" id="selection-${id}" class="selection-span cloze-hole answer-item">`
 }
 
 utils.getHtmlLength = (solution) => {
@@ -70,8 +70,8 @@ utils.getTextFromDecorated = (_text) => {
 
   //we replace with '' because remove() leaves us with blank space (juste so you know)
   $(tmp).find('.selection-buttons').replaceWith('')
-  $(tmp).find('.span-selection').each(function () {
-    $(this).replaceWith($(this).text())
+  $(tmp).find('.selection-span').each(function () {
+    $(this).replaceWith($(this).html())
   })
 
   return tmp.innerHTML
