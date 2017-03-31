@@ -71,7 +71,7 @@ const ManageRightsAction = props => {
       action={props.openRightsManagement}
     >
       {'custom' === props.rights &&
-      <span className="fa fa-asterisk text-danger"></span>
+        <span className="fa fa-asterisk text-danger" />
       }
     </PageAction>
   )
@@ -99,13 +99,13 @@ LikeAction.propTypes = {
 const ResourceActions = props =>
   <PageActions className="resource-actions">
     <PageGroupActions>
-      <PageAction id="resource-edit" title="Edit this resource" icon="fa fa-pencil" />
+      <PageAction id="resource-edit" title="Edit this resource" icon="fa fa-pencil" primary={true} action="#editor" />
       <PublishAction published={true} togglePublish={() => true} />
       <ManageRightsAction rights="workspace" openRightsManagement={() => true} />
     </PageGroupActions>
 
     <PageGroupActions>
-      <PageAction id="resource-share" title="Share this resource" icon="fa fa-share" />
+      <PageAction id="resource-share" title="Share this resource" icon="fa fa-share" action="#share" />
       <LikeAction likes={100} />
       <FavoriteAction favorited={false} toggleFavorite={() => true} />
     </PageGroupActions>

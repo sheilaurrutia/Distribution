@@ -1,4 +1,5 @@
 import React, { PropTypes as T } from 'react'
+import classes from 'classnames'
 
 /**
  * Page scaffolding components.
@@ -20,6 +21,12 @@ PageContainer.propTypes = {
   children: T.node
 }
 
+/**
+ * Root of the current page.
+ *
+ * @param props
+ * @constructor
+ */
 const Page = props =>
   <main className="page">
     {props.children}
@@ -32,6 +39,28 @@ Page.propTypes = {
 
 Page.defaultTypes = {
   fullScreen: false
+}
+
+const PageHeader = props =>
+  <header className={classes('page-header', props.className)}>
+    <h1>
+      {props.title}
+      &nbsp;
+      {props.subtitle && <small>{props.subtitle}</small>}
+    </h1>
+
+    {props.children}
+  </header>
+
+PageHeader.propTypes = {
+  title: T.string.isRequired,
+  subtitle: T.string,
+  className: T.string,
+  children: T.node
+}
+
+PageHeader.defaultTypes = {
+  subtitle: null
 }
 
 const PageContent = props =>
@@ -48,5 +77,7 @@ PageContent.propTypes = {
 
 export {
   PageContainer,
-  Page
+  Page,
+  PageHeader,
+  PageContent
 }

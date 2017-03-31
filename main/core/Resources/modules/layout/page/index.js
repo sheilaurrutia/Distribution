@@ -1,2 +1,2 @@
-export * from './components/page-header.jsx'
+export * from './components/page.jsx'
 export * from './components/page-actions.jsx'

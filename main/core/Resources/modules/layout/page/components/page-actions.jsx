@@ -25,7 +25,10 @@ const PageAction = props =>
         role="button"
         className={classes(
           'btn page-action-btn',
-          {disabled: props.disabled},
+          {
+            'disabled': props.disabled,
+            'page-action-primary': props.primary
+          },
           props.className
         )}
         disabled={props.disabled}
@@ -38,7 +41,10 @@ const PageAction = props =>
         role="link"
         className={classes(
           'btn page-action-btn',
-          {disabled: props.disabled},
+          {
+            'disabled': props.disabled,
+            'page-action-primary': props.primary
+          },
           props.className
         )}
         disabled={props.disabled}
@@ -52,6 +58,7 @@ const PageAction = props =>
 
 PageAction.propTypes = {
   id: T.string.isRequired,
+  primary: T.bool,
   title: T.string.isRequired,
   icon: T.string.isRequired,
   disabled: T.bool,
@@ -61,7 +68,8 @@ PageAction.propTypes = {
 }
 
 PageAction.defaultProps = {
-  disabled: false
+  disabled: false,
+  primary: false
 }
 
 /**

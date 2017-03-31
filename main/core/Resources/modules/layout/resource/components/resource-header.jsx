@@ -1,6 +1,6 @@
 import React, { PropTypes as T } from 'react'
 
-import { PageHeader } from '#/main/core/layout/page/components/page-header.jsx'
+import { PageHeader } from '#/main/core/layout/page/components/page.jsx'
 import { ResourceActions } from '#/main/core/layout/resource/components/resource-actions.jsx'
 
 const ResourceHeader = props =>
